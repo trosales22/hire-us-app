@@ -20,8 +20,10 @@
   <link href="<?php echo base_url(); ?>static/SBAdmin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
   <link href="<?php echo base_url(); ?>static/SBAdmin/css/sb-admin-2.min.css" rel="stylesheet">
-  <link href="<?php echo base_url(); ?>static/SBAdmin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
-
+	<link href="<?php echo base_url(); ?>static/SBAdmin/vendor/datatables/dataTables.bootstrap4.min.css" rel="stylesheet">
+	
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.css">
 </head>
 
 <body id="page-top">
@@ -394,7 +396,7 @@
   <div class="modal fade" id="addTalentOrModelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <form method="POST" action="action.php">
+        <form method="POST" action="<?php echo base_url(). 'home/addTalentOrModel'; ?>">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Add Talent or Model</h5>
             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
@@ -407,61 +409,66 @@
               <div class="row form-group">
                 <div class="col-xs-4" style="margin-left: 10px; margin-right: 10px;">
                   <label for="inputFirstname">First Name</label>
-                  <input type="email" class="form-control" id="inputFirstname" placeholder="Enter first name" required>
+                  <input type="email" class="form-control" id="inputFirstname" name="firstname" placeholder="Enter first name" required>
                 </div>
 
                 <div class="col-xs-4">
                   <label for="inputMiddlename">Middle Name</label>
-                  <input type="password" class="form-control" id="inputMiddlename" placeholder="Enter middle name" required>
+                  <input type="password" class="form-control" id="inputMiddlename" name="middlename" placeholder="Enter middle name" required>
+                </div>
+								
+                <div class="col-sm-5">
+                  <label for="inputLastname">Last Name</label>
+                  <input type="password" class="form-control" id="inputLastname" name="lastname" placeholder="Enter last name" required>
+                </div>
+              </div>
+
+              <div class="row form-group">
+                <div class="col-sm-5">
+                  <label for="inputEmail">Email</label>
+                  <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Enter email" required>
                 </div>
 
                 <div class="col-sm-5">
-                  <label for="inputLastname">Last Name</label>
-                  <input type="password" class="form-control" id="inputLastname" placeholder="Enter last name" required>
-                </div>
-              </div>
-
-              <div class="row form-group">
-                <div class="col-sm-6">
-                  <label for="inputEmail">Email</label>
-                  <input type="email" class="form-control" id="inputEmail" placeholder="Enter email" required>
-                </div>
-
-                <div class="col-sm-6">
                   <label for="inputContactNumber">Contact Number</label>
-                  <input type="text" class="form-control" id="inputContactNumber" placeholder="Enter contact number" required>
+                  <input type="text" class="form-control" id="inputContactNumber" name="contact_number" placeholder="Enter contact number" required>
                 </div>
               </div>
 
               <div class="row form-group">
-                <div class="col-sm-6">
+                <div class="col-sm-4">
                   <label for="cmbGender">Gender</label>
-                  <select id="cmbGender" class="form-control" required>
+                  <select id="cmbGender" name="gender" class="form-control" required>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                   </select>
                 </div>
 
-                <div class="col-sm-6">
-                  <label for="inputHeight">Height (in cm)</label>
-                  <input type="text" class="form-control" id="inputHeight" placeholder="Enter height (in cm)" required>
-                </div>
+                <div class="col-sm-4">
+                  <label for="inputHeight">Height (in inches)</label>
+                  <input type="text" class="form-control" id="inputHeight" name="height" placeholder="Enter height (in inches)" required>
+								</div>
+								
+								<div class="col-sm-4">
+                  <label for="inputBirthdate">Birth Date</label>
+                  <input type="text" class="form-control" id="inputBirthdate" name="birth_date" placeholder="Choose birthdate" required>
+								</div>
               </div>
 
               <div class="form-group">
                 <label for="inputLocation">Location</label>
-                <textarea class="form-control" rows="5" id="inputLocation" placeholder="Enter location" required></textarea>
+                <textarea class="form-control" rows="5" id="inputLocation" name="location" placeholder="Enter location" style="resize: none;" required></textarea>
               </div>
 
               <div class="row form-group">
                 <div class="col-sm-4">
                   <label for="inputTalentFee">Talent Fee</label>
-                  <input type="number" class="form-control" id="inputTalentFee" placeholder="Enter talent fee" required>
+                  <input type="text" class="form-control" id="inputTalentFee" name="talent_fee" placeholder="Enter talent fee" required>
                 </div>
 
                 <div class="col-sm-7">
                   <label for="cmbTalentFeeType">Talent Fee Type</label>
-                  <select id="cmbTalentFeeType" class="form-control" required>
+                  <select id="cmbTalentFeeType" name="talent_fee_type" class="form-control" required>
                     <option value="HOURLY_RATE">Hourly</option>
                     <option value="DAILY_RATE">Daily</option>
                   </select>
@@ -470,7 +477,7 @@
 
               <div class="form-group">
                   <label for="cmbCategory">Category</label>
-                  <select id="cmbCategory" class="form-control" required>
+                  <select id="cmbCategory" name="category[]" class="form-control" multiple required>
                     <?php foreach($categories as $category){?>
                       <option value="<?php echo $category->category_id;?>"><?php echo $category->category_name;?></option>   
                      <?php }?>
@@ -489,7 +496,10 @@
 
   <!-- Bootstrap core JavaScript-->
   <script src="<?php echo base_url(); ?>static/SBAdmin/vendor/jquery/jquery.min.js"></script>
-  <script src="<?php echo base_url(); ?>static/SBAdmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="<?php echo base_url(); ?>static/SBAdmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/js/standalone/selectize.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-maskmoney/3.0.2/jquery.maskMoney.min.js"></script>
 
   <!-- Core plugin JavaScript-->
   <script src="<?php echo base_url(); ?>static/SBAdmin/vendor/jquery-easing/jquery.easing.min.js"></script>
@@ -502,7 +512,8 @@
   <script src="<?php echo base_url(); ?>static/SBAdmin/vendor/datatables/dataTables.bootstrap4.min.js"></script>
 
   <!-- Page level custom scripts -->
-  <script src="<?php echo base_url(); ?>static/SBAdmin/js/demo/datatables-demo.js"></script>
+	<script src="<?php echo base_url(); ?>static/SBAdmin/js/demo/datatables-demo.js"></script>
+	<script src="<?php echo base_url(); ?>static/js/home.js"></script>
 
 </body>
 

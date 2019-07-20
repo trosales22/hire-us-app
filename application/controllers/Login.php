@@ -6,14 +6,14 @@ class Login extends CI_Controller {
 		parent::__construct();
 		
 		$this->load->helper('url', 'form');
-		$this->load->library('session', 'form_validation');
+		$this->load->library('session');
 		$this->load->model('Login_model', 'login_model');
 	}
 
 	public function index(){
 		//use password_hash("password", PASSWORD_BCRYPT) for password encryption/hashing
 		//use password_verify("password", $hash) for password verification
-		
+
 		$data['error_message'] = '';
 		$this->load->view('login_page', $data);	
 	}
