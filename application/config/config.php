@@ -23,7 +23,26 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | a PHP script and you can easily do that on your own.
 |
 */
-$config['base_url'] = 'http://localhost/hire-us-app';
+
+$http_request 		= '';
+
+if( ISSET( $_SERVER['HTTP_HOST'] ) )
+{
+	$http_request 	= 'http';
+}
+
+if (!EMPTY($_SERVER['HTTPS']) AND $_SERVER['HTTPS'] != 'off'){
+    // SSL connection
+    $http_request 	= 'https';
+}
+
+$base_url_str 		= '';
+
+if( ISSET( $_SERVER['HTTP_HOST'] ) ){
+	$base_url_str 	= $http_request.'://'.$_SERVER['HTTP_HOST'].'/hire-us/';
+}
+
+$config['base_url'] = $base_url_str;
 
 /*
 |--------------------------------------------------------------------------
@@ -182,7 +201,7 @@ $config['permitted_uri_chars'] = 'a-z 0-9~%.:_\-';
 | use segment based URLs.
 |
 */
-$config['enable_query_strings'] = TRUE;
+$config['enable_query_strings'] = FALSE;
 $config['controller_trigger'] = 'c';
 $config['function_trigger'] = 'm';
 $config['directory_trigger'] = 'd';
@@ -223,7 +242,7 @@ $config['allow_get_array'] = TRUE;
 | your log files will fill up very fast.
 |
 */
-$config['log_threshold'] = 0;
+$config['log_threshold'] = 1;
 
 /*
 |--------------------------------------------------------------------------

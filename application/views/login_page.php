@@ -1,3 +1,8 @@
+<?php
+	if ($this->session->userdata('logged_in')) {
+		redirect(base_url('home_page'));
+	}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,22 +26,21 @@
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-				<form class="login100-form validate-form">
+				<form class="login100-form validate-form" method="POST" action="<?php echo base_url(). 'login/user_login_process'; ?>">
 					<span class="login100-form-title p-b-43">
 						<img src="<?php echo base_url(); ?>static/images/logo.png" style="height: 80px; width: 80px;">
 						Hire Us<br />Please login to continue
 					</span>
 					
-					
-					<div class="wrap-input100 validate-input" data-validate = "Valid email is required: ex@abc.xyz">
-						<input class="input100" type="text" name="email">
+					<div class="wrap-input100 validate-input" data-validate = "Username is required">
+						<input class="input100" type="text" name="username">
 						<span class="focus-input100"></span>
-						<span class="label-input100">Email or Username</span>
+						<span class="label-input100">Username</span>
 					</div>
 					
 					
 					<div class="wrap-input100 validate-input" data-validate="Password is required">
-						<input class="input100" type="password" name="pass">
+						<input class="input100" type="password" name="password">
 						<span class="focus-input100"></span>
 						<span class="label-input100">Password</span>
 					</div>
@@ -58,10 +62,14 @@
 			
 
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn">
+						<button class="login100-form-btn" type="submit">
 							Login
 						</button>
 					</div>
+					
+					<span style="font-size: 20px; margin: auto; display:table; margin-top: 10px;">
+						<?php echo $error_message; ?>
+					</span>
 				</form>
 
 				<div class="login100-more" style="background-image: url('<?php echo base_url(); ?>static/Login_v18/images/background_image.jpg');">
