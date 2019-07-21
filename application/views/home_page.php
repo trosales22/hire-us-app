@@ -295,8 +295,6 @@
                     <tr>
                       <th>Name</th>
                       <th>Birth Date</th>
-                      <th>Contact Number</th>
-											<th>Gender</th>
                       <th>Location</th>
                       <th>Talent Fee</th>
                       <th>Actions</th>
@@ -308,23 +306,21 @@
 											<tr>
 												<td><?php echo $talent->fullname;?></td>
 												<td><?php echo $talent->birth_date;?></td>
-												<td><?php echo $talent->contact_number;?></td>
-												<td><?php echo $talent->gender;?></td>
 												<td><?php echo $talent->location;?></td>
 												<td><?php echo $talent->talent_fee . ' <b>(' . $talent->talent_fee_type . ')</b>';?></td>
 												<td>
 													<a href="#" class="btn btn-success btn-icon-split">
 														<span class="icon text-white-50">
-															<i class="fas fa-eye"></i>
+															<i class="fas fa-edit"></i>
 														</span>
-														<span class="text">View</span>
+														<span class="text">Information</span>
 													</a>
 
-													<a href="#" class="btn btn-warning btn-icon-split">
+													<a href="#" data-toggle="modal" data-target="#updateTalentResourcesModal" class="btn btn-warning btn-icon-split">
 														<span class="icon text-white-50">
 															<i class="fas fa-edit"></i>
 														</span>
-														<span class="text">Edit</span>
+														<span class="text">Resources</span>
 													</a>
 												</td>
 											</tr> 
@@ -335,8 +331,6 @@
                     <tr>
                       <th>Name</th>
                       <th>Birth Date</th>
-                      <th>Contact Number</th>
-											<th>Gender</th>
                       <th>Location</th>
                       <th>Talent Fee</th>
                       <th>Actions</th>
@@ -405,21 +399,20 @@
           </div>
 
           <div class="modal-body">
-            
               <div class="row form-group">
                 <div class="col-xs-4" style="margin-left: 10px; margin-right: 10px;">
                   <label for="inputFirstname">First Name</label>
-                  <input type="email" class="form-control" id="inputFirstname" name="firstname" placeholder="Enter first name" required>
+                  <input type="text" class="form-control" id="inputFirstname" name="firstname" placeholder="Enter first name" required>
                 </div>
 
                 <div class="col-xs-4">
                   <label for="inputMiddlename">Middle Name</label>
-                  <input type="password" class="form-control" id="inputMiddlename" name="middlename" placeholder="Enter middle name" required>
+                  <input type="text" class="form-control" id="inputMiddlename" name="middlename" placeholder="Enter middle name" required>
                 </div>
 								
                 <div class="col-sm-5">
                   <label for="inputLastname">Last Name</label>
-                  <input type="password" class="form-control" id="inputLastname" name="lastname" placeholder="Enter last name" required>
+                  <input type="text" class="form-control" id="inputLastname" name="lastname" placeholder="Enter last name" required>
                 </div>
               </div>
 
@@ -493,6 +486,32 @@
       </div>
     </div>
   </div>
+
+	<div class="modal fade" id="updateTalentResourcesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+        <form id="frmUpdateTalentProfilePic" method="POST" action="<?php echo base_url(). 'home/uploadProfilePicOfTalent'; ?>" enctype="multipart/form-data">
+          <div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Update Talent or Model Resources</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+					</div>
+
+					<div class="modal-body">
+						<div class="form-group">
+							<input type="file" id="profile_image" name="profile_image" size="33" />
+						</div>
+					</div>
+
+					<div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+            <button class="btn btn-primary" id="btnUpdateTalentProfilePic" type="submit">Update</button>
+          </div>
+				</form>
+			</div>
+		</div>
+	</div>
 
   <!-- Bootstrap core JavaScript-->
   <script src="<?php echo base_url(); ?>static/SBAdmin/vendor/jquery/jquery.min.js"></script>

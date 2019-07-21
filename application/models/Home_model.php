@@ -2,16 +2,18 @@
 class Home_model extends CI_Model {
 
   public function getAllCategories() {
+		$params = array('Y');
+
 		$query = "
 						SELECT 
 							category_id,category_name
 						FROM 
 							param_categories 
 						WHERE 
-							active_flag = 'Y'
+							active_flag = ?
 						";
 
-    $stmt = $this->db->query($query);
+    $stmt = $this->db->query($query, $params);
     return $stmt->result();
   }
 
@@ -66,20 +68,24 @@ class Home_model extends CI_Model {
     $this->db->insert('talents', $talents_fields);
     $lastInsertedId = $this->db->insert_id();
 
-    $talents_category_fields = array(
-      'talent_id' => $lastInsertedId,
-      'category_id' => $data['category'],
-    );
+		foreach($data['categories'] as $category){
+			$talents_category_fields = array(
+				'talent_id' => $lastInsertedId,
+				'category_id' => $category,
+			);
+
+			$this->db->insert('talents_category', $talents_category_fields);
+		}
 
     $generated_pin = 'HIREUS_' . $this->_generatePIN();
 
-    print_r('PIN: ' . $generated_pin);
+		print_r('PIN: ' . $generated_pin);
+		
     $talents_account_fields = array(
       'talent_id' => $lastInsertedId,
       'talent_password' => password_hash($generated_pin, PASSWORD_BCRYPT),
-    );
-
-    $this->db->insert('talents_category', $talents_category_fields);
+		);
+		
     $this->db->insert('talents_account', $talents_account_fields);
   }
 }

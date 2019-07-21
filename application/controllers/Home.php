@@ -31,9 +31,39 @@ class Home extends CI_Controller {
                 'birth_date'    	=> $this->input->post('birth_date'),
                 'talent_fee'     	=> $this->input->post('talent_fee'),
                 'talent_fee_type' => $this->input->post('talent_fee_type'),
-                'category'      	=> $this->input->post('category') //change this into array
+                'categories'      => $this->input->post('category')
               );
 		
     $this->home_model->insertTalentOrModel($talents_fields);
+	}
+
+	public function uploadProfilePicOfTalent(){
+		$msg = array();
+
+		$config['upload_path'] = 'uploads/talents_or_models/';
+		$config['allowed_types'] = 'jpg|png';
+		$config['max_size'] = 5000;
+		$config['max_width'] = 1500;
+		$config['max_height'] = 1500;
+		$config['file_name'] = md5(time() . rand());
+
+		$this->load->library('upload', $config);
+
+		if(!$this->upload->do_upload('profile_image')) {
+			$msg = array(
+								'status'	=> 'FAILED',
+								'error'	 	=> $this->upload->display_errors()
+							);
+		}else{
+			$msg = array(
+								'status'	=> 'SUCCESS',
+								'image_metadata' => $this->upload->data()
+							);
+		}
+
+		// print_r($msg);
+		// die();
+
+		return $msg;
 	}
 }
