@@ -60,10 +60,7 @@ class Home extends CI_Controller {
 								'image_metadata' => $this->upload->data()
 							);
 		}
-
-		// print_r($msg);
-		// die();
-
+		
 		return $msg;
 	}
 }

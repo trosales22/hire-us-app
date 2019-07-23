@@ -11,18 +11,18 @@ $('select#cmbCategory').selectize({
 $('#inputHeight').maskMoney();
 $('#inputTalentFee').maskMoney();
 
-$("#frmUpdateTalentProfilePic").submit(function (event) {
-    event.preventDefault();
-
-	var data = $('#frmUpdateTalentProfilePic').serialize();
+$('#frmUpdateTalentProfilePic').submit(function(e){
+	e.preventDefault(); 
 	$.ajax({
-		url: this.action,
-		type: 'POST',
-		contentType: 'multipart/form-data',
-    	processData: false,
-		data: data,
-		success:function(data){
-			console.log(data);
+		url:this.action,
+		type:"POST",
+		data:new FormData(this),
+		processData:false,
+		contentType:false,
+		cache:false,
+		async:false,
+		success: function(data){
+			alert("Upload Image Successful.");
 		}
 	});
 });

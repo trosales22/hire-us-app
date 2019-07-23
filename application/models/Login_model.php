@@ -19,8 +19,7 @@ class Login_model extends CI_Model {
 		$stmt = $this->db->query($query, $params);
 		return $stmt->num_rows();
 	}
-
-
+	
 	public function getUserInformation($username){
 		$params = array($username, 'Y');
 		$query = "
