@@ -15,6 +15,8 @@ class Login extends CI_Controller {
 		//use password_verify("password", $hash) for password verification
 
 		$data['error_message'] = '';
+		$data['role_clients'] = $this->login_model->getAllRoleForClient();
+
 		$this->load->view('login_page', $data);	
 	}
 
@@ -62,5 +64,33 @@ class Login extends CI_Controller {
 		}
 		
         redirect('login_page');
-    } 
+	}
+
+	public function insertApplicant(){
+		$applicant_fields =   array(
+			'firstname'     	=> $this->input->post('firstname'),
+			'middlename'     	=> $this->input->post('middlename'),
+			'lastname'       	=> $this->input->post('lastname'),
+			'email'       		=> $this->input->post('email'),
+			'contact_number'  	=> $this->input->post('contact_number'),
+			'gender'       		=> $this->input->post('gender'),
+			'password'       	=> $this->input->post('password')
+		);
+		  
+		$this->login_model->insertApplicant($applicant_fields);
+
+		redirect('login_page');
+	}
+
+	public function insertClient(){
+		$client_fields =   array(
+			'email'       		=> $this->input->post('email'),
+			'contact_number'  	=> $this->input->post('contact_number'),
+			'account_type'      => $this->input->post('account_type')
+		);
+		  
+		$this->login_model->insertClient($client_fields);
+		
+		redirect('login_page');
+	}
 }

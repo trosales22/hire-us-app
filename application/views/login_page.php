@@ -62,11 +62,19 @@
 			
 
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" type="submit">
-							Login
+						<button class="login100-form-btn" type="submit" style="margin-bottom: 10px;">
+							<i class="fa fa-sign-in fa-lg"></i> Login
+						</button>
+
+						<button class="login100-form-btn" type="button" style="margin-bottom: 10px; background-color: orange;" data-toggle="modal" data-target="#registrationPortalApplicantModal">
+							<i class="fa fa-briefcase fa-lg"></i> Register as an Applicant
+						</button>
+
+						<button class="login100-form-btn" type="button" style="margin-bottom: 10px; background-color: red;" data-toggle="modal" data-target="#registrationPortalClientModal">
+							<i class="fa fa-handshake-o fa-lg"></i> Register as a Client
 						</button>
 					</div>
-					
+
 					<span style="font-size: 20px; margin: auto; display:table; margin-top: 10px;">
 						<?php echo $error_message; ?>
 					</span>
@@ -74,6 +82,115 @@
 
 				<div class="login100-more" style="background-image: url('<?php echo base_url(); ?>static/Login_v18/images/background_image.jpg');">
 				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="registrationPortalApplicantModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<form id="frmInsertApplicant" method="POST" action="<?php echo base_url(). 'login/insertApplicant'; ?>">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Registration Portal (Applicant)</h5>
+						<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					
+					<div class="modal-body">
+						<div class="row form-group">
+							<div class="col-sm-4">
+								<label for="inputFirstname">First Name</label>
+								<input type="text" class="form-control" id="inputFirstname" name="firstname" placeholder="Enter first name" required>
+							</div>
+
+							<div class="col-sm-4">
+								<label for="inputMiddlename">Middle Name</label>
+								<input type="text" class="form-control" id="inputMiddlename" name="middlename" placeholder="Enter middle name" required>
+							</div>
+											
+							<div class="col-sm-4">
+								<label for="inputLastname">Last Name</label>
+								<input type="text" class="form-control" id="inputLastname" name="lastname" placeholder="Enter last name" required>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-sm-4">
+								<label for="inputEmail">Email</label>
+								<input type="email" class="form-control" id="inputEmail" name="email" placeholder="Enter email" required>
+							</div>
+
+							<div class="col-sm-4">
+								<label for="inputContactNumber">Contact Number</label>
+								<input type="text" class="form-control" id="inputContactNumber" name="contact_number" placeholder="Enter contact number" required>
+							</div>
+
+							<div class="col-sm-4">
+								<label for="cmbGender">Gender</label>
+								<select id="cmbGender" name="gender" class="form-control" required>
+									<option value="Male">Male</option>
+									<option value="Female">Female</option>
+								</select>
+							</div>
+						</div>
+
+						<div class="row form-group">
+							<div class="col-sm-6">
+								<label for="inputPassword">Password</label>
+								<input type="password" class="form-control" id="inputPassword" name="password" placeholder="Enter your password" maxlength="16" required>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+						<button class="btn btn-primary" id="btnUpdateTalentProfilePic" type="submit">Register</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="registrationPortalClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<form id="frmInsertClient" method="POST" action="<?php echo base_url(). 'login/insertClient'; ?>">
+					<div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Registration Portal (Client)</h5>
+						<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+						<span aria-hidden="true">×</span>
+						</button>
+					</div>
+					
+					<div class="modal-body">
+						<div class="row form-group">
+							<div class="col-sm-4">
+								<label for="inputEmail">Email</label>
+								<input type="email" class="form-control" id="inputEmail" name="email" placeholder="Enter email" required>
+							</div>
+
+							<div class="col-sm-4">
+								<label for="inputContactNumber">Contact Number</label>
+								<input type="text" class="form-control" id="inputContactNumber" name="contact_number" placeholder="Enter contact number" required>
+							</div>
+
+							<div class="col-sm-4">
+								<label for="cmbAccountType">Account Type</label>
+								<select id="cmbAccountType" name="account_type" class="form-control" required>
+									<?php foreach($role_clients as $role_client){?>
+									<option value="<?php echo $role_client->role_id;?>"><?php echo $role_client->role_name;?></option>   
+									<?php }?>
+								</select>
+							</div>
+						</div>
+					</div>
+
+					<div class="modal-footer">
+						<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+						<button class="btn btn-primary" id="btnUpdateTalentProfilePic" type="submit">Register</button>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>

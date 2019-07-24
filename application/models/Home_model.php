@@ -15,7 +15,7 @@ class Home_model extends CI_Model {
 
     $stmt = $this->db->query($query, $params);
     return $stmt->result();
-  }
+	}
 
   public function getAllTalents() {
     $query = "
@@ -37,7 +37,6 @@ class Home_model extends CI_Model {
     return $stmt->result();
   }
 
-  //Our custom function.
   private function _generatePIN($digits = 4) {
     $i = 0; //counter
     $pin = ""; //our default pin is blank.
