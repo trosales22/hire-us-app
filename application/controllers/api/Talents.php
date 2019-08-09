@@ -31,16 +31,16 @@ class Talents extends REST_Controller {
 	  
 		$this->response($response);
 	}
-
-	public function get_talent_categories_get(){
+	
+	public function get_talent_details_get(){
 		try{
 			$success 					= 0;
 			$talent_id      			= $this->get('talent_id');
 
 			if(EMPTY($talent_id))
         		throw new Exception("Talent ID is required.");
-
-			$talents_categories_list 	= $this->talents_model->getTalentCategories($talent_id);
+			
+			$talent_details 	= $this->talents_model->getTalentDetails($talent_id);
 			
 			$success  = 1;
 		}catch (Exception $e){
@@ -49,7 +49,7 @@ class Talents extends REST_Controller {
 
 		if($success == 1){
 			$response = [
-			  'talents_categories_list' => $talents_categories_list
+				$talent_details
 			];
 		}else{
 			$response = [
