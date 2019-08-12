@@ -1,7 +1,38 @@
 <?php
 class Talents_model extends CI_Model {
-	public function getAllTalents() {
+	public function getAllTalents($selected_categories = NULL, $additional_filtering = NULL) {
 		$params = array('Y');
+
+		$where_selected_categories = '';
+		$where_additional_filtering = '';
+		$filtering_category_arr = array();
+		
+		if($selected_categories != NULL){
+			$selected_categories_arr = explode(',', $selected_categories);
+
+			foreach($selected_categories_arr as $category){
+				array_push($filtering_category_arr, "'" . $category . "'");
+			}
+
+			$where_selected_categories = " AND D.category_name IN (" . implode(",", $filtering_category_arr) . ")";
+		}
+
+		if(!empty($additional_filtering['height'])){
+			$where_additional_filtering .= ' AND A.height = "' . $additional_filtering['height'] . '"';
+		}
+
+		if(!empty($additional_filtering['age'])){
+			$age_arr = explode ("-", $additional_filtering['age']);
+			$where_additional_filtering .= ' AND YEAR(CURDATE()) - YEAR(A.birth_date) BETWEEN ' . $age_arr[0] . ' AND ' . $age_arr[1];
+		}
+		
+		if(!empty($additional_filtering['talent_fee'])){
+			$where_additional_filtering .= ' AND A.talent_fee <= ' . $additional_filtering['talent_fee'];
+		}
+
+		if(!empty($additional_filtering['location'])){
+			$where_additional_filtering .= ' AND A.location LIKE "%' . $additional_filtering['location'] . '%"';
+		}
 
 		$query = "
 				SELECT
@@ -11,11 +42,9 @@ class Talents_model extends CI_Model {
 						WHEN 'HOURLY_RATE' THEN 'PER HOUR'
 						WHEN 'DAILY_RATE' THEN 'PER DAY'
 					END as talent_fee_type,
-					IFNULL(B.talent_description, '') as talent_description,
-					A.location,DATE_FORMAT(A.birth_date, '%M %d, %Y') as birth_date,
+					A.location,IFNULL(B.talent_description, '') as talent_description,
 					YEAR(CURDATE()) - YEAR(A.birth_date) as age,
-					A.email,A.contact_number,A.gender,IFNULL(B.talent_display_photo, '') as talent_display_photo,
-					GROUP_CONCAT(C.category_id SEPARATOR ', ') as category_ids,
+					A.gender,IFNULL(B.talent_display_photo, '') as talent_display_photo,
 					GROUP_CONCAT(D.category_name SEPARATOR ', ') as category_names 
 				FROM 
 					talents A 
@@ -26,7 +55,7 @@ class Talents_model extends CI_Model {
 				LEFT JOIN 
 					param_categories D ON C.category_id = D.category_id 
 				WHERE 
-					A.active_flag = ? 
+					A.active_flag = ? $where_selected_categories $where_additional_filtering 
 				GROUP BY A.talent_id 
 				ORDER BY talent_id DESC
 			";
@@ -34,18 +63,14 @@ class Talents_model extends CI_Model {
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
 	}
-	
+
 	public function getTalentDetails($talent_id){
 		$params = array($talent_id);
 
 		$query = "
 			SELECT
 					A.talent_id,CONCAT(A.firstname, ' ', A.lastname) as fullname,
-					A.height,A.talent_fee,
-					CASE A.talent_fee_type
-						WHEN 'HOURLY_RATE' THEN 'PER HOUR'
-						WHEN 'DAILY_RATE' THEN 'PER DAY'
-					END as talent_fee_type,
+					A.height,A.talent_fee,A.talent_fee_type,
 					IFNULL(B.talent_description, '') as talent_description,
 					A.location,YEAR(CURDATE()) - YEAR(A.birth_date) as age,
 					A.email,IFNULL(B.talent_display_photo, '') as talent_display_photo,
