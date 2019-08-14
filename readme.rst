@@ -9,10 +9,10 @@ To have own payment system that allows customers/client to pay online in order t
 TOOLS
 *******************
 
->PHP CodeIgniter<br>
->RESTful<br>
->HTML/CSS/Bootstrap<br>
->JavaScript<br>
+>PHP CodeIgniter <br />
+>RESTful <br />
+>HTML/CSS/Bootstrap <br />
+>JavaScript <br />
 
 *******************
 Server Requirements
