@@ -6,13 +6,13 @@ A mobile app/web based booking application that will cater market in entertainme
 To have own payment system that allows customers/client to pay online in order to book using debit card.
 
 *******************
-Tech Tools Used
+TOOLS
 *******************
 
->PHP CodeIgniter
->RESTful
->HTML/CSS/Bootstrap
->JavaScript
+>PHP CodeIgniter<br>
+>RESTful<br>
+>HTML/CSS/Bootstrap<br>
+>JavaScript<br>
 
 *******************
 Server Requirements
