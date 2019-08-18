@@ -20,6 +20,7 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>static/Login_v18/vendor/daterangepicker/daterangepicker.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>static/Login_v18/css/util.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>static/Login_v18/css/main.css">
+	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 </head>
 <body style="background-color: #666666;">
 	
@@ -155,42 +156,69 @@
 	<div class="modal fade" id="registrationPortalClientModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
-				<form id="frmInsertClient" method="POST" action="<?php echo base_url(). 'login/insertClient'; ?>">
-					<div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">Registration Portal (Client)</h5>
-						<button class="close" type="button" data-dismiss="modal" aria-label="Close">
-						<span aria-hidden="true">×</span>
-						</button>
-					</div>
-					
-					<div class="modal-body">
+				<div class="modal-header">
+					<h5 class="modal-title" id="exampleModalLabel">Client Registration</h5>
+					<button class="close" type="button" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">×</span>
+					</button>
+				</div>
+				
+				<div class="modal-body">
+					<h5>Individual</h5>
+					<hr width="100%" />
+
+					<form id="frmInsertClient" method="POST" action="<?php echo base_url(). 'login/insertClient'; ?>">
 						<div class="row form-group">
-							<div class="col-sm-4">
-								<label for="inputEmail">Email</label>
-								<input type="email" class="form-control" id="inputEmail" name="email" placeholder="Enter email" required>
+							<div class="col-sm-6">
+								<label for="frmClient_inputFirstname">First Name</label>
+								<input type="text" class="form-control" id="frmClient_inputFirstname" name="firstname" placeholder="Enter first name" required>
+							</div>
+											
+							<div class="col-sm-6">
+								<label for="frmClient_inputLastname">Last Name</label>
+								<input type="text" class="form-control" id="frmClient_inputLastname" name="lastname" placeholder="Enter last name" required>
 							</div>
 
-							<div class="col-sm-4">
-								<label for="inputContactNumber">Contact Number</label>
-								<input type="text" class="form-control" id="inputContactNumber" name="contact_number" placeholder="Enter contact number" required>
+							
+						</div>
+
+						<div class="row form-group">
+							<div class="col-sm-6">
+								<label for="frmClient_inputContactNumber">Contact Number</label>
+								<input type="text" class="form-control" id="frmClient_inputContactNumber" name="contact_number" placeholder="Enter contact number" required>
 							</div>
 
-							<div class="col-sm-4">
-								<label for="cmbAccountType">Account Type</label>
-								<select id="cmbAccountType" name="account_type" class="form-control" required>
-									<?php foreach($role_clients as $role_client){?>
-									<option value="<?php echo $role_client->role_id;?>"><?php echo $role_client->role_name;?></option>   
-									<?php }?>
-								</select>
+							<div class="col-sm-6">
+								<label for="frmClient_inputEmail">Email</label>
+								<input type="email" class="form-control" id="frmClient_inputEmail" name="email" placeholder="Enter email" required>
 							</div>
 						</div>
-					</div>
 
-					<div class="modal-footer">
-						<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-						<button class="btn btn-primary" id="btnUpdateTalentProfilePic" type="submit">Register</button>
-					</div>
-				</form>
+						<div class="row form-group">
+							<div class="col-sm-6">
+                  				<label for="inputBirthdate">Birth Date</label>
+                  				<input type="text" class="form-control" id="inputBirthdate" name="birth_date" placeholder="Choose birthdate" required>
+							</div>
+
+							<div class="col-sm-6">
+								<label for="frmClient_inputLocation">Location</label>
+                				<textarea class="form-control" rows="5" id="frmClient_inputLocation" name="location" placeholder="Enter location" style="resize: none;" required></textarea>
+							</div>
+						</div>
+
+						<button class="btn btn-primary" id="frmClient_btnUpdateTalentProfilePic" type="submit" style="width: 100%;">Register</button>
+					</form>
+
+					<hr width="100%" />
+					<h5>Company</h5>
+					<hr width="100%" />
+
+					<p style="font-size: 15px; font-weight: bold;">Coming Soon!</p>
+				</div>
+
+				<div class="modal-footer">
+					<button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -204,5 +232,7 @@
 	<script src="<?php echo base_url(); ?>static/Login_v18/vendor/daterangepicker/daterangepicker.js"></script>
 	<script src="<?php echo base_url(); ?>static/Login_v18/vendor/countdowntime/countdowntime.js"></script>
 	<script src="<?php echo base_url(); ?>static/Login_v18/js/main.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<script src="<?php echo base_url(); ?>static/js/login.js"></script>
 </body>
 </html>
