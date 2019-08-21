@@ -8,9 +8,12 @@ class Client_individual_registration extends CI_Controller {
 		
 		$this->load->helper('url', 'form');
 		$this->load->library('session');
+		$this->load->database();
+   		$this->load->model('Client_individual_model', 'client_individual_model');
 	}
 
   	public function index() {
-		$this->load->view('registration_client_individual_page');
+		$this->data['param_provinces'] = $this->client_individual_model->getAllProvinces();
+		$this->load->view('registration_client_individual_page', $this->data);
 	}
 }
