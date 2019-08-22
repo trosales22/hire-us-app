@@ -55,4 +55,55 @@
 		}
 	);
 
+	$('#frmRegisterIndividualClient').parsley().on('field:validated', function() {
+		var ok = $('.parsley-error').length === 0;
+		console.log(ok);
+	})
+
+	$("#frmRegisterIndividualClient").submit(function(e) {
+
+        //prevent Default functionality
+        e.preventDefault();
+
+        //get the action-url of the form
+		var actionurl = e.currentTarget.action;
+
+		$.confirm({
+			title: 'Confirmation!',
+			content: 'Are you sure you want to register as an individual client?',
+			useBootstrap: false, 
+			theme: 'supervan',
+			buttons: {
+				NO: function () {
+					//do nothing
+				},
+				YES: function () {
+					$.ajax({
+						url: actionurl,
+						type: 'POST',
+						data: $("#frmRegisterIndividualClient").serialize(),
+						success: function(data) {
+							$.alert({
+								title: 'Client successfully registered!',
+								content: 'Please check your email for verification.',
+								useBootstrap: false,
+								theme: 'supervan',
+								buttons: {
+									'Ok, Got It!': function () {
+										location.replace(base_url());
+									}
+								}
+							});
+						},
+						error: function(err){
+							console.log(err);
+						}
+					});
+					
+				}
+			}
+		});
+    });
+
+
 })(jQuery);

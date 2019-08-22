@@ -24,7 +24,9 @@
     <link href="<?php echo base_url(); ?>static/colorlib-regform-4/vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
 
     <!-- Main CSS-->
-    <link href="<?php echo base_url(); ?>static/colorlib-regform-4/css/main.css" rel="stylesheet" media="all">
+    <link href="<?php echo base_url(); ?>static/colorlib-regform-4/css/main.css" rel="stylesheet">
+	<link href="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.css" rel="stylesheet">
+	<link href="<?php echo base_url(); ?>static/css/parsley.css" rel="stylesheet">
 </head>
 
 <body>
@@ -33,18 +35,19 @@
             <div class="card card-4">
                 <div class="card-body">
                     <h2 class="title">Client Registration (Individual)</h2>
-                    <form method="POST">
+					
+                    <form method="POST" id="frmRegisterIndividualClient" action="" data-parsley-validate="">
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">first name</label>
-                                    <input class="input--style-4" type="text" name="first_name">
+                                    <input class="input--style-4" type="text" name="first_name" required>
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">last name</label>
-                                    <input class="input--style-4" type="text" name="last_name">
+                                    <input class="input--style-4" type="text" name="last_name" required>
                                 </div>
                             </div>
 						</div>
@@ -54,7 +57,7 @@
                                 <div class="input-group">
                                     <label class="label">Birthday</label>
                                     <div class="input-group-icon">
-                                        <input class="input--style-4 js-datepicker" type="text" name="birthday">
+                                        <input class="input--style-4 js-datepicker" type="text" name="birthday" required>
                                         <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
                                     </div>
                                 </div>
@@ -80,13 +83,13 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Email</label>
-                                    <input class="input--style-4" type="email" name="email">
+                                    <input class="input--style-4" type="email" name="email" data-parsley-trigger="change" required>
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Phone Number</label>
-                                    <input class="input--style-4" type="text" name="phone">
+                                    <input class="input--style-4" type="text" name="phone" required>
                                 </div>
                             </div>
 						</div>
@@ -96,7 +99,7 @@
 							
 							<!-- add select--no-search in class if doesn't want to have a search filter -->
                             <div class="rs-select2 js-select-simple">
-                                <select name="province">
+                                <select name="province" required>
 									<option disabled="disabled" selected="selected">Choose Province</option>
 									<?php foreach($param_provinces as $province){?>
 										<option value="<?php echo $province->provCode;?>"><?php echo $province->provDesc;?></option>
@@ -108,7 +111,7 @@
 							<br/>
 
 							<div class="rs-select2 js-select-simple">
-                                <select name="city_muni">
+                                <select name="city_muni" required>
                                     <option disabled="disabled" selected="selected">Choose City/Municipality</option>
                                 </select>
                                 <div class="select-dropdown"></div>
@@ -117,7 +120,7 @@
 							<br/>
 							
 							<div class="rs-select2 js-select-simple">
-                                <select name="barangay">
+                                <select name="barangay" required>
                                     <option disabled="disabled" selected="selected">Choose Barangay</option>
                                 </select>
                                 <div class="select-dropdown"></div>
@@ -128,17 +131,17 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Street/Unit/Bldg/Village</label>
-                                    <input class="input--style-4" type="text" name="bldg_village">
+                                    <input class="input--style-4" type="text" name="bldg_village" required>
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
 									<label class="label">ZIP Code / Postal Code</label>
-									<input class="input--style-4" type="text" name="zip_code">
+									<input class="input--style-4" type="text" name="zip_code" required>
                                 </div>
                             </div>
 						</div>
-
+						
                         <div class="p-t-15">
 							<button class="btn btn--radius-2 btn--blue" type="button" onclick="window.location.href='<?php echo base_url(); ?>'">Back</button>
                             <button class="btn btn--radius-2 btn--green" type="submit">Submit</button>
@@ -158,6 +161,9 @@
 
     <!-- Main JS-->
 	<script src="<?php echo base_url(); ?>static/colorlib-regform-4/js/global.js"></script>
+	
+	<script src="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.js"></script>
+	<script src="https://parsleyjs.org/dist/parsley.min.js"></script>
 	<script src="<?php echo base_url(); ?>static/js/client_registration_individual.js"></script>
 
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->

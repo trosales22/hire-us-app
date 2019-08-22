@@ -68,12 +68,12 @@
 						</button>
 
 						<button class="login100-form-btn" type="button" style="margin-bottom: 10px; background-color: orange;" data-toggle="modal" data-target="#registrationPortalApplicantModal">
-							<i class="fa fa-briefcase fa-lg"></i> Register as an Applicant
+							<i class="fa fa-briefcase fa-lg"></i> Register as Applicant
 						</button>
 
 						<a href="<?php echo base_url(); ?>client_individual_registration" style="text-decoration: none; width: 100%;">
 							<button class="login100-form-btn" type="button" style="margin-bottom: 10px; background-color: red;">
-								<i class="fa fa-handshake-o fa-lg"></i> Register as a Client
+								<i class="fa fa-handshake-o fa-lg"></i> Register as Client
 							</button>
 						</a>
 					</div>
