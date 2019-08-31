@@ -276,7 +276,7 @@
 
           <!-- Page Heading -->
           <h1 class="h3 mb-2 text-gray-800">Roster of Talents</h1>
-          <p class="mb-4">Description Here</p>
+          <p class="mb-4">"Your Long-Term RAKET Partner"</p>
 
           <!-- DataTales Example -->
           <div class="card shadow mb-4">
@@ -410,72 +410,93 @@
                   <input type="text" class="form-control" id="inputMiddlename" name="middlename" placeholder="Enter middle name" required>
                 </div>
 								
-                <div class="col-sm-5">
+                <div class="col-sm-4">
                   <label for="inputLastname">Last Name</label>
                   <input type="text" class="form-control" id="inputLastname" name="lastname" placeholder="Enter last name" required>
                 </div>
               </div>
 
               <div class="row form-group">
-                <div class="col-sm-5">
+                <div class="col-xs-4" style="margin-left: 10px; margin-right: 10px;">
                   <label for="inputEmail">Email</label>
                   <input type="email" class="form-control" id="inputEmail" name="email" placeholder="Enter email" required>
                 </div>
 
-                <div class="col-sm-5">
+                <div class="col-xs-4">
                   <label for="inputContactNumber">Contact Number</label>
                   <input type="text" class="form-control" id="inputContactNumber" name="contact_number" placeholder="Enter contact number" required>
                 </div>
-              </div>
 
-              <div class="row form-group">
-                <div class="col-sm-4">
+								<div class="col-sm-4">
                   <label for="cmbGender">Gender</label>
                   <select id="cmbGender" name="gender" class="form-control" required>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                   </select>
                 </div>
-
-                <div class="col-sm-4">
-                  <label for="inputHeight">Height (in inches)</label>
-                  <input type="text" class="form-control" id="inputHeight" name="height" placeholder="Enter height (in inches)" required>
-								</div>
-								
-								<div class="col-sm-4">
-                  <label for="inputBirthdate">Birth Date</label>
-                  <input type="text" class="form-control" id="inputBirthdate" name="birth_date" placeholder="Choose birthdate" required>
-								</div>
-              </div>
-
-              <div class="form-group">
-                <label for="inputLocation">Location</label>
-                <textarea class="form-control" rows="5" id="inputLocation" name="location" placeholder="Enter location" style="resize: none;" required></textarea>
               </div>
 
               <div class="row form-group">
-                <div class="col-sm-4">
-                  <label for="inputTalentFee">Talent Fee</label>
-                  <input type="text" class="form-control" id="inputTalentFee" name="talent_fee" placeholder="Enter talent fee" required>
+								<div class="col-xs-4" style="margin-left: 10px; margin-right: 10px;">
+									<label for="inputHeight">Height (in inches)</label>
+                  <input type="text" class="form-control" id="inputHeight" name="height" placeholder="Enter height" required>
                 </div>
 
-                <div class="col-sm-7">
-                  <label for="cmbTalentFeeType">Talent Fee Type</label>
-                  <select id="cmbTalentFeeType" name="talent_fee_type" class="form-control" required>
-                    <option value="HOURLY_RATE">Hourly</option>
-                    <option value="DAILY_RATE">Daily</option>
-                  </select>
+                <div class="col-xs-4">
+									<label for="inputBirthdate">Birth Date</label><br>
+                  <input type="text" class="form-control" id="inputBirthdate" name="birth_date" placeholder="Choose birthdate" required>
+                </div>
+								
+                <div class="col-sm-4">
+									<label for="inputHourlyRate">Hourly Rate</label>
+                  <input type="text" class="form-control" id="inputHourlyRate" name="hourly_rate" placeholder="Enter hourly rate" required>
                 </div>
               </div>
 
-              <div class="form-group">
-                  <label for="cmbCategory">Category</label>
+							<div class="row form-group">
+                <div class="col-xs-4" style="margin-left: 10px; margin-right: 10px;">
+                  <label for="inputVitalStats">Vital Stats</label>
+                  <input type="text" class="form-control" id="inputVitalStats" name="vital_stats" placeholder="Enter vital statistics">
+                </div>
+
+                <div class="col-xs-4">
+                  <label for="inputFbFollowers">Facebook Followers</label>
+                  <input type="text" class="form-control" id="inputFbFollowers" name="fb_followers" placeholder="Enter FB Followers">
+                </div>
+								
+								<div class="col-sm-4">
+									<label for="inputInstagramFollowers">Instagram Followers</label>
+                  <input type="text" class="form-control" id="inputInstagramFollowers" name="instagram_followers" placeholder="Enter Instagram Followers">
+								</div>
+							</div>
+
+							<div class="row form-group">
+								<div class="col-sm-6">
+               		<label for="inputDescription">Description</label>
+                	<textarea class="form-control" rows="5" id="inputDescription" name="description" placeholder="Enter talent's motto in life or any other things that describe him/her.." style="resize: none;" required></textarea>
+								</div>
+
+								<div class="col-sm-5">
+               		<label for="inputAddress">Address</label>
+                	<textarea class="form-control" rows="5" id="inputLocation" name="address" placeholder="Enter address" style="resize: none;" required></textarea>
+								</div>
+							</div>
+
+              <div class="row form-group">
+								<div class="col-sm-6">
+									<label for="cmbCategory">Category</label>
                   <select id="cmbCategory" name="category[]" class="form-control" multiple required>
                     <?php foreach($categories as $category){?>
                       <option value="<?php echo $category->category_id;?>"><?php echo $category->category_name;?></option>   
                      <?php }?>
                   </select>
-              </div>
+								</div>
+
+								<div class="col-sm-5">
+									<label for="inputGenre">Genre</label>
+                  <input type="text" class="form-control" id="inputGenre" name="genre" placeholder="Enter Genre">
+								</div>		
+							</div>
           </div>
           
           <div class="modal-footer">
