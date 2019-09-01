@@ -11,8 +11,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <link rel="icon" type="image/png" href="<?php echo base_url(); ?>static/images/logo.ico"/>
-  <meta name="description" content="">
-  <meta name="author" content="">
+  <meta name="description" content="Your Long-Term RAKET Partner">
+  <meta name="author" content="Tristan Rosales">
 
   <title>Hire Us - Dashboard</title>
 
@@ -24,6 +24,10 @@
 	
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.css">
+	<link href="<?php echo base_url(); ?>static/css/parsley.css" rel="stylesheet">
+	<link href="<?php echo base_url(); ?>static/js/libraries/filepond/filepond.css" rel="stylesheet">
+	<link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
+	<link href="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.css" rel="stylesheet">
 </head>
 
 <body id="page-top">
@@ -35,7 +39,7 @@
     <ul class="navbar-nav bg-gradient-primary sidebar sidebar-dark accordion" id="accordionSidebar">
 
       <!-- Sidebar - Brand -->
-      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="index.html">
+      <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url(); ?>">
         <div class="sidebar-brand-icon rotate-n-15">
           <img src="<?php echo base_url(); ?>static/images/logo.png" style="height: 50px; width: 50px;">
         </div>
@@ -47,7 +51,7 @@
 
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
-        <a class="nav-link" href="index.html">
+        <a class="nav-link" href="<?php echo base_url(); ?>">
           <i class="fas fa-fw fa-tachometer-alt"></i>
           <span>Dashboard</span></a>
       </li>
@@ -254,10 +258,6 @@
                   <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                   Settings
                 </a>
-                <a class="dropdown-item" href="#">
-                  <i class="fas fa-list fa-sm fa-fw mr-2 text-gray-400"></i>
-                  Activity Log
-                </a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">
                   <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
@@ -295,8 +295,8 @@
                     <tr>
                       <th>Name</th>
                       <th>Birth Date</th>
-                      <th>Location</th>
-                      <th>Talent Fee</th>
+											<th>Hourly Rate</th>
+											<th>Gender</th>
                       <th>Actions</th>
                     </tr>
                   </thead>
@@ -306,21 +306,21 @@
 											<tr>
 												<td><?php echo $talent->fullname;?></td>
 												<td><?php echo $talent->birth_date;?></td>
-												<td><?php echo $talent->location;?></td>
-												<td><?php echo $talent->talent_fee . ' <b>(' . $talent->talent_fee_type . ')</b>';?></td>
+												<td><?php echo $talent->hourly_rate;?></td>
+												<td><?php echo $talent->gender;?></td>
 												<td>
 													<a href="#" class="btn btn-success btn-icon-split">
 														<span class="icon text-white-50">
 															<i class="fas fa-edit"></i>
 														</span>
-														<span class="text">Information</span>
+														<span class="text">Edit Information</span>
 													</a>
 
 													<a href="#" data-toggle="modal" data-target="#updateTalentResourcesModal" class="btn btn-warning btn-icon-split">
 														<span class="icon text-white-50">
 															<i class="fas fa-edit"></i>
 														</span>
-														<span class="text">Resources</span>
+														<span class="text">Add Resources</span>
 													</a>
 												</td>
 											</tr> 
@@ -331,8 +331,8 @@
                     <tr>
                       <th>Name</th>
                       <th>Birth Date</th>
-                      <th>Location</th>
-                      <th>Talent Fee</th>
+											<th>Hourly Rate</th>
+											<th>Gender</th>
                       <th>Actions</th>
                     </tr>
                   </tfoot>
@@ -390,7 +390,7 @@
   <div class="modal fade" id="addTalentOrModelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <form method="POST" action="<?php echo base_url(). 'home/addTalentOrModel'; ?>">
+        <form id="frmAddTalentOrModel" method="POST" action="<?php echo base_url(). 'home/addTalentOrModel'; ?>">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Add Talent or Model</h5>
             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
@@ -430,6 +430,7 @@
 								<div class="col-sm-4">
                   <label for="cmbGender">Gender</label>
                   <select id="cmbGender" name="gender" class="form-control" required>
+										<option disabled="disabled" selected="selected">Choose Gender</option>
                     <option value="Male">Male</option>
                     <option value="Female">Female</option>
                   </select>
@@ -438,8 +439,8 @@
 
               <div class="row form-group">
 								<div class="col-xs-4" style="margin-left: 10px; margin-right: 10px;">
-									<label for="inputHeight">Height (in inches)</label>
-                  <input type="text" class="form-control" id="inputHeight" name="height" placeholder="Enter height" required>
+									<label for="inputHeight">Height <b>(in centimeter)</b></label>
+                  <input type="text" class="form-control" id="inputHeight" name="height" placeholder="Enter height in centimeter" required>
                 </div>
 
                 <div class="col-xs-4">
@@ -455,7 +456,7 @@
 
 							<div class="row form-group">
                 <div class="col-xs-4" style="margin-left: 10px; margin-right: 10px;">
-                  <label for="inputVitalStats">Vital Stats</label>
+                  <label for="inputVitalStats">Vital Statistics</label>
                   <input type="text" class="form-control" id="inputVitalStats" name="vital_stats" placeholder="Enter vital statistics">
                 </div>
 
@@ -471,16 +472,60 @@
 							</div>
 
 							<div class="row form-group">
-								<div class="col-sm-6">
+								<div class="col-sm-5">
                		<label for="inputDescription">Description</label>
                 	<textarea class="form-control" rows="5" id="inputDescription" name="description" placeholder="Enter talent's motto in life or any other things that describe him/her.." style="resize: none;" required></textarea>
 								</div>
-
-								<div class="col-sm-5">
-               		<label for="inputAddress">Address</label>
-                	<textarea class="form-control" rows="5" id="inputLocation" name="address" placeholder="Enter address" style="resize: none;" required></textarea>
+								
+								<div class="col-sm-6">
+               		<label for="inputPreviousClients">Previous Client(s)</label>
+                	<textarea class="form-control" rows="5" id="inputPreviousClients" name="prev_clients" placeholder="Enter previous clients.." style="resize: none;" required></textarea>
 								</div>
 							</div>
+							
+							<hr width="100%" />
+								<h5>Address</h5>
+							<hr width="100%" />
+
+							<div class="row form-group">
+								<div class="col-sm-4">
+									<label for="cmbProvince">Province</label>
+									<select name="province" id="cmbProvince" class="form-control" required>
+										<option disabled="disabled" selected="selected">Choose Province</option>
+										<?php foreach($param_provinces as $province){?>
+											<option value="<?php echo $province->provCode;?>"><?php echo $province->provDesc;?></option>
+										<?php }?>
+                  </select>
+								</div>
+
+								<div class="col-sm-4">
+									<label for="cmbCityMunicipality">City/Municipality</label>
+									<select name="city_muni" id="cmbCityMunicipality" class="form-control" required>
+										<option disabled="disabled" selected="selected">Choose City/Municipality</option>
+									</select>
+								</div>
+
+								<div class="col-sm-4">
+									<label for="cmbBarangay">Barangay</label>
+									<select name="barangay" id="cmbBarangay" class="form-control" required>
+										<option disabled="disabled" selected="selected">Choose Barangay</option>
+									</select>
+								</div>
+							</div>
+
+							<div class="row form-group">
+								<div class="col-sm-7">
+									<label for="streetUnit">Street/Unit/Bldg/Village</label>
+                  <input class="form-control" id="streetUnit" type="text" name="bldg_village" placeholder="Enter Street/Unit/Bldg/Village" required>
+								</div>
+
+								<div class="col-sm-4">
+									<label for="zipCode">ZIP Code / Postal Code</label>
+                  <input class="form-control" id="zipCode" type="text" name="zip_code" maxlength="5" placeholder="Enter ZIP Code / Postal Code" required>
+								</div>
+							</div>
+
+							<hr width="100%" />
 
               <div class="row form-group">
 								<div class="col-sm-6">
@@ -513,7 +558,7 @@
       <div class="modal-content">
         <form id="frmUpdateTalentProfilePic" method="POST" action="<?php echo base_url(). 'home/uploadProfilePicOfTalent'; ?>" enctype="multipart/form-data">
           <div class="modal-header">
-						<h5 class="modal-title" id="exampleModalLabel">Update Talent or Model Resources</h5>
+						<h5 class="modal-title" id="exampleModalLabel">Add Talent or Model Resources</h5>
             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
               <span aria-hidden="true">×</span>
             </button>
@@ -521,13 +566,34 @@
 
 					<div class="modal-body">
 						<div class="form-group">
-							<input type="file" id="profile_image" name="profile_image" size="33" />
+							<label for="profile_picture">Profile Picture</label>
+							<input 
+								type="file" 
+								id="profile_picture" 
+								class="filepond" 
+								name="profile_image" 
+								accept="image/png, image/jpeg" 
+								data-max-file-size="5MB" />
+						</div>
+						
+						<div class="form-group">
+							<label for="talent_gallery">Gallery (Min/Max: 8-10)</label>
+							<input 
+								type="file" 
+								id="talent_gallery" 
+								class="filepond" 
+								name="talent_gallery" 
+								accept="image/png, image/jpeg"
+								multiple 
+								data-max-file-size="5MB"
+								data-min-files="8"
+								data-max-files="10" />
 						</div>
 					</div>
 
 					<div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <button class="btn btn-primary" id="btnUpdateTalentProfilePic" type="submit">Update</button>
+            <button class="btn btn-primary" id="btnUpdateTalentProfilePic" type="submit">Submit</button>
           </div>
 				</form>
 			</div>
@@ -553,6 +619,17 @@
 
   <!-- Page level custom scripts -->
 	<script src="<?php echo base_url(); ?>static/SBAdmin/js/demo/datatables-demo.js"></script>
+	<script src="https://parsleyjs.org/dist/parsley.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
+	<script src="https://unpkg.com/filepond-polyfill"></script>
+	<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
+	<script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js"></script>
+	<script src="https://unpkg.com/filepond-plugin-image-validate-size/dist/filepond-plugin-image-validate-size.js"></script>
+	<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
+	<script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
+	<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
+	<script src="<?php echo base_url(); ?>static/js/libraries/filepond/filepond.js"></script>
+	<script src="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.js"></script>
 	<script src="<?php echo base_url(); ?>static/js/home.js"></script>
 
 </body>

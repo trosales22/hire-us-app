@@ -20,14 +20,9 @@ class Home_model extends CI_Model {
   public function getAllTalents() {
     $query = "
   				SELECT
-  					talent_id,CONCAT(firstname, ' ', lastname) as fullname,
-						height,talent_fee,
-						CASE talent_fee_type
-							WHEN 'HOURLY_RATE' THEN 'PER HOUR'
-							WHEN 'DAILY_RATE' THEN 'PER DAY'
-						END as talent_fee_type,
-						location,DATE_FORMAT(birth_date, '%M %d, %Y') as birth_date,
-  					email,contact_number,gender
+						talent_id,CONCAT(firstname, ' ', lastname) as fullname,
+						hourly_rate,gender,
+						DATE_FORMAT(birth_date, '%M %d, %Y') as birth_date
   				FROM
   					talents
   				ORDER BY talent_id DESC
@@ -49,6 +44,7 @@ class Home_model extends CI_Model {
   }
 
   public function insertTalentOrModel(array $data) {
+		//insert to talents table
     $talents_fields = array(
       'firstname' => $data['firstname'],
       'middlename' => $data['middlename'],
@@ -57,16 +53,20 @@ class Home_model extends CI_Model {
       'contact_number' => $data['contact_number'],
       'gender' => $data['gender'],
       'height' => $data['height'],
-      'location' => $data['location'],
       'birth_date' => $data['birth_date'],
-      'talent_fee' => $data['talent_fee'],
-      'talent_fee_type' => $data['talent_fee_type'],
+			'hourly_rate' => $data['hourly_rate'],
+			'vital_stats'	=> $data['vital_stats'],
+			'fb_followers'	=> $data['fb_followers'],
+			'instagram_followers'	=> $data['instagram_followers'],
+			'genre'	=> $data['genre'],
+			'description'	=> $data['description'],
       'created_by' => 1,
     );
 
     $this->db->insert('talents', $talents_fields);
     $lastInsertedId = $this->db->insert_id();
-
+		
+		//insert to talents_category table
 		foreach($data['categories'] as $category){
 			$talents_category_fields = array(
 				'talent_id' => $lastInsertedId,
@@ -76,6 +76,7 @@ class Home_model extends CI_Model {
 			$this->db->insert('talents_category', $talents_category_fields);
 		}
 
+		//insert to talents_account table
     $generated_pin = 'HIREUS_' . $this->_generatePIN();
 
 		print_r('PIN: ' . $generated_pin);
@@ -85,6 +86,26 @@ class Home_model extends CI_Model {
       'talent_password' => password_hash($generated_pin, PASSWORD_BCRYPT),
 		);
 		
-    $this->db->insert('talents_account', $talents_account_fields);
-  }
+		$this->db->insert('talents_account', $talents_account_fields);
+		
+		//insert to talents_exp_or_prev_clients table
+		$talents_prev_clients_fields = array(
+			'talent_id' => $lastInsertedId,
+			'details'		=> $data['prev_clients']
+		);
+
+		$this->db->insert('talents_exp_or_prev_clients', $talents_prev_clients_fields);
+		
+		//insert to talent_address table
+		$talents_address_fields = array(
+			'talent_id' 		=> $lastInsertedId,
+			'province' 			=> $data['address']['province'],
+			'city_muni' 		=> $data['address']['city_muni'],
+			'barangay' 			=> $data['address']['barangay'],
+			'bldg_village' 	=> $data['address']['bldg_village'],
+			'zip_code' 			=> $data['address']['zip_code']
+		);
+
+		$this->db->insert('talents_address', $talents_address_fields);
+	}
 }

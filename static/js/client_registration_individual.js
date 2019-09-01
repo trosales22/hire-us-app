@@ -58,14 +58,13 @@
 	$('#frmRegisterIndividualClient').parsley().on('field:validated', function() {
 		var ok = $('.parsley-error').length === 0;
 		console.log(ok);
-	})
+	});
 
 	$("#frmRegisterIndividualClient").submit(function(e) {
+    //prevent Default functionality
+    e.preventDefault();
 
-        //prevent Default functionality
-        e.preventDefault();
-
-        //get the action-url of the form
+    //get the action-url of the form
 		var actionurl = e.currentTarget.action;
 
 		$.confirm({
