@@ -28,6 +28,29 @@
 	<link href="<?php echo base_url(); ?>static/js/libraries/filepond/filepond.css" rel="stylesheet">
 	<link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.css" rel="stylesheet">
+
+  <style>
+  div.gallery {
+    margin: 5px;
+    border: 1px solid #ccc;
+    float: left;
+    width: 180px;
+  }
+
+  div.gallery:hover {
+    border: 1px solid #777;
+  }
+
+  div.gallery img {
+    width: 100%;
+    height: 200px;
+  }
+
+  div.desc {
+    padding: 15px;
+    text-align: center;
+  }
+  </style>
 </head>
 
 <body id="page-top">
@@ -316,11 +339,18 @@
 														<span class="text">Edit Information</span>
 													</a>
 
-													<a href="#" data-toggle="modal" data-target="#updateTalentResourcesModal" class="btn btn-warning btn-icon-split">
+													<a id="btnAddTalentResources" href="#" data-toggle="modal" data-id="<?php echo $talent->talent_id;?>" data-target="#updateTalentResourcesModal" class="btn btn-warning btn-icon-split">
 														<span class="icon text-white-50">
-															<i class="fas fa-edit"></i>
+															<i class="fas fa-plus-circle"></i>
 														</span>
 														<span class="text">Add Resources</span>
+													</a>
+
+                          <a id="btnViewTalentGallery" href="#" data-toggle="modal" data-id="<?php echo $talent->talent_id;?>" data-target="#viewTalentGalleryModal" class="btn btn-danger btn-icon-split">
+														<span class="icon text-white-50">
+															<i class="fas fa-eye"></i>
+														</span>
+														<span class="text">View Gallery</span>
 													</a>
 												</td>
 											</tr> 
@@ -556,7 +586,6 @@
 	<div class="modal fade" id="updateTalentResourcesModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 		<div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <form id="frmUpdateTalentProfilePic" method="POST" action="<?php echo base_url(). 'home/uploadProfilePicOfTalent'; ?>" enctype="multipart/form-data">
           <div class="modal-header">
 						<h5 class="modal-title" id="exampleModalLabel">Add Talent or Model Resources</h5>
             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
@@ -565,40 +594,81 @@
 					</div>
 
 					<div class="modal-body">
-						<div class="form-group">
-							<label for="profile_picture">Profile Picture</label>
-							<input 
-								type="file" 
-								id="profile_picture" 
-								class="filepond" 
-								name="profile_image" 
-								accept="image/png, image/jpeg" 
-								data-max-file-size="5MB" />
-						</div>
+            <form id="frmUpdateTalentProfilePic" method="POST" action="<?php echo base_url(). 'home/uploadProfilePicOfTalent'; ?>" enctype="multipart/form-data">
+              <div class="form-group">
+                <label for="profile_picture">Profile Picture</label>
+
+                <input 
+                  type="file" 
+                  id="profile_picture" 
+                  class="filepond" 
+                  name="profile_image" 
+                  accept="image/png, image/jpeg" 
+                  data-max-file-size="5MB" />
+                
+                  <button class="btn btn-primary" id="btnUpdateTalentProfilePic" type="submit" style="display: block; margin: 0 auto;">Upload Profile Picture</button>
+                  
+              </div>
+            </form>
 						
-						<div class="form-group">
-							<label for="talent_gallery">Gallery (Min/Max: 8-10)</label>
-							<input 
-								type="file" 
-								id="talent_gallery" 
-								class="filepond" 
-								name="talent_gallery" 
-								accept="image/png, image/jpeg"
-								multiple 
-								data-max-file-size="5MB"
-								data-min-files="8"
-								data-max-files="10" />
-						</div>
+            <form id="frmUploadTalentGallery" method="POST" action="<?php echo base_url(). 'home/uploadTalentGallery'; ?>" enctype="multipart/form-data">
+              <div class="form-group">
+                <label for="talent_gallery">Gallery (Min/Max: 8-10)</label>
+                
+                <input type="hidden" name="talent_id" />
+                <input type="file" name="talent_gallery[]" multiple accept="image/png, image/jpeg" />
+
+                <!-- <input 
+                  type="file" 
+                  id="talent_gallery" 
+                  class="filepond" 
+                  name="talent_gallery[]" 
+                  accept="image/png, image/jpeg"
+                  multiple 
+                  data-max-file-size="5MB"
+                  data-min-files="8"
+                  data-max-files="10" /> -->
+                  
+                <button class="btn btn-primary" id="btnUploadPictures" type="submit" style="display: block; margin: 0 auto;">Upload Pictures</button>
+              </div>
+            </form>
 					</div>
 
 					<div class="modal-footer">
-            <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
-            <button class="btn btn-primary" id="btnUpdateTalentProfilePic" type="submit">Submit</button>
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
           </div>
-				</form>
 			</div>
 		</div>
 	</div>
+
+  <div class="modal fade" id="viewTalentGalleryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">View Gallery</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+          </div>
+
+          <div class="modal-body">
+            <!-- display uploaded images -->
+            <?php if(!empty($gallery)){ foreach($gallery as $file){ ?>
+              <div class="gallery">
+                <a target="_blank" href="<?php echo base_url('uploads/talents_or_models/'.$file->file_name); ?>">
+                  <img src="<?php echo base_url('uploads/talents_or_models/'.$file->file_name); ?>" width="600" height="400">
+                </a>
+                <div class="desc">Uploaded On <?php echo date("j M Y",strtotime($file->uploaded_on)); ?></div>
+              </div>
+            <?php } }else{ ?>
+            <p>Image(s) not found.....</p>
+            <?php } ?>
+          </div>
+
+          <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+          </div>
+  </div>
 
   <!-- Bootstrap core JavaScript-->
   <script src="<?php echo base_url(); ?>static/SBAdmin/vendor/jquery/jquery.min.js"></script>

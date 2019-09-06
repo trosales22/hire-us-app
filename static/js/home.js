@@ -15,6 +15,13 @@ $('#zipCode').maskMoney({precision: 0, thousands: ''});
 $('#inputFbFollowers').maskMoney({precision: 0});
 $('#inputInstagramFollowers').maskMoney({precision: 0});
 
+$('#talent_id_upload_gallery').val($(this).data('id'));
+
+$('#btnAddTalentResources').click(function(){
+	var talentId = $(this).data("id");
+	$('input[name=talent_id').val(talentId);
+});
+
 $('#frmUpdateTalentProfilePic').submit(function(e){
 	e.preventDefault(); 
 	$.ajax({
@@ -26,8 +33,36 @@ $('#frmUpdateTalentProfilePic').submit(function(e){
 		cache:false,
 		async:false,
 		success: function(data){
-			alert("Upload Image Successful.");
-		}
+			alert("Image(s) uploaded successfully.");
+			location.reload(true);
+		},
+		error: function(xhr, status, error){
+        	var errorMessage = xhr.status + ': ' + xhr.statusText
+         	alert('Error - ' + errorMessage);
+			location.reload(true);
+     	}
+	});
+});
+
+$('#frmUploadTalentGallery').submit(function(e){
+	e.preventDefault(); 
+	$.ajax({
+		url: this.action,
+		type: "POST",
+		data: new FormData(this),
+		processData: false,
+		contentType: false,
+		cache: false,
+		async: false,
+		success: function(data){
+			alert("Image(s) uploaded successfully.");
+			location.reload(true);
+		},
+		error: function(xhr, status, error){
+        	var errorMessage = xhr.status + ': ' + xhr.statusText
+         	alert('Error - ' + errorMessage);
+			location.reload(true);
+     	}
 	});
 });
 
@@ -184,7 +219,7 @@ function addTalentOrModel(){
 
 $('#frmAddTalentOrModel').parsley().on('field:validated', function() {
 	var ok = $('.parsley-error').length === 0;
-
+	
 	if(ok){
 		addTalentOrModel();
 	}

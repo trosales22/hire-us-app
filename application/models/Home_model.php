@@ -108,4 +108,24 @@ class Home_model extends CI_Model {
 
 		$this->db->insert('talents_address', $talents_address_fields);
 	}
+
+	public function uploadTalentGallery(array $data){
+		//insert to talents gallery table
+		$insert = $this->db->insert_batch('talents_gallery',$data);
+	}
+
+	public function getTalentGallery($talent_id = ''){
+		$params = array($talent_id);
+		$query = "
+  				SELECT
+						img_id,talent_id,file_name,uploaded_on
+  				FROM
+						talents_gallery
+					ORDER BY 
+						uploaded_on DESC
+  			";
+
+    $stmt = $this->db->query($query, $params);
+		return $stmt->result();
+	}
 }

@@ -16,7 +16,7 @@ class Home extends CI_Controller {
     $this->data['categories'] = $this->home_model->getAllCategories();
 		$this->data['talents'] = $this->home_model->getAllTalents();
 		$this->data['param_provinces'] = $this->client_individual_model->getAllProvinces();
-
+		$this->data['gallery'] = $this->home_model->getTalentGallery(1);
     $this->load->view('home_page', $this->data);
 	}
 	
@@ -77,6 +77,65 @@ class Home extends CI_Controller {
 
 		print_r($msg['image_metadata']['file_name']);
 		
+		return $msg;
+	}
+	
+	public function uploadTalentGallery(){
+		$msg = array();
+
+		if(!empty($_FILES['talent_gallery']['name'])){
+			$filesCount = count($_FILES['talent_gallery']['name']);
+
+			for($i = 0; $i < $filesCount; $i++){
+					$_FILES['file']['name']     = $_FILES['talent_gallery']['name'][$i];
+					$_FILES['file']['type']     = $_FILES['talent_gallery']['type'][$i];
+					$_FILES['file']['tmp_name'] = $_FILES['talent_gallery']['tmp_name'][$i];
+					$_FILES['file']['error']     = $_FILES['talent_gallery']['error'][$i];
+					$_FILES['file']['size']     = $_FILES['talent_gallery']['size'][$i];
+					
+					// File upload configuration
+					$config['upload_path'] = 'uploads/talents_or_models/';
+					$config['allowed_types'] = 'jpg|png';
+					$config['max_size'] = 5000;
+					$config['max_width'] = 1500;
+					$config['max_height'] = 1500;
+					$config['file_name'] = md5(time() . rand());
+
+					// Load and initialize upload library
+					$this->load->library('upload', $config);
+					$this->upload->initialize($config);
+					
+					// Upload file to server
+					if($this->upload->do_upload('file')){
+							// Uploaded file data
+							$fileData = $this->upload->data();
+							$uploadData[$i]['file_name'] = $fileData['file_name'];
+							$uploadData[$i]['talent_id'] = $this->input->post('talent_id');
+
+							$msg = array(
+								'status'	=> 'SUCCESS',
+								'image_metadata' => $this->upload->data()
+							);
+
+					}else{
+						$msg = array(
+							'status'	=> 'FAILED',
+							'error'	 	=> $this->upload->display_errors()
+						);
+					}
+			}
+			
+			if(!empty($uploadData)){
+					// Insert files data into the database
+					$this->home_model->uploadTalentGallery($uploadData);
+			}
+		}else{
+			$msg = array(
+				'status'	=> 'FAILED',
+				'error'	 	=> 'Empty file upload. Please try again!'
+			);
+		}
+
 		return $msg;
 	}
 }
