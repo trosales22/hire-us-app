@@ -37,15 +37,12 @@ class Talents_model extends CI_Model {
 		$query = "
 				SELECT
 					A.talent_id,CONCAT(A.firstname, ' ', A.lastname) as fullname,
-					A.height,A.talent_fee,
-					CASE A.talent_fee_type
-						WHEN 'HOURLY_RATE' THEN 'PER HOUR'
-						WHEN 'DAILY_RATE' THEN 'PER DAY'
-					END as talent_fee_type,
-					A.location,IFNULL(B.talent_description, '') as talent_description,
+					A.height,A.hourly_rate,IFNULL(A.description, '') as talent_description,
 					YEAR(CURDATE()) - YEAR(A.birth_date) as age,
 					A.gender,IFNULL(B.talent_display_photo, '') as talent_display_photo,
-					GROUP_CONCAT(D.category_name SEPARATOR ', ') as category_names 
+					GROUP_CONCAT(D.category_name SEPARATOR '\n') as category_names,
+					G.provDesc as province, H.citymunDesc as city_muni, I.brgyDesc as barangay,
+					F.bldg_village, F.zip_code
 				FROM 
 					talents A 
 				LEFT JOIN 
@@ -54,6 +51,14 @@ class Talents_model extends CI_Model {
 					talents_category C ON A.talent_id = C.talent_id 
 				LEFT JOIN 
 					param_categories D ON C.category_id = D.category_id 
+				LEFT JOIN 
+					talents_address F ON A.talent_id = F.talent_id 
+				LEFT JOIN 
+					param_province G ON F.province = G.provCode 
+				LEFT JOIN
+					param_city_muni H ON F.city_muni = H.citymunCode 
+				LEFT JOIN 
+					param_barangay I ON F.barangay = I.id 
 				WHERE 
 					A.active_flag = ? $where_selected_categories $where_additional_filtering 
 				GROUP BY A.talent_id 
@@ -69,26 +74,43 @@ class Talents_model extends CI_Model {
 
 		$query = "
 			SELECT
-					A.talent_id,CONCAT(A.firstname, ' ', A.lastname) as fullname,
-					A.height,A.talent_fee,A.talent_fee_type,
-					IFNULL(B.talent_description, '') as talent_description,
-					A.location,YEAR(CURDATE()) - YEAR(A.birth_date) as age,
-					A.email,IFNULL(B.talent_display_photo, '') as talent_display_photo,
-					GROUP_CONCAT(D.category_name SEPARATOR ', ') as category_names,
-					IFNULL(E.talent_experiences, 'N/A') as talent_experiences
-				FROM 
-					talents A 
-				LEFT JOIN 
-					talents_resources B ON A.talent_id = B.talent_id 
-				LEFT JOIN 
-					talents_category C ON A.talent_id = C.talent_id 
-				LEFT JOIN 
-					param_categories D ON C.category_id = D.category_id 
-				LEFT JOIN 
-					talents_experiences E ON A.talent_id = E.talent_id
-				WHERE 
-					A.talent_id = ?
-				GROUP BY A.talent_id
+				A.talent_id,CONCAT(A.firstname, ' ', A.lastname) as fullname,
+				A.height,A.hourly_rate,
+				IFNULL(A.description, '') as talent_description,
+				
+				G.provDesc as province, H.citymunDesc as city_muni, I.brgyDesc as barangay,
+				F.bldg_village, F.zip_code,
+
+				YEAR(CURDATE()) - YEAR(A.birth_date) as age,
+				A.email,IFNULL(B.talent_display_photo, '') as talent_display_photo,
+				GROUP_CONCAT(D.category_name SEPARATOR '\n') as category_names,
+				IFNULL(E.details, 'N/A') as talent_experiences,
+
+				IFNULL(A.vital_stats, 'N/A') as vital_stats,
+				IFNULL(A.fb_followers, 0) as fb_followers,
+				IFNULL(A.instagram_followers, 0) as instagram_followers,
+				IFNULL(A.genre, 'N/A') as genre
+			FROM 
+				talents A 
+			LEFT JOIN 
+				talents_resources B ON A.talent_id = B.talent_id 
+			LEFT JOIN 
+				talents_category C ON A.talent_id = C.talent_id 
+			LEFT JOIN 
+				param_categories D ON C.category_id = D.category_id 
+			LEFT JOIN 
+				talents_exp_or_prev_clients E ON A.talent_id = E.talent_id 
+			LEFT JOIN 
+				talents_address F ON A.talent_id = F.talent_id 
+			LEFT JOIN 
+				param_province G ON F.province = G.provCode 
+			LEFT JOIN
+				param_city_muni H ON F.city_muni = H.citymunCode 
+			LEFT JOIN 
+				param_barangay I ON F.barangay = I.id 
+			WHERE 
+				A.talent_id = ?
+			GROUP BY A.talent_id
 		";
 		
 		$stmt = $this->db->query($query, $params);
