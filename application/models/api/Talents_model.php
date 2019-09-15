@@ -116,4 +116,21 @@ class Talents_model extends CI_Model {
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
 	}
+
+	public function getTalentUnavailableDates($talent_id){
+		$params = array($talent_id);
+
+		$query = "
+			SELECT
+				ud_talent_id,ud_sched,ud_month_year,ud_created_date
+			FROM 
+				talents_unavailable_dates 
+			WHERE 
+				ud_talent_id = ?
+			ORDER BY ud_id DESC
+		";
+		
+		$stmt = $this->db->query($query, $params);
+		return $stmt->result();
+	}
 }
