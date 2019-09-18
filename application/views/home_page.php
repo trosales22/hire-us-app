@@ -597,17 +597,10 @@
             <form id="frmUpdateTalentProfilePic" method="POST" action="<?php echo base_url(). 'home/uploadProfilePicOfTalent'; ?>" enctype="multipart/form-data">
               <div class="form-group">
                 <label for="profile_picture">Profile Picture</label>
-
-                <input 
-                  type="file" 
-                  id="profile_picture" 
-                  class="filepond" 
-                  name="profile_image" 
-                  accept="image/png, image/jpeg" 
-                  data-max-file-size="5MB" />
-                
-                  <button class="btn btn-primary" id="btnUpdateTalentProfilePic" type="submit" style="display: block; margin: 0 auto;">Upload Profile Picture</button>
-                  
+								
+								<input type="hidden" name="talent_id" />
+                <input type="file" id="profile_picture"  name="profile_image" accept="image/png, image/jpeg" />                
+                <button class="btn btn-primary" id="btnUpdateTalentProfilePic" type="submit" style="display: block; margin: 0 auto;">Upload Profile Picture</button>  
               </div>
             </form>
 						

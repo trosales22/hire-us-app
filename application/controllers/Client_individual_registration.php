@@ -16,4 +16,26 @@ class Client_individual_registration extends CI_Controller {
 		$this->data['param_provinces'] = $this->client_individual_model->getAllProvinces();
 		$this->load->view('registration_client_individual_page', $this->data);
 	}
+
+	public function addIndividualClient(){
+		$client_fields =   array(
+			'firstname'     	=> trim($this->input->post('firstname')),
+			'lastname'       	=> trim($this->input->post('lastname')),
+			'email'       		=> trim($this->input->post('email')),
+			'contact_number'  	=> trim($this->input->post('phone')),
+			'username'       	=> trim($this->input->post('username')),
+			'password'       	=> trim($this->input->post('password')),
+			'gender'       		=> trim($this->input->post('gender')),
+			'birth_date'    	=> trim($this->input->post('birth_date')),
+			'address'       	=> array(
+										'province' => trim($this->input->post('province')),
+										'city_muni' => trim($this->input->post('city_muni')),
+										'barangay' => trim($this->input->post('barangay')),
+										'bldg_village' => trim($this->input->post('bldg_village')),
+										'zip_code' => trim($this->input->post('zip_code'))
+									)
+		);
+
+		$this->client_individual_model->addIndividualClient($client_fields);
+	}
 }

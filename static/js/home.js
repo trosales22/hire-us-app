@@ -225,5 +225,5 @@ $('#frmAddTalentOrModel').parsley().on('field:validated', function() {
 	}
 });
 
-setupFilePond();
+//setupFilePond();
 setupAddress();

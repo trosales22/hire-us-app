@@ -36,18 +36,18 @@
                 <div class="card-body">
                     <h2 class="title">Client Registration (Individual)</h2>
 					
-                    <form method="POST" id="frmRegisterIndividualClient" action="" data-parsley-validate="">
+                    <form id="frmRegisterIndividualClient" data-parsley-validate="" method="POST" action="<?php echo base_url(). 'client_individual_registration/addIndividualClient'; ?>">
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">first name</label>
-                                    <input class="input--style-4" type="text" name="first_name" required>
+                                    <input class="input--style-4" type="text" name="firstname" required>
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">last name</label>
-                                    <input class="input--style-4" type="text" name="last_name" required>
+                                    <input class="input--style-4" type="text" name="lastname" required>
                                 </div>
                             </div>
 						</div>
@@ -57,7 +57,7 @@
                                 <div class="input-group">
                                     <label class="label">Birthday</label>
                                     <div class="input-group-icon">
-                                        <input class="input--style-4 js-datepicker" type="text" name="birthday" required>
+                                        <input class="input--style-4 js-datepicker" type="text" name="birth_date" required>
                                         <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
                                     </div>
                                 </div>
@@ -67,11 +67,11 @@
                                     <label class="label">Gender</label>
                                     <div class="p-t-10">
                                         <label class="radio-container m-r-45">Male
-                                            <input type="radio" checked="checked" name="gender">
+                                            <input type="radio" checked="checked" name="gender" value="Male">
                                             <span class="checkmark"></span>
                                         </label>
                                         <label class="radio-container">Female
-                                            <input type="radio" name="gender">
+                                            <input type="radio" name="gender" value = "Female">
                                             <span class="checkmark"></span>
                                         </label>
                                     </div>
@@ -90,6 +90,21 @@
                                 <div class="input-group">
                                     <label class="label">Phone Number</label>
                                     <input class="input--style-4" type="text" name="phone" required>
+                                </div>
+                            </div>
+						</div>
+
+						<div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Username</label>
+                                    <input class="input--style-4" type="text" name="username" data-parsley-trigger="change" required>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Password</label>
+                                    <input class="input--style-4" type="password" name="password" required maxlength="16">
                                 </div>
                             </div>
 						</div>

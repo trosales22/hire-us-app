@@ -30,7 +30,21 @@ class Home_model extends CI_Model {
 
     $stmt = $this->db->query($query);
     return $stmt->result();
-  }
+	}
+	
+	public function getTalentResourceCount($talent_id){
+		$params = array($talent_id);
+
+		$query = "
+						SELECT 
+							count(*) as talent_res_count
+						FROM 
+							talents_resources 
+						WHERE talent_id = ?";
+
+		$stmt = $this->db->query($query, $params);
+    return $stmt->result();
+	}
 
   private function _generatePIN($digits = 4) {
     $i = 0; //counter
@@ -109,8 +123,13 @@ class Home_model extends CI_Model {
 		$this->db->insert('talents_address', $talents_address_fields);
 	}
 
+	public function uploadTalentProfilePic(array $fields){
+		//insert to talents_resources table
+		$this->db->insert('talents_resources', $fields);
+	}
+
 	public function uploadTalentGallery(array $data){
-		//insert to talents gallery table
+		//insert to talents_gallery table
 		$insert = $this->db->insert_batch('talents_gallery',$data);
 	}
 

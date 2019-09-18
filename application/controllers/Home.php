@@ -52,31 +52,44 @@ class Home extends CI_Controller {
 	}
 
 	public function uploadProfilePicOfTalent(){
+		$talent_id = $this->input->post('talent_id');
+		$res = $this->home_model->getTalentResourceCount($talent_id);
 		$msg = array();
-
-		$config['upload_path'] = 'uploads/talents_or_models/';
-		$config['allowed_types'] = 'jpg|png';
-		$config['max_size'] = 5000;
-		$config['max_width'] = 1500;
-		$config['max_height'] = 1500;
-		$config['file_name'] = md5(time() . rand());
-
-		$this->load->library('upload', $config);
-
-		if(!$this->upload->do_upload('profile_image')) {
+		
+		if($res[0]->talent_res_count == 1){
 			$msg = array(
-								'status'	=> 'FAILED',
-								'error'	 	=> $this->upload->display_errors()
-							);
+				'status'	=> 'FAILED',
+				'error_msg'	 	=> 'Already have an existing record.'
+			);
 		}else{
-			$msg = array(
-								'status'	=> 'SUCCESS',
-								'image_metadata' => $this->upload->data()
-							);
+			$config['upload_path'] = 'uploads/talents_or_models/';
+			$config['allowed_types'] = 'jpg|png';
+			$config['max_size'] = 5000;
+			$config['max_width'] = 1500;
+			$config['max_height'] = 1500;
+			$config['file_name'] = md5(time() . rand());
+
+			$this->load->library('upload', $config);
+
+			if(!$this->upload->do_upload('profile_image')) {
+				$msg = array(
+									'status'	=> 'FAILED',
+									'error'	 	=> $this->upload->display_errors()
+								);
+			}else{
+				$msg = array(
+									'status'	=> 'SUCCESS',
+									'image_metadata' => $this->upload->data()
+								);
+
+				$uploadData['talent_display_photo'] = $msg['image_metadata']['file_name'];
+				$uploadData['talent_id'] = $talent_id;
+				
+				// Insert files data into the database
+				$this->home_model->uploadTalentProfilePic($uploadData);
+			}
 		}
 
-		print_r($msg['image_metadata']['file_name']);
-		
 		return $msg;
 	}
 	
