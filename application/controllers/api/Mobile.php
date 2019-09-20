@@ -36,11 +36,12 @@ class Mobile extends REST_Controller {
 	
 					if($user_role_res[0]->role_code == 'SUPER_ADMIN'){
 						$res = array(
-							'is_allowed' => FALSE, 
+							'status' => 'INVALID_ROLE', 
 							'msg' => 'Super Admin is not allowed to login!'
 						);
 					}else{
 						$session_data = array(
+							'status'		=> 'OK',
 							'user_id'		=> $result[0]->user_id,
 							'username' 		=> $result[0]->username,
 							'email' 		=> $result[0]->email,
