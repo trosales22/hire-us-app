@@ -14,7 +14,8 @@ class Login_model extends CI_Model {
 
 	public function loginUser(array $data){
 		$params = array(
-					$data['username'], 
+					$data['username_or_email'],
+					$data['username_or_email'],
 					$data['password'], 
 					'Y'
 				);
@@ -24,23 +25,39 @@ class Login_model extends CI_Model {
 			FROM 
 				users
 			WHERE 
-				username = ? AND password = ? AND active_flag = ?
-			";
+				username = ? OR email = ? AND password = ? AND active_flag = ?";
 				
 		$stmt = $this->db->query($query, $params);
 		return $stmt->num_rows();
 	}
 	
-	public function getUserInformation($username){
-		$params = array($username, 'Y');
+	public function getUserInformation($username_or_email){
+		$params = array($username_or_email, $username_or_email, 'Y');
 		$query = "
 			SELECT 
-				user_id,username,firstname,lastname,email,gender,password
+				A.user_id, A.username, A.firstname, A.lastname, 
+				A.email,A.gender, A.password, B.role_code
 			FROM 
-				users
+				users A
+			LEFT JOIN 
+				user_role B ON A.user_id = B.user_id
 			WHERE 
-				username = ? AND active_flag = ?
+				A.username = ? OR A.email = ? AND A.active_flag = ?
 			";
+
+		$stmt = $this->db->query($query, $params);
+		return $stmt->result();
+	}
+
+	public function getUserRole($user_id){
+		$params = array($user_id);
+		$query = "
+			SELECT 
+				user_id,role_code
+			FROM 
+				user_role
+			WHERE 
+				user_id = ?";
 
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
