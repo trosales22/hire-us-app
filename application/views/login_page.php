@@ -21,22 +21,23 @@
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>static/Login_v18/css/util.css">
 	<link rel="stylesheet" type="text/css" href="<?php echo base_url(); ?>static/Login_v18/css/main.css">
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+	<link href="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.css" rel="stylesheet">
 </head>
 <body style="background-color: #666666;">
 	
 	<div class="limiter">
 		<div class="container-login100">
 			<div class="wrap-login100">
-				<form class="login100-form validate-form" method="POST" action="<?php echo base_url(). 'login/user_login_process'; ?>">
+				<form class="login100-form validate-form" id="frmLoginAdmin" method="POST" action="<?php echo base_url(). 'login/user_login_process'; ?>">
 					<span class="login100-form-title p-b-43">
 						<img src="<?php echo base_url(); ?>static/images/logo.png" style="height: 80px; width: 80px;">
 						Hire Us<br />Please login to continue
 					</span>
 					
-					<div class="wrap-input100 validate-input" data-validate = "Username is required">
-						<input class="input100" type="text" name="username">
+					<div class="wrap-input100 validate-input" data-validate = "Email or Username is required">
+						<input class="input100" type="text" name="username_or_email">
 						<span class="focus-input100"></span>
-						<span class="label-input100">Username</span>
+						<span class="label-input100">Email or Username</span>
 					</div>
 					
 					
@@ -50,7 +51,7 @@
 						<div class="contact100-form-checkbox">
 							<input class="input-checkbox100" id="ckb1" type="checkbox" name="remember-me">
 							<label class="label-checkbox100" for="ckb1">
-								Remember me
+								Remember Me
 							</label>
 						</div>
 
@@ -60,8 +61,7 @@
 							</a>
 						</div>
 					</div>
-			
-
+					
 					<div class="container-login100-form-btn">
 						<button class="login100-form-btn" type="submit" style="margin-bottom: 10px;">
 							<i class="fa fa-sign-in fa-lg"></i> Login
@@ -77,10 +77,6 @@
 							</button>
 						</a>
 					</div>
-
-					<span style="font-size: 20px; margin: auto; display:table; margin-top: 10px;">
-						<?php echo $error_message; ?>
-					</span>
 				</form>
 
 				<div class="login100-more" style="background-image: url('<?php echo base_url(); ?>static/Login_v18/images/background_image.jpg');">
@@ -165,6 +161,7 @@
 	<script src="<?php echo base_url(); ?>static/Login_v18/vendor/countdowntime/countdowntime.js"></script>
 	<script src="<?php echo base_url(); ?>static/Login_v18/js/main.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+	<script src="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.js"></script>
 	<script src="<?php echo base_url(); ?>static/js/login.js"></script>
 </body>
 </html>

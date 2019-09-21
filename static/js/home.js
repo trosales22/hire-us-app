@@ -8,6 +8,11 @@ $('select#cmbCategory').selectize({
 	placeholder: 'Choose category'
 });
 
+//initialize datatable
+$('#tbl_talents').DataTable();
+$('#tbl_clients').DataTable();
+$('#tbl_applicants').DataTable();
+
 $('#inputHeight').maskMoney();
 $('#inputHourlyRate').maskMoney();
 $('#zipCode').maskMoney({precision: 0, thousands: ''});

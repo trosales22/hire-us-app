@@ -1,6 +1,26 @@
 <?php
 class Home_model extends CI_Model {
 
+	public function getPersonalInfo($username_or_email){
+		$params = array($username_or_email, $username_or_email, 'Y');
+		$query = "
+			SELECT 
+				A.user_id, A.username, 
+				A.firstname, A.lastname, A.email, 
+				B.role_code, C.role_name
+			FROM 
+				users A
+			LEFT JOIN 
+				user_role B ON A.user_id = B.user_id 
+			LEFT JOIN 
+				param_roles C ON B.role_code = C.role_id 
+			WHERE 
+				A.username = ? OR A.email = ? AND A.active_flag = ?";
+
+		$stmt = $this->db->query($query, $params);
+		return $stmt->result();
+	}
+
   public function getAllCategories() {
 		$params = array('Y');
 
@@ -30,6 +50,48 @@ class Home_model extends CI_Model {
 
     $stmt = $this->db->query($query);
     return $stmt->result();
+	}
+
+	public function getAllClients(){
+		$query = "
+			SELECT 
+				A.user_id, A.username, A.email, A.contact_number,
+				CONCAT(A.firstname, ' ', A.lastname) as fullname,
+				B.role_code, C.role_name,  IF(A.active_flag = 'Y', 'Active', 'Inactive') as status_flag
+			FROM 
+				users A
+			LEFT JOIN 
+				user_role B ON A.user_id = B.user_id 
+			LEFT JOIN 
+				param_roles C ON B.role_code = C.role_id 
+			WHERE 
+				B.role_code IN ('CLIENT_COMPANY','CLIENT_INDIVIDUAL')
+			ORDER BY 
+				A.user_id DESC";
+
+		$stmt = $this->db->query($query);
+		return $stmt->result();
+	}
+
+	public function getAllApplicants(){
+		$query = "
+			SELECT 
+				A.user_id, A.email, A.contact_number,
+				CONCAT(A.firstname, ' ', A.lastname) as fullname,
+				B.role_code, C.role_name,  IF(A.active_flag = 'Y', 'Active', 'Inactive') as status_flag
+			FROM 
+				users A
+			LEFT JOIN 
+				user_role B ON A.user_id = B.user_id 
+			LEFT JOIN 
+				param_roles C ON B.role_code = C.role_id 
+			WHERE 
+				B.role_code IN ('APPLICANT')
+			ORDER BY 
+				A.user_id DESC";
+
+		$stmt = $this->db->query($query);
+		return $stmt->result();
 	}
 	
 	public function getTalentResourceCount($talent_id){

@@ -75,29 +75,10 @@
       <!-- Nav Item - Dashboard -->
       <li class="nav-item">
         <a class="nav-link" href="<?php echo base_url(); ?>">
-          <i class="fas fa-fw fa-tachometer-alt"></i>
-          <span>Dashboard</span></a>
+          <i class="fas fa-fw fa-home"></i>
+          <span>Home</span></a>
       </li>
-
-      <!-- Divider -->
-      <hr class="sidebar-divider">
-
-      <!-- Nav Item - Pages Collapse Menu -->
-      <li class="nav-item">
-        <a class="nav-link collapsed" href="#" data-toggle="collapse" data-target="#collapsePages" aria-expanded="true" aria-controls="collapsePages">
-          <i class="fas fa-fw fa-folder"></i>
-          <span>Menu</span>
-        </a>
-        <div id="collapsePages" class="collapse" aria-labelledby="headingPages" data-parent="#accordionSidebar">
-          <div class="bg-white py-2 collapse-inner rounded">
-            <h6 class="collapse-header">LIST</h6>
-            <a class="collapse-item" href="login.html">Applicants</a>
-            <a class="collapse-item" href="register.html">Employees</a>
-            <a class="collapse-item" href="forgot-password.html">Clients</a>
-          </div>
-        </div>
-      </li>
-
+			
       <!-- Divider -->
       <hr class="sidebar-divider d-none d-md-block">
 
@@ -294,14 +275,12 @@
         </nav>
         <!-- End of Topbar -->
 
-        <!-- Begin Page Content -->
+        <!-- Begin Talents -->
         <div class="container-fluid">
-
           <!-- Page Heading -->
           <h1 class="h3 mb-2 text-gray-800">Roster of Talents</h1>
           <p class="mb-4">"Your Long-Term RAKET Partner"</p>
 
-          <!-- DataTales Example -->
           <div class="card shadow mb-4">
             <div class="card-header py-3">
               <a class="btn btn-primary btn-icon-split" href="#" data-toggle="modal" data-target="#addTalentOrModelModal">
@@ -313,7 +292,7 @@
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="tbl_talents" width="100%" cellspacing="0">
                   <thead>
                     <tr>
                       <th>Name</th>
@@ -370,9 +349,120 @@
               </div>
             </div>
           </div>
-
         </div>
-        <!-- /.container-fluid -->
+        <!-- End Talents -->
+
+				<!-- Begin Clients -->
+        <div class="container-fluid">
+          <h1 class="h3 mb-2 text-gray-800">Clients</h1>
+					
+          <div class="card shadow mb-4">
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="tbl_clients" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+											<th>Username</th>
+                      <th>Email</th>
+											<th>Contact Number</th>
+											<th>Type</th>
+											<th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
+										<?php foreach($clients as $client){?>
+											<tr>
+												<td><?php echo $client->fullname;?></td>
+												<td><?php echo $client->username;?></td>
+												<td><?php echo $client->email;?></td>
+												<td><?php echo $client->contact_number;?></td>
+												<td><?php echo $client->role_name;?></td>
+												<td><?php echo $client->status_flag;?></td>
+												<td>
+													<a href="#" class="btn btn-success btn-icon-split">
+														<span class="icon text-white-50">
+															<i class="fas fa-edit"></i>
+														</span>
+														<span class="text">Check Requirements</span>
+													</a>
+												</td>
+											</tr> 
+                     <?php }?>
+                  </tbody>
+
+                  <tfoot>
+                    <tr>
+											<th>Name</th>
+											<th>Username</th>
+                      <th>Email</th>
+											<th>Contact Number</th>
+											<th>Type</th>
+											<th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Clients -->
+
+				<!-- Begin Applicants -->
+        <div class="container-fluid">
+          <h1 class="h3 mb-2 text-gray-800">Applicants</h1>
+					
+          <div class="card shadow mb-4">
+            <div class="card-body">
+              <div class="table-responsive">
+                <table class="table table-bordered" id="tbl_applicants" width="100%" cellspacing="0">
+                  <thead>
+                    <tr>
+                      <th>Name</th>
+                      <th>Email</th>
+											<th>Contact Number</th>
+											<th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  
+                  <tbody>
+										<?php foreach($applicants as $applicant){?>
+											<tr>
+												<td><?php echo $applicant->fullname;?></td>
+												<td><?php echo $applicant->email;?></td>
+												<td><?php echo $applicant->contact_number;?></td>
+												<td><?php echo $applicant->status_flag;?></td>
+												<td>
+													<a href="#" class="btn btn-success btn-icon-split">
+														<span class="icon text-white-50">
+															<i class="fas fa-edit"></i>
+														</span>
+														<span class="text">Check Requirements</span>
+													</a>
+												</td>
+											</tr> 
+                     <?php }?>
+                  </tbody>
+
+                  <tfoot>
+                    <tr>
+											<th>Name</th>
+                      <th>Email</th>
+											<th>Contact Number</th>
+											<th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </tfoot>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- End Applicants -->
 
       </div>
       <!-- End of Main Content -->

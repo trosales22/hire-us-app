@@ -22,37 +22,63 @@ class Login extends CI_Controller {
 
 	public function user_login_process() {
 		$inputs = array(
-			'username' => $this->input->post('username'),
-			'password' => $this->input->post('password')
+			'username_or_email' => $this->input->post('username_or_email'),
+			'password' 			=> $this->input->post('password')
 		);
 		
-		$result = $this->login_model->getUserInformation($inputs['username']);
+		$res = array();
+		$result = $this->login_model->getUserInformation($inputs['username_or_email']);
 
-		if(password_verify($inputs['password'], $result[0]->password)){
-			$fields = array(
-				'username' => $inputs['username'],
-				'password' => $result[0]->password
+		if(empty($result)){
+			$res = array(
+				'status' 	=> 'UNKNOWN_USER',
+				'msg'		=> 'Unknown user. Please try again!'
 			);
-
-			$count = $this->login_model->loginUser($fields);
-
-			if($count == 1){
-				$session_data = array(
-					'user_id'	=> $result[0]->user_id,
-					'username' => $result[0]->username,
-					'email' => $result[0]->email,
-				);
-
-				$this->session->set_userdata('logged_in', $session_data);
-				redirect(base_url('home_page'));
-			}else{
-				$this->data['error_message'] = 'Invalid Username or Password!';
-				$this->load->view('login_page', $this->data);
-			}
 		}else{
-			$this->data['error_message'] = 'Invalid Username or Password!';
-			$this->load->view('login_page', $this->data);
+			if(password_verify($inputs['password'], $result[0]->password)){
+				$fields = array(
+					'username_or_email' 	=> $inputs['username_or_email'],
+					'password' 				=> $result[0]->password
+				);
+				
+				$count = $this->login_model->loginUser($fields);
+				
+				if($count == 1){
+					$user_role_res = $this->login_model->getUserRole($result[0]->user_id);
+	
+					if($user_role_res[0]->role_code == 'SUPER_ADMIN'){
+						$session_data = array(
+							'status'		=> 'OK',
+							'user_id'		=> $result[0]->user_id,
+							'username' 		=> $result[0]->username,
+							'email' 		=> $result[0]->email,
+							'role_code'		=> $result[0]->role_code
+						);
+						
+						$res = $session_data;
+						$this->session->set_userdata('logged_in', $session_data);
+						//redirect(base_url('home_page'));
+					}else{
+						$res = array(
+							'status' => 'INVALID_ROLE', 
+							'msg' => 'Only Super Admin have access to the system!'
+						);
+					}
+				}else{
+					$res = array(
+						'status' 	=> 'INVALID_LOGIN',
+						'msg'		=> 'Invalid email/username or password!'
+					);
+				}
+			}else{
+				$res = array(
+					'status' 	=> 'PASSWORD_MISMATCH',
+					'msg'		=> 'Password does not match!'
+				);
+			}
 		}
+
+		echo json_encode($res);
 	}
 
 	public function user_logout(){    
