@@ -87,4 +87,48 @@ class Client_individual_model extends CI_Model {
 
 		$this->db->insert('user_address', $client_address_fields);
 	}
+
+	public function add_to_booking_list(array $data){
+		$booking_params = array(
+			'client_id' 			=> $data['client_id'],
+			'talent_id' 			=> $data['talent_id'],
+			'preferred_date_from' 	=> $data['preferred_date_from'],
+			'preferred_date_to' 	=> $data['preferred_date_to'],
+			'preferred_time_from' 	=> $data['preferred_time_from'],
+			'preferred_time_to' 	=> $data['preferred_time_to'],
+			'total_amount' 			=> $data['total_amount']
+		);
+
+		$this->db->insert('client_booking_list', $booking_params);
+		$lastInsertedId = $this->db->insert_id();
+
+		$client_booking_status_params = array(
+			'booking_id' 	=> $lastInsertedId,
+			'status'		=> 'PAID'
+		);
+
+		$this->db->insert('client_booking_status', $client_booking_status_params);
+	}
+
+	public function get_booking_list_by_client_id($client_id){
+		$params = array($client_id);
+
+		$query = "
+			SELECT 
+				A.booking_id,A.talent_id, FORMAT(A.total_amount, 2) as total_amount,
+				A.preferred_date_from,A.preferred_date_to,
+				A.preferred_time_from, A.preferred_time_to, 
+				B.status, DATE_FORMAT(B.date_paid, '%M %d, %Y %r') as date_paid
+			FROM 
+				client_booking_list A 
+			LEFT JOIN 
+				client_booking_status B ON A.booking_id = B.booking_id 
+			WHERE 
+				A.client_id = ? 
+			ORDER BY 
+				booking_id DESC";
+
+    	$stmt = $this->db->query($query, $params);
+    	return $stmt->result();
+	}
 }

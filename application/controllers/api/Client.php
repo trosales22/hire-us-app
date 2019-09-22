@@ -6,6 +6,7 @@ class Client extends REST_Controller {
 		parent::__construct();
 		$this->load->database();
 		$this->load->model('Client_individual_model', 'client_individual_model');
+		$this->load->model('api/Talents_model', 'talents_model');
 	}
 
 	public function get_city_muni_by_province_code_get(){
@@ -55,6 +56,95 @@ class Client extends REST_Controller {
 		if($success == 1){
 			$response = [
 			  'barangay_list' => $barangay_list
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+	  
+		$this->response($response);
+	}
+
+	public function add_to_booking_list_post(){
+		try{
+			$success        = 0;
+			$booking_params = array(
+				'client_id' 			=> trim($this->post('client_id')),
+				'talent_id' 			=> trim($this->post('talent_id')),
+				'preferred_date_from' 	=> trim($this->post('preferred_date_from')),
+				'preferred_date_to' 	=> trim($this->post('preferred_date_to')),
+				'preferred_time_from' 	=> trim($this->post('preferred_time_from')),
+				'preferred_time_to' 	=> trim($this->post('preferred_time_to')),
+				'total_amount' 			=> trim($this->post('total_amount'))
+			);
+
+			if(EMPTY($booking_params['client_id']))
+				throw new Exception("Client ID is required.");
+				
+			if(EMPTY($booking_params['talent_id']))
+				throw new Exception("Talent ID is required.");
+
+			if(EMPTY($booking_params['preferred_date_from']))
+				throw new Exception("Preferred Date is required.");
+			
+			if(EMPTY($booking_params['preferred_date_to']))
+				throw new Exception("Preferred Date is required.");
+				
+			if(EMPTY($booking_params['preferred_time_from']))
+				throw new Exception("Preferred Time is required.");
+				
+			if(EMPTY($booking_params['preferred_time_to']))
+				throw new Exception("Preferred Time is required.");
+				
+			if(EMPTY($booking_params['total_amount']))
+				throw new Exception("Total Amount is required.");
+				
+			//will soon add validation if client_id & talent_id is existing
+			$this->client_individual_model->add_to_booking_list($booking_params);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();
+		}
+
+		if($success == 1){
+			$response = array(
+				'status' 	=> 'OK',
+				'msg'		=> 'Added to booking list!'
+			);
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+
+		$this->response($response);
+	}
+
+	public function get_booking_list_by_client_id_get(){
+		try{
+			$success        		= 0;
+			$client_id 	= $this->get('client_id');
+			
+			if(EMPTY($client_id))
+        		throw new Exception("Client ID is required.");
+
+			$booking_list = $this->client_individual_model->get_booking_list_by_client_id($client_id);
+			foreach($booking_list as $booking){
+				$talent_details 	= $this->talents_model->getTalentDetails($booking->talent_id);
+				$booking->talent_id = $talent_details[0];
+			}
+			
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+			  'booking_list' => $booking_list
 			];
 		}else{
 			$response = [
