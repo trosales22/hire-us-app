@@ -75,7 +75,7 @@ class Talents_model extends CI_Model {
 		$query = "
 			SELECT
 				A.talent_id,CONCAT(A.firstname, ' ', A.lastname) as fullname,
-				A.height,A.hourly_rate,
+				A.height,A.hourly_rate,A.gender,
 				IFNULL(A.description, '') as talent_description,
 				
 				G.provDesc as province, H.citymunDesc as city_muni, I.brgyDesc as barangay,
