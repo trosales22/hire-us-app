@@ -38,8 +38,8 @@ class Talents_model extends CI_Model {
 				SELECT
 					A.talent_id,CONCAT(A.firstname, ' ', A.lastname) as fullname,
 					A.height,A.hourly_rate,IFNULL(A.description, '') as talent_description,
-					YEAR(CURDATE()) - YEAR(A.birth_date) as age,
-					A.gender,IFNULL(B.talent_display_photo, '') as talent_display_photo,
+					YEAR(CURDATE()) - YEAR(A.birth_date) as age, A.gender,
+					IF( ISNULL(B.talent_display_photo), '', CONCAT('" . base_url() . "uploads/talents_or_models/', B.talent_display_photo) ) as talent_display_photo,
 					GROUP_CONCAT(D.category_name SEPARATOR '\n') as category_names,
 					G.provDesc as province, H.citymunDesc as city_muni, I.brgyDesc as barangay,
 					F.bldg_village, F.zip_code
@@ -81,8 +81,9 @@ class Talents_model extends CI_Model {
 				G.provDesc as province, H.citymunDesc as city_muni, I.brgyDesc as barangay,
 				F.bldg_village, F.zip_code,
 
-				YEAR(CURDATE()) - YEAR(A.birth_date) as age,
-				A.email,IFNULL(B.talent_display_photo, '') as talent_display_photo,
+				YEAR(CURDATE()) - YEAR(A.birth_date) as age, A.email,
+				IF( ISNULL(B.talent_display_photo), '', CONCAT('" . base_url() . "uploads/talents_or_models/', B.talent_display_photo) ) as talent_display_photo,
+
 				GROUP_CONCAT(D.category_name SEPARATOR '\n') as category_names,
 				IFNULL(E.details, 'N/A') as talent_experiences,
 

@@ -88,26 +88,19 @@ class Client_individual_model extends CI_Model {
 		$this->db->insert('user_address', $client_address_fields);
 	}
 
-	public function add_to_booking_list(array $data){
-		$booking_params = array(
-			'client_id' 			=> $data['client_id'],
-			'talent_id' 			=> $data['talent_id'],
-			'preferred_date_from' 	=> $data['preferred_date_from'],
-			'preferred_date_to' 	=> $data['preferred_date_to'],
-			'preferred_time_from' 	=> $data['preferred_time_from'],
-			'preferred_time_to' 	=> $data['preferred_time_to'],
-			'total_amount' 			=> $data['total_amount']
+	public function add_to_temp_booking_list(array $data){
+		$temp_booking_params = array(
+			'temp_client_id' 			=> $data['temp_client_id'],
+			'temp_talent_id' 			=> $data['temp_talent_id'],
+			'temp_booking_date' 		=> $data['temp_booking_date'],
+			'temp_booking_time' 		=> $data['temp_booking_time'],
+			'temp_total_amount' 		=> $data['temp_total_amount'],
+			'temp_status' 				=> $data['temp_status'],
+			'temp_payment_option' 		=> $data['temp_payment_option']
 		);
 
-		$this->db->insert('client_booking_list', $booking_params);
+		$this->db->insert('temp_booking_list', $temp_booking_params);
 		$lastInsertedId = $this->db->insert_id();
-
-		$client_booking_status_params = array(
-			'booking_id' 	=> $lastInsertedId,
-			'status'		=> 'PAID'
-		);
-
-		$this->db->insert('client_booking_status', $client_booking_status_params);
 	}
 
 	public function get_booking_list_by_client_id($client_id){
