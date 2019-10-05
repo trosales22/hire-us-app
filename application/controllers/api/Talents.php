@@ -1,4 +1,5 @@
 <?php
+header('Access-Control-Allow-Origin: *');
 require APPPATH . 'libraries/REST_Controller.php';
      
 class Talents extends REST_Controller {

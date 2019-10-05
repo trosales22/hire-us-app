@@ -1,4 +1,5 @@
 <?php
+header('Access-Control-Allow-Origin: *');
 require APPPATH . 'libraries/REST_Controller.php';
      
 class Categories extends REST_Controller {

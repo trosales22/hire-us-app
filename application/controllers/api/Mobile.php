@@ -1,4 +1,5 @@
 <?php
+header('Access-Control-Allow-Origin: *');
 require APPPATH . 'libraries/REST_Controller.php';
      
 class Mobile extends REST_Controller {
@@ -8,7 +9,7 @@ class Mobile extends REST_Controller {
 		$this->load->model('Login_model', 'login_model');
 		$this->load->model('Home_model', 'home_model');
 	}
-
+	
 	public function user_login_post() {
 		$inputs = array(
 			'username_or_email' => $this->post('username_or_email'),
@@ -65,7 +66,7 @@ class Mobile extends REST_Controller {
 			}
 		}
 
-		echo json_encode($res);
+		$this->response($res);
 	}
 
 	public function get_personal_info_get(){
