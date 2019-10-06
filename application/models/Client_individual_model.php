@@ -103,23 +103,35 @@ class Client_individual_model extends CI_Model {
 		$lastInsertedId = $this->db->insert_id();
 	}
 
+	public function add_to_client_booking_list(array $data){
+		$client_booking_params = array(
+			'talent_id' 		=> $data['talent_id'],
+			'client_id' 		=> $data['client_id'],
+			'preferred_date' 	=> $data['preferred_date'],
+			'preferred_time' 	=> $data['preferred_time'],
+			'payment_option' 	=> $data['payment_option'],
+			'total_amount' 		=> $data['total_amount']
+			
+		);
+
+		$this->db->insert('client_booking_list', $client_booking_params);
+		$lastInsertedId = $this->db->insert_id();
+	}
+
 	public function get_booking_list_by_client_id($client_id){
 		$params = array($client_id);
 
 		$query = "
 			SELECT 
-				A.booking_id,A.talent_id, FORMAT(A.total_amount, 2) as total_amount,
-				A.preferred_date_from,A.preferred_date_to,
-				A.preferred_time_from, A.preferred_time_to, 
-				B.status, DATE_FORMAT(B.date_paid, '%M %d, %Y %r') as date_paid
+				A.booking_id, A.client_id, A.talent_id, A.total_amount,
+				A.preferred_date, A.preferred_time, A.payment_option,
+				DATE_FORMAT(A.created_date, '%M %d, %Y %r') as date_paid
 			FROM 
 				client_booking_list A 
-			LEFT JOIN 
-				client_booking_status B ON A.booking_id = B.booking_id 
 			WHERE 
 				A.client_id = ? 
 			ORDER BY 
-				booking_id DESC";
+				A.booking_id DESC";
 
     	$stmt = $this->db->query($query, $params);
     	return $stmt->result();

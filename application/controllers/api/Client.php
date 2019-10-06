@@ -80,7 +80,7 @@ class Client extends REST_Controller {
 				'temp_status' 				=> trim($this->post('temp_status')),
 				'temp_payment_option' 		=> trim($this->post('temp_payment_option'))
 			);
-			
+
 			if(EMPTY($booking_params['temp_client_id']))
 				throw new Exception("Client ID is required.");
 				
@@ -98,6 +98,56 @@ class Client extends REST_Controller {
 				
 			//will soon add validation if client_id & talent_id is existing
 			$this->client_individual_model->add_to_temp_booking_list($booking_params);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();
+		}
+
+		if($success == 1){
+			$response = array(
+				'status' 	=> 'OK',
+				'msg'		=> 'Added to temporary booking list!'
+			);
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+
+		$this->response($response);
+	}
+
+	public function add_to_client_booking_list_post(){
+		try{
+			$success        = 0;
+			$client_booking_params = array(
+				'talent_id' 		=> trim($this->post('talent_id')),
+				'client_id' 		=> trim($this->post('client_id')),
+				'preferred_date' 	=> trim($this->post('preferred_date')),
+				'preferred_time' 	=> trim($this->post('preferred_time')),
+				'payment_option' 	=> trim($this->post('payment_option')),
+				'total_amount' 		=> trim($this->post('total_amount'))
+				
+			);
+
+			if(EMPTY($client_booking_params['client_id']))
+				throw new Exception("Client ID is required.");
+				
+			if(EMPTY($client_booking_params['talent_id']))
+				throw new Exception("Talent ID is required.");
+
+			if(EMPTY($client_booking_params['preferred_date']))
+				throw new Exception("Preferred Date is required.");
+			
+			if(EMPTY($client_booking_params['preferred_time']))
+				throw new Exception("Preferred Time is required.");
+				
+			if(EMPTY($client_booking_params['total_amount']))
+				throw new Exception("Total Amount is required.");
+			
+			//will soon add validation if client_id & talent_id is existing
+			$this->client_individual_model->add_to_client_booking_list($client_booking_params);
 			$success  = 1;
 		}catch (Exception $e){
 			$msg = $e->getMessage();
