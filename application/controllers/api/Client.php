@@ -200,4 +200,33 @@ class Client extends REST_Controller {
 	  
 		$this->response($response);
 	}
+
+	public function get_already_reserved_schedule_get(){
+		try{
+			$success    = 0;
+			$talent_id 	= $this->get('talent_id');
+			
+			if(EMPTY($talent_id))
+				throw new Exception("Talent ID is required.");
+				
+			$already_reserved_sched_list = $this->client_individual_model->get_already_reserved_schedule($talent_id);
+			
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+			  'already_reserved_sched_list' => $already_reserved_sched_list
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+	  
+		$this->response($response);
+	}
 }

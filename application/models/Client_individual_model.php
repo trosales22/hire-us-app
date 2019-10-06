@@ -136,4 +136,18 @@ class Client_individual_model extends CI_Model {
     	$stmt = $this->db->query($query, $params);
     	return $stmt->result();
 	}
+
+	public function get_already_reserved_schedule($talent_id){
+		$params = array($talent_id);
+		$query = "
+			SELECT 
+				A.booking_id, A.talent_id, A.preferred_date, A.preferred_time, A.created_date
+			FROM 
+				client_booking_list A 
+			WHERE 
+				A.talent_id = ? AND A.created_date >= CURDATE()";
+		
+    	$stmt = $this->db->query($query, $params);
+    	return $stmt->result();
+	}
 }
