@@ -14,13 +14,18 @@ class Talents extends REST_Controller {
 			$success        		= 0;
 			$selected_categories 	= $this->get('selected_categories');
 			$additional_filtering   = [
-				'height'		=> $this->get('height'),
-				'age'			=> $this->get('age'),
-				'talent_fee'	=> $this->get('talent_fee'),
-				'location'		=> $this->get('location')
+				'height_from'			=> $this->get('height_from'),
+				'height_to'				=> $this->get('height_to'),
+				'age_from'				=> $this->get('age_from'),
+				'age_to'				=> $this->get('age_to'),
+				'rate_per_hour_from'	=> $this->get('rate_per_hour_from'),
+				'rate_per_hour_to'		=> $this->get('rate_per_hour_to'),
+				'province_code'			=> $this->get('province_code'),
+				'city_muni_code'		=> $this->get('city_muni_code'),
+				'gender'				=> $this->get('gender'),
 			];
 			
-			$talents_list   		= $this->talents_model->getAllTalents($selected_categories, $additional_filtering);
+			$talents_list   		= $this->talents_model->get_all_talents($selected_categories, $additional_filtering);
 			
 			$success  = 1;
 		}catch (Exception $e){

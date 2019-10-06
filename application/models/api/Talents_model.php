@@ -1,6 +1,6 @@
 <?php
 class Talents_model extends CI_Model {
-	public function getAllTalents($selected_categories = NULL, $additional_filtering = NULL) {
+	public function get_all_talents($selected_categories = NULL, $additional_filtering = NULL) {
 		$params = array('Y');
 
 		$where_selected_categories = '';
@@ -17,30 +17,50 @@ class Talents_model extends CI_Model {
 			$where_selected_categories = " AND D.category_name IN (" . implode(",", $filtering_category_arr) . ")";
 		}
 
-		if(!empty($additional_filtering['height'])){
-			$where_additional_filtering .= ' AND A.height = "' . $additional_filtering['height'] . '"';
+		if(!empty($additional_filtering['height_from'])){
+			if(!empty($additional_filtering['height_to'])){
+				$where_additional_filtering .= ' AND A.height BETWEEN "' . $additional_filtering['height_from'] . '" AND "' . $additional_filtering['height_to'] . '"';
+			}else{
+				$where_additional_filtering .= ' AND A.height >= "' . $additional_filtering['height_from'] . '"';
+			}
 		}
 
-		if(!empty($additional_filtering['age'])){
-			$age_arr = explode ("-", $additional_filtering['age']);
-			$where_additional_filtering .= ' AND YEAR(CURDATE()) - YEAR(A.birth_date) BETWEEN ' . $age_arr[0] . ' AND ' . $age_arr[1];
+		if(!empty($additional_filtering['age_from'])){
+			if(!empty($additional_filtering['age_to'])){
+				$where_additional_filtering .= ' AND YEAR(CURDATE()) - YEAR(A.birth_date) BETWEEN ' . $additional_filtering['age_from'] . ' AND ' . $additional_filtering['age_to'];
+			}else{
+				$where_additional_filtering .= ' AND YEAR(CURDATE()) - YEAR(A.birth_date) >= ' . $additional_filtering['age_from'];
+			}
 		}
 		
-		if(!empty($additional_filtering['talent_fee'])){
-			$where_additional_filtering .= ' AND A.talent_fee <= ' . $additional_filtering['talent_fee'];
+		if(!empty($additional_filtering['rate_per_hour_from'])){
+			if(!empty($additional_filtering['rate_per_hour_to'])){
+				$where_additional_filtering .= ' AND A.hourly_rate BETWEEN "' . $additional_filtering['rate_per_hour_from'] . '" AND "' . $additional_filtering['rate_per_hour_to'] . '"';
+			}else{
+				$where_additional_filtering .= ' AND A.hourly_rate >= "' . $additional_filtering['rate_per_hour_from'] . '"';
+			}
 		}
 
-		if(!empty($additional_filtering['location'])){
-			$where_additional_filtering .= ' AND A.location LIKE "%' . $additional_filtering['location'] . '%"';
+		if(!empty($additional_filtering['province_code'])){
+			$where_additional_filtering .= ' AND F.province = "' . $additional_filtering['province_code'] . '"';
+		}
+
+		if(!empty($additional_filtering['city_muni_code'])){
+			$where_additional_filtering .= ' AND F.city_muni = "' . $additional_filtering['city_muni_code'] . '"';
+		}
+
+		if(!empty($additional_filtering['gender'])){
+			$where_additional_filtering .= ' AND A.gender = "' . $additional_filtering['gender'] . '"';
 		}
 
 		$query = "
 				SELECT
-					A.talent_id,CONCAT(A.firstname, ' ', A.lastname) as fullname,
-					A.height,A.hourly_rate,IFNULL(A.description, '') as talent_description,
+					A.talent_id, CONCAT(A.firstname, ' ', A.lastname) as fullname,
+					A.height, A.hourly_rate, IFNULL(A.description, '') as talent_description,
 					YEAR(CURDATE()) - YEAR(A.birth_date) as age, A.gender,
 					IF( ISNULL(B.talent_display_photo), '', CONCAT('" . base_url() . "uploads/talents_or_models/', B.talent_display_photo) ) as talent_display_photo,
 					GROUP_CONCAT(D.category_name SEPARATOR '\n') as category_names,
+					F.province as province_code, F.city_muni as city_muni_code,
 					G.provDesc as province, H.citymunDesc as city_muni, I.brgyDesc as barangay,
 					F.bldg_village, F.zip_code
 				FROM 

@@ -10,6 +10,30 @@ class Client extends REST_Controller {
 		$this->load->model('api/Talents_model', 'talents_model');
 	}
 
+	public function get_all_provinces_get(){
+		try{
+			$success       	= 0;
+			$provinces_list = $this->client_individual_model->getAllProvinces();
+			
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+			  'provinces_list' => $provinces_list
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+	  
+		$this->response($response);
+	}
+
 	public function get_city_muni_by_province_code_get(){
 		try{
 			$success        		= 0;
