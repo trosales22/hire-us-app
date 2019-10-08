@@ -69,6 +69,55 @@ class Mobile extends REST_Controller {
 		$this->response($res);
 	}
 
+	public function talent_login_post() {
+		$inputs = array(
+			'username_or_email' => $this->post('username_or_email'),
+			'password' 			=> $this->post('password')
+		);
+
+		$res = array();
+		$result = $this->login_model->get_talent_information($inputs['username_or_email']);
+
+		if(empty($result)){
+			$res = array(
+				'status' 	=> 'UNKNOWN_USER',
+				'msg'		=> 'User not found!'
+			);
+		}else{
+			if(password_verify($inputs['password'], $result[0]->password)){
+				$fields = array(
+					'username_or_email' => $inputs['username_or_email'],
+					'password' 			=> $result[0]->password
+				);
+				
+				$count = $this->login_model->login_talent($fields);
+	
+				if($count == 1){
+					$session_data = array(
+						'status'		=> 'OK',
+						'user_id'		=> $result[0]->talent_id,
+						'email' 		=> $result[0]->email,
+						'role_code'		=> $result[0]->role_code
+					);
+					
+					$res = $session_data;
+				}else{
+					$res = array(
+						'status' 	=> 'INVALID_LOGIN',
+						'msg'		=> 'Invalid username/email or password!'
+					);
+				}
+			}else{
+				$res = array(
+					'status' 	=> 'PASSWORD_MISMATCH',
+					'msg'		=> 'Password does not match!'
+				);
+			}
+		}
+
+		$this->response($res);
+	}
+
 	public function get_personal_info_get(){
 		try{
 			$success        		= 0;

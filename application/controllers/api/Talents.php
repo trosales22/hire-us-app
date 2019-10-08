@@ -101,4 +101,33 @@ class Talents extends REST_Controller {
 	  
 		$this->response($response);
 	}
+
+	public function get_all_client_booked_get(){
+		try{
+			$success 					= 0;
+			$talent_id      			= $this->get('talent_id');
+
+			if(EMPTY($talent_id))
+        		throw new Exception("Talent ID is required.");
+			
+			$clients_booked_list = $this->talents_model->get_all_client_booked($talent_id);
+			
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+			'clients_booked_list' => $clients_booked_list
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+	  
+		$this->response($response);
+	}
 }

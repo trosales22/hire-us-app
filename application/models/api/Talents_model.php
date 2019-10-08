@@ -154,4 +154,31 @@ class Talents_model extends CI_Model {
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
 	}
+
+	public function get_all_client_booked($talent_id){
+		$params = array($talent_id);
+
+		$query = "
+		SELECT 
+			B.booking_id, A.user_id as client_id, B.talent_id, 
+			CONCAT(A.firstname, ' ', A.lastname) as fullname, 
+			IFNULL(A.gender, '') as gender, D.role_id, D.role_name,
+			B.preferred_date, B.preferred_time, 
+			B.payment_option, B.total_amount, DATE_FORMAT(B.created_date, '%M %d, %Y %r') as date_paid
+		FROM 
+			users A 
+		LEFT JOIN 
+			client_booking_list B ON A.user_id = B.client_id 
+		LEFT JOIN 
+			user_role C ON A.user_id = C.user_id 
+		LEFT JOIN 
+			param_roles D ON C.role_code = D.role_id 
+		WHERE 
+			B.talent_id = ? 
+		ORDER BY B.booking_id DESC
+		";
+		
+		$stmt = $this->db->query($query, $params);
+		return $stmt->result();
+	}
 }

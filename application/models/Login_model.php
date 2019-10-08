@@ -30,6 +30,57 @@ class Login_model extends CI_Model {
 		$stmt = $this->db->query($query, $params);
 		return $stmt->num_rows();
 	}
+
+	public function login_talent(array $data){
+		$params = array(
+			$data['username_or_email'],
+			$data['password'], 
+			'Y'
+		);
+
+		$query = "
+			SELECT 
+				A.talent_id, A.email
+			FROM 
+				talents A 
+			LEFT JOIN 
+				talents_account B ON A.talent_id = B.talent_id 
+			WHERE 
+				A.email = ? AND B.talent_password = ? AND A.active_flag = ?
+		";
+				
+		$stmt = $this->db->query($query, $params);
+		return $stmt->num_rows();
+	}
+
+	public function get_talent_information($username_or_email){
+		$params = array(
+			$username_or_email,
+			'Y'
+		);
+
+		$query = "
+			SELECT 
+				A.talent_id, A.email, B.talent_password as password, 
+				IF( ISNULL(C.talent_display_photo), '', CONCAT('" . base_url() . "uploads/talents_or_models/', C.talent_display_photo) ) as talent_display_photo, 
+				GROUP_CONCAT(E.category_name SEPARATOR '\n') as role_code
+			FROM 
+				talents A 
+			JOIN 
+				talents_account B ON A.talent_id = B.talent_id 
+			JOIN 
+				talents_resources C ON A.talent_id = C.talent_id 
+			LEFT JOIN 
+				talents_category D ON A.talent_id = D.talent_id 
+			LEFT JOIN 
+				param_categories E ON D.category_id = E.category_id 
+			WHERE 
+				A.email = ? AND A.active_flag = ?
+			";
+
+		$stmt = $this->db->query($query, $params);
+		return $stmt->result();
+	}
 	
 	public function getUserInformation($username_or_email){
 		$params = array($username_or_email, $username_or_email, 'Y');
