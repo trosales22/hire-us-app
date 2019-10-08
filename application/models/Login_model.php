@@ -61,9 +61,10 @@ class Login_model extends CI_Model {
 
 		$query = "
 			SELECT 
-				A.talent_id, A.email, B.talent_password as password, 
+				A.talent_id, A.firstname, A.lastname, A.email, 
+				B.talent_password as password, 
 				IF( ISNULL(C.talent_display_photo), '', CONCAT('" . base_url() . "uploads/talents_or_models/', C.talent_display_photo) ) as talent_display_photo, 
-				GROUP_CONCAT(E.category_name SEPARATOR '\n') as role_code
+				GROUP_CONCAT(E.category_name SEPARATOR '\n') as role_name
 			FROM 
 				talents A 
 			JOIN 

@@ -97,7 +97,7 @@ class Mobile extends REST_Controller {
 						'status'		=> 'OK',
 						'user_id'		=> $result[0]->talent_id,
 						'email' 		=> $result[0]->email,
-						'role_code'		=> $result[0]->role_code
+						'role_code'		=> $result[0]->role_name
 					);
 					
 					$res = $session_data;
@@ -127,6 +127,39 @@ class Mobile extends REST_Controller {
         		throw new Exception("Username/email is required.");
 
 			$personal_info = $this->home_model->getPersonalInfo($username_email);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			if(empty($personal_info)){
+				$response = [
+					'msg'       => 'Unidentified user. Please try again.',
+					'flag'		=> 0
+				];
+			}else{
+				$response = $personal_info[0];
+			}
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+	  
+		$this->response($response);
+	}
+
+	public function get_talent_personal_info_get(){
+		try{
+			$success        		= 0;
+			$username_email 	= $this->get('username_email');
+			
+			if(EMPTY($username_email))
+        		throw new Exception("Username/email is required.");
+
+			$personal_info = $this->login_model->get_talent_information($username_email);
 			$success  = 1;
 		}catch (Exception $e){
 			$msg = $e->getMessage();      
