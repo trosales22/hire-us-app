@@ -1,15 +1,15 @@
 <?php
 class Talents_model extends CI_Model {
-	public function get_all_talents($selected_categories = NULL, $additional_filtering = NULL) {
+	public function get_all_talents($extra_filtering = NULL, $additional_filtering = NULL) {
 		$params = array('Y');
 
 		$where_selected_categories = '';
 		$where_additional_filtering = '';
 		$filtering_category_arr = array();
 		
-		if($selected_categories != NULL){
-			$selected_categories_arr = explode(',', $selected_categories);
-
+		if(!empty($extra_filtering['selected_categories'])){
+			$selected_categories_arr = explode(',', $extra_filtering['selected_categories']);
+			
 			foreach($selected_categories_arr as $category){
 				array_push($filtering_category_arr, "'" . $category . "'");
 			}
@@ -149,6 +149,23 @@ class Talents_model extends CI_Model {
 			WHERE 
 				ud_talent_id = ?
 			ORDER BY ud_id DESC
+		";
+		
+		$stmt = $this->db->query($query, $params);
+		return $stmt->result();
+	}
+
+	public function get_reserved_schedule_talent($talent_id){
+		$params = array($talent_id);
+
+		$query = "
+		SELECT 
+			GROUP_CONCAT(preferred_date SEPARATOR ',') as reserved_date, 
+			GROUP_CONCAT(preferred_time SEPARATOR ',') as reserved_time 
+		FROM 
+			client_booking_list 
+		WHERE 
+			talent_id = ? GROUP BY talent_id
 		";
 		
 		$stmt = $this->db->query($query, $params);

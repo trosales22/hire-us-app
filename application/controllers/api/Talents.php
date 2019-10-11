@@ -12,7 +12,11 @@ class Talents extends REST_Controller {
 	public function get_all_talents_get(){
 		try{
 			$success        		= 0;
-			$selected_categories 	= $this->get('selected_categories');
+
+			$extra_filtering		= [
+				'selected_categories'	=> $this->get('selected_categories')
+			];
+			
 			$additional_filtering   = [
 				'height_from'			=> $this->get('height_from'),
 				'height_to'				=> $this->get('height_to'),
@@ -25,7 +29,7 @@ class Talents extends REST_Controller {
 				'gender'				=> $this->get('gender'),
 			];
 			
-			$talents_list   		= $this->talents_model->get_all_talents($selected_categories, $additional_filtering);
+			$talents_list   		= $this->talents_model->get_all_talents($extra_filtering, $additional_filtering);
 			
 			$success  = 1;
 		}catch (Exception $e){
@@ -35,6 +39,35 @@ class Talents extends REST_Controller {
 		if($success == 1){
 			$response = [
 			  'talents_list' => $talents_list
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+	  
+		$this->response($response);
+	}
+
+	public function get_reserved_schedule_talent_get(){
+		try{
+			$success 					= 0;
+			$talent_id      			= $this->get('talent_id');
+			
+			if(EMPTY($talent_id))
+        		throw new Exception("Talent ID is required.");
+			
+			$reserved_schedule_list = $this->talents_model->get_reserved_schedule_talent($talent_id);
+			
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+			'reserved_schedule_list' => $reserved_schedule_list
 			];
 		}else{
 			$response = [
