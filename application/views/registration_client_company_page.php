@@ -11,7 +11,7 @@
     <meta name="keywords" content="Colorlib Templates">
 
     <!-- Title Page-->
-    <title>Hire Us | Client Registration (Individual)</title>
+    <title>Hire Us | Client Registration (Company)</title>
 
     <!-- Icons font CSS-->
     <link href="<?php echo base_url(); ?>static/colorlib-regform-4/vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
@@ -35,46 +35,36 @@
             <div class="card card-4">
                 <div class="card-body">
 					<img src="<?php echo base_url(); ?>static/images/logo.png" style="display: block; margin-left: auto; margin-right: auto; width: 100px; height: 100px;">
-                    <h2 class="title" style="text-align: center;">Client Registration (Individual)</h2>
+                    <h2 class="title" style="text-align: center;">Client Registration (Company / Corporate)</h2>
 					
-                    <form id="frmRegisterIndividualClient" data-parsley-validate="" method="POST" action="<?php echo base_url(). 'client_individual_registration/addIndividualClient'; ?>">
+                    <form id="frmRegisterIndividualClient" data-parsley-validate="" method="POST" action="<?php echo base_url(). 'client_company_registration/add_company_client'; ?>">
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
-                                    <label class="label">first name</label>
-                                    <input class="input--style-4" type="text" name="firstname" required>
+                                    <label class="label">company name</label>
+                                    <input class="input--style-4" type="text" name="company_name" required>
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
-                                    <label class="label">last name</label>
-                                    <input class="input--style-4" type="text" name="lastname" required>
+                                    <label class="label">name of contact person</label>
+                                    <input class="input--style-4" type="text" name="company_contact_person" required>
                                 </div>
                             </div>
 						</div>
 						
                         <div class="row row-space">
+							<div class="input-group">
+								<label class="label">position of contact person</label>
+								<input class="input--style-4" type="text" name="company_contact_person_position" required>
+							</div>
+							
                             <div class="col-2">
                                 <div class="input-group">
-                                    <label class="label">Birthday</label>
+                                    <label class="label">Length of Service (Start date)</label>
                                     <div class="input-group-icon">
-                                        <input class="input--style-4 js-datepicker" type="text" name="birth_date" required>
+                                        <input class="input--style-4 js-datepicker" type="text" name="company_length_of_service" required>
                                         <i class="zmdi zmdi-calendar-note input-icon js-btn-calendar"></i>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-2">
-                                <div class="input-group">
-                                    <label class="label">Gender</label>
-                                    <div class="p-t-10">
-                                        <label class="radio-container m-r-45">Male
-                                            <input type="radio" checked="checked" name="gender" value="Male">
-                                            <span class="checkmark"></span>
-                                        </label>
-                                        <label class="radio-container">Female
-                                            <input type="radio" name="gender" value = "Female">
-                                            <span class="checkmark"></span>
-                                        </label>
                                     </div>
                                 </div>
                             </div>
@@ -84,13 +74,13 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Email</label>
-                                    <input class="input--style-4" type="email" name="email" data-parsley-trigger="change" required>
+                                    <input class="input--style-4" type="email" name="company_email" data-parsley-trigger="change" required>
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
-                                    <label class="label">Phone Number</label>
-                                    <input class="input--style-4" type="text" name="phone" required>
+                                    <label class="label">Contact Number</label>
+                                    <input class="input--style-4" type="text" name="company_contact_number" required>
                                 </div>
                             </div>
 						</div>
@@ -111,7 +101,7 @@
 						</div>
 						
                         <div class="input-group">
-							<label class="label">Address</label>
+							<label class="label">Company Address</label>
 							
 							<!-- add select--no-search in class if doesn't want to have a search filter -->
                             <div class="rs-select2 js-select-simple">
@@ -170,18 +160,25 @@
 
 						<hr width="100%" />
 						<h3 class="title">Valid ID's</h3>
+
+						<div class="col-4">
+							<div class="input-group">
+								<label class="label">Company ID Image</label>
+								<input class="input--style-4" type="file" name="company_id_image" required>
+							</div>
+						</div>
 						
 						<div class="row row-space">
                             <div class="col-2">
                                 <!-- add select--no-search in class if doesn't want to have a search filter -->
 								<div class="rs-select2 js-select-simple">
-									<select name="individual_government_issued_id" required>
+									<select name="company_government_issued_id" required>
 										<option disabled="disabled" selected="selected">Choose Any Government Issued ID</option>
 										<?php foreach($param_valid_ids as $valid_id){?>
 											<option value="<?php echo $valid_id->valid_id_code;?>"><?php echo $valid_id->valid_id_name;?></option>
 										<?php }?>
 									</select>
-									
+
 									<div class="select-dropdown"></div>
 								</div>
                             </div>
@@ -189,7 +186,7 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Any Government Issued ID Image</label>
-                                    <input class="input--style-4" type="file" name="individual_government_issued_id_image" required>
+                                    <input class="input--style-4" type="file" name="company_government_issued_id_image" required>
                                 </div>
                             </div>
 						</div>
@@ -223,7 +220,7 @@
 	
 	<script src="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.js"></script>
 	<script src="https://parsleyjs.org/dist/parsley.min.js"></script>
-	<script src="<?php echo base_url(); ?>static/js/client_registration_individual.js"></script>
+	<script src="<?php echo base_url(); ?>static/js/client_registration_company.js"></script>
 
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
 

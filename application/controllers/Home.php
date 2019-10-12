@@ -3,22 +3,22 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Home extends CI_Controller {
   public function __construct() {
-		parent::__construct();
+	parent::__construct();
 		
-		$this->load->helper('url', 'form');
-		$this->load->library('session');
+	$this->load->helper('url', 'form');
+	$this->load->library('session');
     $this->load->database();
-		$this->load->model('Home_model', 'home_model');
-		$this->load->model('Client_individual_model', 'client_individual_model');
+	$this->load->model('Home_model', 'home_model');
+	$this->load->model('Client_individual_model', 'client_individual_model');
   }
 
   public function index() {
     $this->data['categories'] = $this->home_model->getAllCategories();
-		$this->data['talents'] = $this->home_model->getAllTalents();
-		$this->data['clients'] = $this->home_model->getAllClients();
-		$this->data['applicants'] = $this->home_model->getAllApplicants();
-		$this->data['param_provinces'] = $this->client_individual_model->getAllProvinces();
-		$this->data['gallery'] = $this->home_model->getTalentGallery(1);
+	$this->data['talents'] = $this->home_model->getAllTalents();
+	$this->data['clients'] = $this->home_model->getAllClients();
+	$this->data['applicants'] = $this->home_model->getAllApplicants();
+	$this->data['param_provinces'] = $this->client_individual_model->getAllProvinces();
+	$this->data['gallery'] = $this->home_model->getTalentGallery(1);
     $this->load->view('home_page', $this->data);
 	}
 	

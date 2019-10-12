@@ -6,14 +6,20 @@ class Client extends REST_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->database();
+		$this->load->model('api/Clients_model', 'clients_model');
 		$this->load->model('Client_individual_model', 'client_individual_model');
 		$this->load->model('api/Talents_model', 'talents_model');
 	}
 
-	public function get_all_provinces_get(){
+	public function get_all_provinces_by_region_code_get(){
 		try{
 			$success       	= 0;
-			$provinces_list = $this->client_individual_model->getAllProvinces();
+			$region_code 	= $this->get('region_code');
+			
+			if(EMPTY($region_code))
+				throw new Exception("Region Code is required.");
+				
+			$provinces_list = $this->clients_model->get_all_provinces($region_code);
 			
 			$success  = 1;
 		}catch (Exception $e){
@@ -42,7 +48,7 @@ class Client extends REST_Controller {
 			if(EMPTY($province_code))
         		throw new Exception("Province Code is required.");
 
-			$city_muni_list = $this->client_individual_model->getCityMuniByProvinceCode($province_code);
+			$city_muni_list = $this->clients_model->get_city_muni_by_province_code($province_code);
 			
 			$success  = 1;
 		}catch (Exception $e){
@@ -71,7 +77,7 @@ class Client extends REST_Controller {
 			if(EMPTY($city_muni_code))
         		throw new Exception("City/Municipality Code is required.");
 
-			$barangay_list = $this->client_individual_model->getBarangayByCityMuniCode($city_muni_code);
+			$barangay_list = $this->clients_model->get_barangay_by_city_muni_code($city_muni_code);
 			
 			$success  = 1;
 		}catch (Exception $e){

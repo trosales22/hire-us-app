@@ -1,5 +1,5 @@
 (function ($) {
-	var region_dropdown = $("select[name='region']");
+    var region_dropdown = $("select[name='region']");
 	var province_dropdown = $("select[name='province']");
 	var city_muni_dropdown = $("select[name='city_muni']");
 	var barangay_dropdown = $("select[name='barangay']");
@@ -47,7 +47,7 @@
 			});
 		}
 	);
-
+	
 	province_dropdown.change(
 		function() {
 			clearCityMuni();

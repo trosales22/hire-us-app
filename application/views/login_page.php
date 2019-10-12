@@ -63,17 +63,23 @@
 					</div>
 					
 					<div class="container-login100-form-btn">
-						<button class="login100-form-btn" type="submit" style="margin-bottom: 10px;">
-							<i class="fa fa-sign-in fa-lg"></i> Login
+						<button class="login100-form-btn" type="submit" style="margin-bottom: 10px; background-color: #FF6F61;">
+							<i class="fa fa-sign-in fa-lg" style="margin-right: 5px;"></i> Login
 						</button>
 
-						<button class="login100-form-btn" type="button" style="margin-bottom: 10px; background-color: orange;" data-toggle="modal" data-target="#registrationPortalApplicantModal">
-							<i class="fa fa-briefcase fa-lg"></i> Register as Applicant
+						<button class="login100-form-btn" type="button" style="margin-bottom: 10px; background-color: #6B5B95;" data-toggle="modal" data-target="#registrationPortalApplicantModal">
+							<i class="fa fa-briefcase fa-lg" style="margin-right: 5px;"></i> Register as Applicant
 						</button>
 
-						<a href="<?php echo base_url(); ?>client_individual_registration" style="text-decoration: none; width: 100%;">
-							<button class="login100-form-btn" type="button" style="margin-bottom: 10px; background-color: red;">
-								<i class="fa fa-handshake-o fa-lg"></i> Register as Client
+						<a href="<?php echo base_url(); ?>client_individual_registration" style="text-decoration: none; width: 45%; margin-right: 5px;">
+							<button class="login100-form-btn" type="button" style="margin-bottom: 10px; background-color: #2A4B7C;">
+								<i class="fa fa-handshake-o fa-lg"></i> Register as Individual Client
+							</button>
+						</a>
+
+						<a href="<?php echo base_url(); ?>client_company_registration" style="text-decoration: none; width: 45%;">
+							<button class="login100-form-btn" type="button" style="margin-bottom: 10px; background-color: #577284;">
+								<i class="fa fa-institution fa-lg"></i> Register as Company Client
 							</button>
 						</a>
 					</div>
