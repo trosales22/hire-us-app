@@ -1,15 +1,16 @@
 <?php
 class Client_individual_model extends CI_Model {
-	public function addIndividualClient(array $data){
+	public function add_individual_client(array $data){
 		//insert to talents table
 		$client_fields = array(
-			'firstname' => $data['firstname'],
-			'lastname' => $data['lastname'],
-			'email' => $data['email'],
-			'contact_number' => $data['contact_number'],
-			'username' => $data['username'],
-			'password' => password_hash($data['password'], PASSWORD_BCRYPT),
-			'gender' => $data['gender']
+			'firstname' 		=> $data['firstname'],
+			'lastname' 			=> $data['lastname'],
+			'email' 			=> $data['email'],
+			'contact_number' 	=> $data['contact_number'],
+			'username' 			=> $data['username'],
+			'password' 			=> password_hash($data['password'], PASSWORD_BCRYPT),
+			'gender' 			=> $data['gender'],
+			'active_flag'		=> 'N'
 		);
 	
 		//insert to users table
@@ -35,6 +36,7 @@ class Client_individual_model extends CI_Model {
 		//insert to user_address table
 		$client_address_fields = array(
 			'user_id' 			=> $lastInsertedId,
+			'region'			=> $data['address']['region'],
 			'province' 			=> $data['address']['province'],
 			'city_muni' 		=> $data['address']['city_muni'],
 			'barangay' 			=> $data['address']['barangay'],
@@ -43,6 +45,21 @@ class Client_individual_model extends CI_Model {
 		);
 
 		$this->db->insert('user_address', $client_address_fields);
+
+		//insert to user_valid_id table
+		$individual_government_issued_id_fields = array(
+			'user_id' 		=> $lastInsertedId,
+			'id_type'		=> $data['individual_government_issued_id'],
+			'file_name'		=> $data['individual_government_issued_id_image']
+		);
+
+		$this->db->insert('user_valid_id', $individual_government_issued_id_fields);
+		
+		for($i = 0; $i < count($data['valid_id_beside_your_face_image']); $i++){
+			$data['valid_id_beside_your_face_image'][$i]['user_id'] = $lastInsertedId;
+		}
+		
+		$this->db->insert_batch('user_valid_id', $data['valid_id_beside_your_face_image']);
 	}
 
 	public function add_to_temp_booking_list(array $data){

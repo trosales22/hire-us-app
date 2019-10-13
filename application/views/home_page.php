@@ -382,7 +382,7 @@
 												<td><?php echo $client->role_name;?></td>
 												<td><?php echo $client->status_flag;?></td>
 												<td>
-													<a href="#" class="btn btn-success btn-icon-split">
+													<a href="#" data-toggle="modal" data-id="<?php echo $client->user_id;?>" data-target="#checkRequirementsModal" class="btn btn-success btn-icon-split">
 														<span class="icon text-white-50">
 															<i class="fas fa-edit"></i>
 														</span>
@@ -609,12 +609,19 @@
 
 							<div class="row form-group">
 								<div class="col-sm-4">
+									<label for="cmbProvince">Region</label>
+									<select name="region" id="cmbRegion" class="form-control" required>
+										<option disabled="disabled" selected="selected">Choose Region</option>
+										<?php foreach($param_regions as $region){?>
+											<option value="<?php echo $region->regCode;?>"><?php echo $region->region_name;?></option>
+										<?php }?>
+                  </select>
+								</div>
+										
+								<div class="col-sm-4">
 									<label for="cmbProvince">Province</label>
 									<select name="province" id="cmbProvince" class="form-control" required>
 										<option disabled="disabled" selected="selected">Choose Province</option>
-										<?php foreach($param_provinces as $province){?>
-											<option value="<?php echo $province->provCode;?>"><?php echo $province->provDesc;?></option>
-										<?php }?>
                   </select>
 								</div>
 
@@ -724,6 +731,40 @@
 		</div>
 	</div>
 
+	<div class="modal fade" id="checkRequirementsModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+		<div class="modal-dialog modal-lg" role="document">
+      <div class="modal-content">
+          <div class="modal-header">
+						<h5 class="modal-title" id="exampleModalLabel">Check Requirements</h5>
+            <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">×</span>
+            </button>
+					</div>
+					
+					<div class="modal-body">
+						<?php if(!empty($client_requirements)){ foreach($client_requirements as $file){ ?>
+              <div style="display: grid; grid-template-columns: auto auto; margin-bottom: 10px;">
+                <a target="_blank" href="<?php echo $file->file_name; ?>">
+                  <img src="<?php echo $file->file_name; ?>" width="400" height="250">
+                </a>
+                <div>
+									<br />
+									<b>Type:</b> <?php echo $file->valid_id_name; ?><br />
+									<b>Date Uploaded:</b> <?php echo $file->created_date; ?>
+								</div>
+              </div>
+            <?php } }else{ ?>
+            <p>Requirements not found.....</p>
+            <?php } ?>
+					</div>
+
+					<div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
+          </div>
+			</div>
+		</div>
+	</div>
+
   <div class="modal fade" id="viewTalentGalleryModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
@@ -751,8 +792,8 @@
           <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-dismiss="modal">Close</button>
           </div>
-  </div>
-
+	</div>
+	
   <!-- Bootstrap core JavaScript-->
   <script src="<?php echo base_url(); ?>static/SBAdmin/vendor/jquery/jquery.min.js"></script>
 	<script src="<?php echo base_url(); ?>static/SBAdmin/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

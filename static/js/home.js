@@ -64,8 +64,8 @@ $('#frmUploadTalentGallery').submit(function(e){
 			location.reload(true);
 		},
 		error: function(xhr, status, error){
-        	var errorMessage = xhr.status + ': ' + xhr.statusText
-         	alert('Error - ' + errorMessage);
+        	var errorMessage = xhr.status + ': ' + xhr.statusText;
+         	//alert('Error - ' + errorMessage);
 			location.reload(true);
      	}
 	});

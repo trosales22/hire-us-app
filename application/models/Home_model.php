@@ -21,35 +21,35 @@ class Home_model extends CI_Model {
 		return $stmt->result();
 	}
 
-  public function getAllCategories() {
+  	public function getAllCategories() {
 		$params = array('Y');
 
 		$query = "
-						SELECT 
-							category_id,category_name
-						FROM 
-							param_categories 
-						WHERE 
-							active_flag = ?
-						";
+			SELECT 
+				category_id,category_name
+			FROM 
+				param_categories 
+			WHERE 
+				active_flag = ?
+			";
 
-    $stmt = $this->db->query($query, $params);
-    return $stmt->result();
+		$stmt = $this->db->query($query, $params);
+		return $stmt->result();
 	}
 
-  public function getAllTalents() {
-    $query = "
-  				SELECT
-						talent_id,CONCAT(firstname, ' ', lastname) as fullname,
-						hourly_rate,gender,
-						DATE_FORMAT(birth_date, '%M %d, %Y') as birth_date
-  				FROM
-  					talents
-  				ORDER BY talent_id DESC
-  			";
+  	public function getAllTalents() {
+		$query = "
+			SELECT
+				talent_id,CONCAT(firstname, ' ', lastname) as fullname,
+				hourly_rate,gender,
+				DATE_FORMAT(birth_date, '%M %d, %Y') as birth_date
+			FROM
+				talents
+			ORDER BY talent_id DESC
+		";
 
-    $stmt = $this->db->query($query);
-    return $stmt->result();
+		$stmt = $this->db->query($query);
+		return $stmt->result();
 	}
 
 	public function getAllClients(){
@@ -98,50 +98,69 @@ class Home_model extends CI_Model {
 		$params = array($talent_id);
 
 		$query = "
-						SELECT 
-							count(*) as talent_res_count
-						FROM 
-							talents_resources 
-						WHERE talent_id = ?";
+			SELECT 
+				count(*) as talent_res_count
+			FROM 
+				talents_resources 
+			WHERE talent_id = ?";
 
 		$stmt = $this->db->query($query, $params);
-    return $stmt->result();
+    	return $stmt->result();
 	}
 
-  private function _generatePIN($digits = 4) {
-    $i = 0; //counter
-    $pin = ""; //our default pin is blank.
-    while ($i < $digits) {
-      //generate a random number between 0 and 9.
-      $pin .= mt_rand(0, 9);
-      $i++;
-    }
-    return $pin;
-  }
-
-  public function insertTalentOrModel(array $data) {
-		//insert to talents table
-    $talents_fields = array(
-      'firstname' => $data['firstname'],
-      'middlename' => $data['middlename'],
-      'lastname' => $data['lastname'],
-      'email' => $data['email'],
-      'contact_number' => $data['contact_number'],
-      'gender' => $data['gender'],
-      'height' => $data['height'],
-      'birth_date' => $data['birth_date'],
-			'hourly_rate' => $data['hourly_rate'],
-			'vital_stats'	=> $data['vital_stats'],
-			'fb_followers'	=> $data['fb_followers'],
-			'instagram_followers'	=> $data['instagram_followers'],
-			'genre'	=> $data['genre'],
-			'description'	=> $data['description'],
-      'created_by' => 1,
-    );
-
-    $this->db->insert('talents', $talents_fields);
-    $lastInsertedId = $this->db->insert_id();
+	public function get_requirements_of_client($client_id){
+		$params = array($client_id);
 		
+		$query = "
+			SELECT 
+				A.id, A.user_id as client_id, B.valid_id_code, B.valid_id_name,
+				IF( ISNULL(A.file_name), '', CONCAT('" . base_url() . "uploads/id_verification/', A.file_name) ) as file_name,
+				DATE_FORMAT(A.created_date, '%M %d, %Y %r') as created_date
+			FROM 
+				user_valid_id A 
+			LEFT JOIN 
+				param_valid_ids B ON A.id_type = B.valid_id_code 
+			WHERE user_id = ?;
+		";
+		
+		$stmt = $this->db->query($query, $params);
+		return $stmt->result();
+	}
+
+	private function _generatePIN($digits = 4) {
+		$i = 0; //counter
+		$pin = ""; //our default pin is blank.
+		while ($i < $digits) {
+		//generate a random number between 0 and 9.
+		$pin .= mt_rand(0, 9);
+		$i++;
+		}
+		return $pin;
+	}
+
+  	public function insertTalentOrModel(array $data) {
+		//insert to talents table
+		$talents_fields = array(
+		'firstname' => $data['firstname'],
+		'middlename' => $data['middlename'],
+		'lastname' => $data['lastname'],
+		'email' => $data['email'],
+		'contact_number' => $data['contact_number'],
+		'gender' => $data['gender'],
+		'height' => $data['height'],
+		'birth_date' => $data['birth_date'],
+		'hourly_rate' => $data['hourly_rate'],
+		'vital_stats'	=> $data['vital_stats'],
+		'fb_followers'	=> $data['fb_followers'],
+		'instagram_followers'	=> $data['instagram_followers'],
+		'genre'	=> $data['genre'],
+		'description'	=> $data['description'],
+		'created_by' => 1,
+		);
+
+		$this->db->insert('talents', $talents_fields);
+		$lastInsertedId = $this->db->insert_id();
+			
 		//insert to talents_category table
 		foreach($data['categories'] as $category){
 			$talents_category_fields = array(
@@ -153,13 +172,13 @@ class Home_model extends CI_Model {
 		}
 
 		//insert to talents_account table
-    $generated_pin = 'HIREUS_' . $this->_generatePIN();
+		$generated_pin = 'HIREUS_' . $this->_generatePIN();
 
 		print_r('PIN: ' . $generated_pin);
 		
-    $talents_account_fields = array(
-      'talent_id' => $lastInsertedId,
-      'talent_password' => password_hash($generated_pin, PASSWORD_BCRYPT),
+		$talents_account_fields = array(
+			'talent_id' => $lastInsertedId,
+			'talent_password' => password_hash($generated_pin, PASSWORD_BCRYPT),
 		);
 		
 		$this->db->insert('talents_account', $talents_account_fields);
@@ -198,15 +217,15 @@ class Home_model extends CI_Model {
 	public function getTalentGallery($talent_id = ''){
 		$params = array($talent_id);
 		$query = "
-  				SELECT
-						img_id,talent_id,file_name,uploaded_on
-  				FROM
-						talents_gallery
-					ORDER BY 
-						uploaded_on DESC
+			SELECT
+				img_id,talent_id,file_name,uploaded_on
+			FROM
+				talents_gallery
+			ORDER BY 
+				uploaded_on DESC
   			";
 
-    $stmt = $this->db->query($query, $params);
+    	$stmt = $this->db->query($query, $params);
 		return $stmt->result();
 	}
 }

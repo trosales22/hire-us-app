@@ -10,6 +10,7 @@ class Home extends CI_Controller {
     $this->load->database();
 	$this->load->model('Home_model', 'home_model');
 	$this->load->model('Client_individual_model', 'client_individual_model');
+	$this->load->model('api/Clients_model', 'clients_model');
   }
 
   public function index() {
@@ -17,40 +18,40 @@ class Home extends CI_Controller {
 	$this->data['talents'] = $this->home_model->getAllTalents();
 	$this->data['clients'] = $this->home_model->getAllClients();
 	$this->data['applicants'] = $this->home_model->getAllApplicants();
-	$this->data['param_provinces'] = $this->client_individual_model->getAllProvinces();
+	$this->data['param_regions'] = $this->clients_model->get_all_regions();
 	$this->data['gallery'] = $this->home_model->getTalentGallery(1);
+	$this->data['client_requirements'] = $this->home_model->get_requirements_of_client(8);
     $this->load->view('home_page', $this->data);
 	}
 	
 	public function addTalentOrModel(){
-    $talents_fields =   array(
-                'firstname'     	=> trim($this->input->post('firstname')),
-                'middlename'     	=> trim($this->input->post('middlename')),
-                'lastname'       	=> trim($this->input->post('lastname')),
-                'email'       		=> trim($this->input->post('email')),
-                'contact_number'  => trim($this->input->post('contact_number')),
-                'gender'       		=> trim($this->input->post('gender')),
-								'height'       		=> trim($this->input->post('height')),
-								'birth_date'    	=> trim($this->input->post('birth_date')),
-								'hourly_rate'    	=> trim($this->input->post('hourly_rate')),
-								'vital_stats'    	=> trim($this->input->post('vital_stats')),
-								'fb_followers'    => trim($this->input->post('fb_followers')),
-								'instagram_followers'	=> trim($this->input->post('instagram_followers')),
-								'description'    	=> trim($this->input->post('description')),
-								'prev_clients'		=> trim($this->input->post('prev_clients')),
-								'address'       	=> 
-																		array(
-																			'province' => trim($this->input->post('province')),
-																			'city_muni' => trim($this->input->post('city_muni')),
-																			'barangay' => trim($this->input->post('barangay')),
-																			'bldg_village' => trim($this->input->post('bldg_village')),
-																			'zip_code' => trim($this->input->post('zip_code'))
-																		),
-								'categories'      => $this->input->post('category'),
-								'genre'      			=> trim($this->input->post('genre'))
-              );
+    	$talents_fields =   array(
+			'firstname'     	=> trim($this->input->post('firstname')),
+			'middlename'     	=> trim($this->input->post('middlename')),
+			'lastname'       	=> trim($this->input->post('lastname')),
+			'email'       		=> trim($this->input->post('email')),
+			'contact_number'  	=> trim($this->input->post('contact_number')),
+			'gender'       		=> trim($this->input->post('gender')),
+			'height'       		=> trim($this->input->post('height')),
+			'birth_date'    	=> trim($this->input->post('birth_date')),
+			'hourly_rate'    	=> trim($this->input->post('hourly_rate')),
+			'vital_stats'    	=> trim($this->input->post('vital_stats')),
+			'fb_followers'    	=> trim($this->input->post('fb_followers')),
+			'instagram_followers' => trim($this->input->post('instagram_followers')),
+			'description'    	=> trim($this->input->post('description')),
+			'prev_clients'		=> trim($this->input->post('prev_clients')),
+			'address'       	=> array(
+				'province' 		=> trim($this->input->post('province')),
+				'city_muni' 	=> trim($this->input->post('city_muni')),
+				'barangay' 		=> trim($this->input->post('barangay')),
+				'bldg_village' 	=> trim($this->input->post('bldg_village')),
+				'zip_code' 		=> trim($this->input->post('zip_code'))
+			),
+			'categories'      	=> $this->input->post('category'),
+			'genre'      		=> trim($this->input->post('genre'))
+		);
 	
-    $this->home_model->insertTalentOrModel($talents_fields);
+    	$this->home_model->insertTalentOrModel($talents_fields);
 	}
 
 	public function uploadProfilePicOfTalent(){
@@ -75,15 +76,15 @@ class Home extends CI_Controller {
 
 			if(!$this->upload->do_upload('profile_image')) {
 				$msg = array(
-									'status'	=> 'FAILED',
-									'error'	 	=> $this->upload->display_errors()
-								);
+					'status'	=> 'FAILED',
+					'error'	 	=> $this->upload->display_errors()
+				);
 			}else{
 				$msg = array(
-									'status'	=> 'SUCCESS',
-									'image_metadata' => $this->upload->data()
-								);
-
+					'status'	=> 'SUCCESS',
+					'image_metadata' => $this->upload->data()
+				);
+				
 				$uploadData['talent_display_photo'] = $msg['image_metadata']['file_name'];
 				$uploadData['talent_id'] = $talent_id;
 				
@@ -152,5 +153,9 @@ class Home extends CI_Controller {
 		}
 
 		return $msg;
+	}
+
+	public function get_requirements_of_client(){
+
 	}
 }

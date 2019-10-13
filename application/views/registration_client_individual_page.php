@@ -37,7 +37,7 @@
 					<img src="<?php echo base_url(); ?>static/images/logo.png" style="display: block; margin-left: auto; margin-right: auto; width: 100px; height: 100px;">
                     <h2 class="title" style="text-align: center;">Client Registration (Individual)</h2>
 					
-                    <form id="frmRegisterIndividualClient" data-parsley-validate="" method="POST" action="<?php echo base_url(). 'client_individual_registration/addIndividualClient'; ?>">
+                    <form id="frmRegisterIndividualClient" data-parsley-validate="" method="POST" action="<?php echo base_url(). 'client_individual_registration/add_individual_client'; ?>" enctype="multipart/form-data">
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">

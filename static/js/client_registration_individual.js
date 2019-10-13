@@ -86,11 +86,11 @@
 	});
 
 	$("#frmRegisterIndividualClient").submit(function(e) {
-    //prevent Default functionality
-    e.preventDefault();
-
-    //get the action-url of the form
-		var actionurl = e.currentTarget.action;
+		//prevent Default functionality
+		e.preventDefault();
+		var formAction = e.currentTarget.action;
+		var formData = new FormData(this);
+		var formType = "POST";
 
 		$.confirm({
 			title: 'Confirmation!',
@@ -103,13 +103,17 @@
 				},
 				YES: function () {
 					$.ajax({
-						url: actionurl,
-						type: 'POST',
-						data: $("#frmRegisterIndividualClient").serialize(),
+						url: formAction,
+						type: formType,
+						data: formData,
+						processData: false,
+						contentType: false,
+						cache: false,
+						async: false,
 						success: function(data) {
 							$.alert({
 								title: 'Client successfully registered!',
-								content: 'Please check your email for verification.',
+								content: 'Please wait for admin approval. Please check your email from time to time. Thank you.',
 								useBootstrap: false,
 								theme: 'supervan',
 								buttons: {
@@ -119,15 +123,14 @@
 								}
 							});
 						},
-						error: function(err){
-							console.log(err);
-						}
+						error: function(xhr, status, error){
+							var errorMessage = xhr.status + ': ' + xhr.statusText
+							alert('Error - ' + errorMessage);
+						 }
 					});
 					
 				}
 			}
 		});
     });
-
-
 })(jQuery);
