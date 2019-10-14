@@ -28,10 +28,10 @@ class Client_individual_registration extends CI_Controller {
 		$config['max_size'] = 5000;
 		$config['max_width'] = 1500;
 		$config['max_height'] = 1500;
-		$config['file_name'] = md5(time() . rand());
+		$config['file_name'] = md5(time() . rand()) . '_' . mt_rand();
 
 		$this->load->library('upload', $config);
-
+		
 		if(!$this->upload->do_upload('individual_government_issued_id_image')) {
 			$msg = array(
 				'status'	=> 'FAILED',

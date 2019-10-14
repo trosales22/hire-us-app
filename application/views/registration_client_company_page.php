@@ -37,7 +37,7 @@
 					<img src="<?php echo base_url(); ?>static/images/logo.png" style="display: block; margin-left: auto; margin-right: auto; width: 100px; height: 100px;">
                     <h2 class="title" style="text-align: center;">Client Registration (Company / Corporate)</h2>
 					
-                    <form id="frmRegisterIndividualClient" data-parsley-validate="" method="POST" action="<?php echo base_url(). 'client_company_registration/add_company_client'; ?>">
+                    <form id="frmRegisterCompanyClient" data-parsley-validate="" method="POST" action="<?php echo base_url(). 'client_company_registration/add_company_client'; ?>">
                         <div class="row row-space">
                             <div class="col-2">
                                 <div class="input-group">
@@ -89,13 +89,13 @@
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Username</label>
-                                    <input class="input--style-4" type="text" name="username" data-parsley-trigger="change" required>
+                                    <input class="input--style-4" type="text" name="company_username" data-parsley-trigger="change" required>
                                 </div>
                             </div>
                             <div class="col-2">
                                 <div class="input-group">
                                     <label class="label">Password</label>
-                                    <input class="input--style-4" type="password" name="password" required maxlength="16">
+                                    <input class="input--style-4" type="password" name="company_password" required maxlength="16">
                                 </div>
                             </div>
 						</div>
@@ -115,7 +115,7 @@
 							</div>
 
 							<br/>
-
+							
 							<!-- add select--no-search in class if doesn't want to have a search filter -->
                             <div class="rs-select2 js-select-simple">
                                 <select name="province" required>
