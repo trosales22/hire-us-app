@@ -56,8 +56,8 @@ class Home_model extends CI_Model {
 		$query = "
 			SELECT 
 				A.user_id, A.username, A.email, A.contact_number,
-				IFNULL(CONCAT(A.firstname, ' ', A.lastname), CONCAT(D.company_name, ' (', D.contact_person, ' -', D.contact_person_position , ')' )) as fullname,
-				B.role_code, C.role_name,  IF(A.active_flag = 'Y', 'Active', 'Inactive') as status_flag
+				IFNULL(CONCAT(A.firstname, ' ', A.lastname), D.company_name) as fullname,
+				B.role_code, IF(C.role_name = 'Client (Individual)', 'INDIVIDUAL', 'COMPANY / CORPORATE') as role_name,  IF(A.active_flag = 'Y', 'Active', 'Inactive') as status_flag
 			FROM 
 				users A
 			LEFT JOIN 
@@ -67,7 +67,7 @@ class Home_model extends CI_Model {
 			LEFT JOIN 
 				client_details D ON A.user_id = D.user_id
 			WHERE 
-				B.role_code IN ('CLIENT_COMPANY','CLIENT_INDIVIDUAL')
+				B.role_code IN ('CLIENT_COMPANY', 'CLIENT_INDIVIDUAL')
 			ORDER BY 
 				A.user_id DESC";
 
