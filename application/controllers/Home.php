@@ -39,6 +39,7 @@ class Home extends CI_Controller {
 			'description'    	=> trim($this->input->post('description')),
 			'prev_clients'		=> trim($this->input->post('prev_clients')),
 			'address'       	=> array(
+				'region'		=> trim($this->input->post('region')),
 				'province' 		=> trim($this->input->post('province')),
 				'city_muni' 	=> trim($this->input->post('city_muni')),
 				'barangay' 		=> trim($this->input->post('barangay')),

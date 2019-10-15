@@ -176,7 +176,7 @@ class Home_model extends CI_Model {
 		//insert to talents_account table
 		$generated_pin = 'HIREUS_' . $this->_generatePIN();
 
-		print_r('PIN: ' . $generated_pin);
+		//print_r('PIN: ' . $generated_pin);
 		
 		$talents_account_fields = array(
 			'talent_id' => $lastInsertedId,
@@ -196,6 +196,7 @@ class Home_model extends CI_Model {
 		//insert to talent_address table
 		$talents_address_fields = array(
 			'talent_id' 		=> $lastInsertedId,
+			'region'			=> $data['address']['region'],
 			'province' 			=> $data['address']['province'],
 			'city_muni' 		=> $data['address']['city_muni'],
 			'barangay' 			=> $data['address']['barangay'],
