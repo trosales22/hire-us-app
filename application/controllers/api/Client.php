@@ -8,7 +8,37 @@ class Client extends REST_Controller {
 		$this->load->database();
 		$this->load->model('api/Clients_model', 'clients_model');
 		$this->load->model('Client_individual_model', 'client_individual_model');
+		$this->load->model('Home_model', 'home_model');
 		$this->load->model('api/Talents_model', 'talents_model');
+	}
+
+	public function get_client_requirements_get(){
+		try{
+			$success       	= 0;
+			$client_id 	= $this->get('client_id');
+			
+			if(EMPTY($client_id))
+				throw new Exception("Client ID is required.");
+			
+			$requirements = $this->home_model->get_requirements_of_client($client_id);
+			
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+			  'requirements' => $requirements
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+		
+		$this->response($response);
 	}
 
 	public function get_all_provinces_by_region_code_get(){

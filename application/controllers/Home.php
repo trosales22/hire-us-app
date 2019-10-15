@@ -154,8 +154,4 @@ class Home extends CI_Controller {
 
 		return $msg;
 	}
-
-	public function get_requirements_of_client(){
-
-	}
 }

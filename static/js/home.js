@@ -1,3 +1,13 @@
+function base_url() {
+	var pathparts = location.pathname.split('/');
+	if (location.host == 'localhost') {
+		var url = location.origin+'/'+pathparts[1].trim('/')+'/'; // http://localhost/myproject/
+	}else{
+		var url = location.origin; // http://stackoverflow.com
+	}
+	return url;
+}
+
 $("#inputBirthdate").flatpickr({
 	dateFormat: "Y-m-d",
 	static: true,
@@ -25,6 +35,39 @@ $('#talent_id_upload_gallery').val($(this).data('id'));
 $('#btnAddTalentResources').click(function(){
 	var talentId = $(this).data("id");
 	$('input[name=talent_id').val(talentId);
+});
+
+$('.btnCheckRequirements').click(function(){
+	var clientId = $(this).data("id");
+	console.log("clientId: " + clientId);
+
+	$('.client_requirements').empty();
+
+	var url = base_url() + 'api/client/get_client_requirements?client_id=' + clientId;
+	$.getJSON(url, function(response) {
+		console.log("length: " + response['requirements'].length);
+		
+		if(response['requirements'].length === 0){
+			$('.client_requirements').append('No requirements sent.');
+		}else{
+			$.each(response['requirements'], function() {
+			
+				$('.client_requirements').append(
+					'<div style="display: grid; grid-template-columns: auto auto; margin-bottom: 10px;">' +
+						'<a target="_blank" href="' + this.file_name + '">' +
+							  '<img src="' + this.file_name + '" width="400" height="250">' +
+						'</a>' +
+						'<div>' +
+							'<br /><b>Type:</b> ' + this.valid_id_name + '<br />' +
+							'<b>Date Uploaded:</b> ' + this.created_date + 
+						'</div>' + 
+					'</div>'
+				);
+			});
+		}
+
+		
+	});
 });
 
 $('#frmUpdateTalentProfilePic').submit(function(e){
