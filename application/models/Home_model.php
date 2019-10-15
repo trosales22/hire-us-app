@@ -220,7 +220,9 @@ class Home_model extends CI_Model {
 		$params = array($talent_id);
 		$query = "
 			SELECT
-				img_id,talent_id,file_name,uploaded_on
+				img_id, talent_id,
+				IF( ISNULL(file_name), '', CONCAT('" . base_url() . "uploads/talents_or_models/', file_name) ) as file_name,
+				DATE_FORMAT(uploaded_on, '%M %d, %Y %r') as created_date
 			FROM
 				talents_gallery
 			ORDER BY 

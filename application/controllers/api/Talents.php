@@ -6,7 +6,59 @@ class Talents extends REST_Controller {
 	public function __construct() {
 		parent::__construct();
 		$this->load->database();
+		$this->load->model('Home_model', 'home_model');
 		$this->load->model('api/Talents_model', 'talents_model');
+	}
+	
+	public function get_talent_categories_get(){
+		try{
+			$success       	= 0;			
+			$talent_categories = $this->home_model->getAllCategories();
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+			  'talent_categories' => $talent_categories
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+		
+		$this->response($response);	
+	}
+
+	public function get_talent_gallery_get(){
+		try{
+			$success       	= 0;
+			$talent_id 	= $this->get('talent_id');
+			
+			if(EMPTY($talent_id))
+				throw new Exception("Talent ID is required.");
+			
+			$talent_gallery = $this->home_model->getTalentGallery($talent_id);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+			  'talent_gallery' => $talent_gallery
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+		
+		$this->response($response);
 	}
 	
 	public function get_all_talents_get(){

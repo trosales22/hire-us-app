@@ -94,16 +94,21 @@ class Talents_model extends CI_Model {
 
 		$query = "
 			SELECT
-				A.talent_id,CONCAT(A.firstname, ' ', A.lastname) as fullname,
-				A.height,A.hourly_rate,A.gender,
+				A.talent_id,
+				IFNULL(A.firstname, '') as firstname, IFNULL(A.middlename, '') as middlename, IFNULL(A.lastname, '') as lastname, 
+				CONCAT(A.firstname, ' ', A.lastname) as fullname,
+				A.height, A.hourly_rate, A.gender, A.contact_number,
 				IFNULL(A.description, '') as talent_description,
-				
-				G.provDesc as province, H.citymunDesc as city_muni, I.brgyDesc as barangay,
-				F.bldg_village, F.zip_code,
 
+				J.regCode as region_code, J.regDesc as region, 
+				G.provCode as province_code, G.provDesc as province, 
+				H.citymunCode as city_muni_code, H.citymunDesc as city_muni, 
+				I.id as barangay_code, I.brgyDesc as barangay,
+				F.bldg_village, F.zip_code, A.birth_date, 
 				YEAR(CURDATE()) - YEAR(A.birth_date) as age, A.email,
 				IF( ISNULL(B.talent_display_photo), '', CONCAT('" . base_url() . "uploads/talents_or_models/', B.talent_display_photo) ) as talent_display_photo,
 
+				GROUP_CONCAT(D.category_id SEPARATOR '|') as category_ids,
 				GROUP_CONCAT(D.category_name SEPARATOR '\n') as category_names,
 				IFNULL(E.details, 'N/A') as talent_experiences,
 
@@ -129,6 +134,8 @@ class Talents_model extends CI_Model {
 				param_city_muni H ON F.city_muni = H.citymunCode 
 			LEFT JOIN 
 				param_barangay I ON F.barangay = I.id 
+			LEFT JOIN 
+				param_region J ON F.region = J.regCode 
 			WHERE 
 				A.talent_id = ?
 			GROUP BY A.talent_id

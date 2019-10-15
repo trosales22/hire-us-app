@@ -19,8 +19,6 @@ class Home extends CI_Controller {
 	$this->data['clients'] = $this->home_model->getAllClients();
 	$this->data['applicants'] = $this->home_model->getAllApplicants();
 	$this->data['param_regions'] = $this->clients_model->get_all_regions();
-	$this->data['gallery'] = $this->home_model->getTalentGallery(1);
-	$this->data['client_requirements'] = $this->home_model->get_requirements_of_client(8);
     $this->load->view('home_page', $this->data);
 	}
 	
