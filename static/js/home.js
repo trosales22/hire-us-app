@@ -61,6 +61,40 @@ $('#btnAddTalentResources').click(function(){
 	$('input[name=talent_id').val(talentId);
 });
 
+$('.btnAddTalentOrModel').click(function(){
+	//clear all fields
+	$("input[name='talent_firstname']").val("");
+	$("input[name='talent_middlename']").val("");
+	$("input[name='talent_lastname']").val("");
+	$("input[name='talent_email']").val("");
+	$("input[name='talent_contact_number']").val("");
+	$("select[name='talent_gender']").val("");
+	$("input[name='talent_height']").val("");
+	$("input[name='talent_birth_date']").val("");
+	$("input[name='talent_hourly_rate']").val("");
+	$("input[name='talent_vital_stats']").val("");
+	$("input[name='talent_fb_followers']").val("");
+	$("input[name='talent_instagram_followers']").val("");
+	$("textarea[name='talent_description']").val("");
+	$("textarea[name='talent_prev_clients']").val("");
+
+	var $select = $('#cmbRegion').selectize();
+ 	var control = $select[0].selectize;
+	control.clear();
+
+	var $select = $('#cmbProvince').selectize();
+ 	var control = $select[0].selectize;
+	control.clear();
+
+	var $select = $('#cmbCityMunicipality').selectize();
+ 	var control = $select[0].selectize;
+	control.clear();
+	
+	var $select = $('#cmbBarangay').selectize();
+ 	var control = $select[0].selectize;
+	control.clear();
+});
+
 $('.btnCheckRequirements').click(function(){
 	var clientId = $(this).data("id");
 	$('input[name=checkReq_clientId').val(clientId);

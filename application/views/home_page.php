@@ -278,7 +278,7 @@
 
           <div class="card shadow mb-4">
             <div class="card-header py-3">
-              <a class="btn btn-primary btn-icon-split" href="#" data-toggle="modal" data-target="#addTalentOrModelModal">
+              <a class="btnAddTalentOrModel btn btn-primary btn-icon-split" href="#" data-toggle="modal" data-target="#addTalentOrModelModal">
                 <span class="icon text-white-50">
                   <i class="fas fa-plus-circle"></i>
                 </span>
