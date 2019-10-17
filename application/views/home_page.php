@@ -656,6 +656,10 @@
                   <input type="text" class="form-control" id="inputGenre" name="genre" placeholder="Enter Genre">
 								</div>		
 							</div>
+
+							<div class="alert alert-info">
+								<strong>Reminder!</strong> <br />Default password: <b>HIRE_US@123</b>
+							</div>
           </div>
           
           <div class="modal-footer">

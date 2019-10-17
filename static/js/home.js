@@ -282,7 +282,7 @@ $("#frmUpdateClientStatus").submit(function(e) {
 								}
 							}
 						});
-					 }
+					}
 				});
 				
 			}
@@ -415,8 +415,19 @@ function addTalentOrModel(){
 								}
 							});
 						},
-						error: function(err){
-							console.log(err);
+						error: function(xhr, status, error){
+							var errorMessage = xhr.status + ': ' + xhr.statusText;
+							$.alert({
+								title: "Oops! We're sorry!",
+								content: errorMessage,
+								useBootstrap: false,
+								theme: 'supervan',
+								buttons: {
+									'Ok, Got It!': function () {
+										//do nothing
+									}
+								}
+							});
 						}
 					});
 					

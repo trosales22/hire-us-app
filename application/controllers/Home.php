@@ -24,21 +24,21 @@ class Home extends CI_Controller {
 	
 	public function addTalentOrModel(){
     	$talents_fields =   array(
-			'firstname'     	=> trim($this->input->post('firstname')),
-			'middlename'     	=> trim($this->input->post('middlename')),
-			'lastname'       	=> trim($this->input->post('lastname')),
-			'email'       		=> trim($this->input->post('email')),
-			'contact_number'  	=> trim($this->input->post('contact_number')),
-			'gender'       		=> trim($this->input->post('gender')),
-			'height'       		=> trim($this->input->post('height')),
-			'birth_date'    	=> trim($this->input->post('birth_date')),
-			'hourly_rate'    	=> trim($this->input->post('hourly_rate')),
-			'vital_stats'    	=> trim($this->input->post('vital_stats')),
-			'fb_followers'    	=> trim($this->input->post('fb_followers')),
-			'instagram_followers' => trim($this->input->post('instagram_followers')),
-			'description'    	=> trim($this->input->post('description')),
-			'prev_clients'		=> trim($this->input->post('prev_clients')),
-			'address'       	=> array(
+			'firstname'     		=> trim($this->input->post('firstname')),
+			'middlename'     		=> trim($this->input->post('middlename')),
+			'lastname'       		=> trim($this->input->post('lastname')),
+			'email'       			=> trim($this->input->post('email')),
+			'contact_number'  		=> trim($this->input->post('contact_number')),
+			'gender'       			=> trim($this->input->post('gender')),
+			'height'       			=> trim($this->input->post('height')),
+			'birth_date'    		=> trim($this->input->post('birth_date')),
+			'hourly_rate'    		=> trim($this->input->post('hourly_rate')),
+			'vital_stats'    		=> trim($this->input->post('vital_stats')),
+			'fb_followers'    		=> trim($this->input->post('fb_followers')),
+			'instagram_followers' 	=> trim($this->input->post('instagram_followers')),
+			'description'    		=> trim($this->input->post('description')),
+			'prev_clients'			=> trim($this->input->post('prev_clients')),
+			'address'       		=> array(
 				'region'		=> trim($this->input->post('region')),
 				'province' 		=> trim($this->input->post('province')),
 				'city_muni' 	=> trim($this->input->post('city_muni')),
@@ -46,10 +46,10 @@ class Home extends CI_Controller {
 				'bldg_village' 	=> trim($this->input->post('bldg_village')),
 				'zip_code' 		=> trim($this->input->post('zip_code'))
 			),
-			'categories'      	=> $this->input->post('category'),
-			'genre'      		=> trim($this->input->post('genre'))
+			'categories'      		=> $this->input->post('category'),
+			'genre'      			=> trim($this->input->post('genre'))
 		);
-	
+		
     	$this->home_model->insertTalentOrModel($talents_fields);
 	}
 

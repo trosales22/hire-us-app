@@ -174,10 +174,8 @@ class Home_model extends CI_Model {
 		}
 
 		//insert to talents_account table
-		$generated_pin = 'HIREUS_' . $this->_generatePIN();
+		$generated_pin = 'HIRE_US@123';
 
-		//print_r('PIN: ' . $generated_pin);
-		
 		$talents_account_fields = array(
 			'talent_id' => $lastInsertedId,
 			'talent_password' => password_hash($generated_pin, PASSWORD_BCRYPT),
@@ -200,7 +198,7 @@ class Home_model extends CI_Model {
 			'province' 			=> $data['address']['province'],
 			'city_muni' 		=> $data['address']['city_muni'],
 			'barangay' 			=> $data['address']['barangay'],
-			'bldg_village' 	=> $data['address']['bldg_village'],
+			'bldg_village' 		=> $data['address']['bldg_village'],
 			'zip_code' 			=> $data['address']['zip_code']
 		);
 
@@ -212,7 +210,7 @@ class Home_model extends CI_Model {
 		$this->db->where('user_id', $data['user_id']);
 		$this->db->update('users', $client_params);
 	}
-	
+
 	public function uploadTalentProfilePic(array $fields){
 		//insert to talents_resources table
 		$this->db->insert('talents_resources', $fields);
