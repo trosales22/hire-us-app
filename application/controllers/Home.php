@@ -53,6 +53,45 @@ class Home extends CI_Controller {
     	$this->home_model->insertTalentOrModel($talents_fields);
 	}
 
+	public function update_client_status(){
+		try{
+			$success       	= 0;
+			$client_id 		= trim($this->input->post('checkReq_clientId'));
+			$active_flag 	= trim($this->input->post('client_status'));
+			
+			if(EMPTY($client_id))
+				throw new Exception("Client ID is required.");
+
+			if(EMPTY($active_flag))
+				throw new Exception("Status is required.");
+			
+			$client_fields =   array(
+				'user_id'     	=> $client_id,
+				'active_flag'	=> $active_flag
+			);
+		
+			$this->home_model->update_client_status($client_fields);
+			
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+		
+		if($success == 1){
+			$response = [
+				'msg'       => 'Successfully updated client status!',
+				'flag'      => $success
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+
+		echo json_encode($response);
+	}
+
 	public function uploadProfilePicOfTalent(){
 		$talent_id = $this->input->post('talent_id');
 		$res = $this->home_model->getTalentResourceCount($talent_id);
@@ -61,7 +100,7 @@ class Home extends CI_Controller {
 		if($res[0]->talent_res_count == 1){
 			$msg = array(
 				'status'	=> 'FAILED',
-				'error_msg'	 	=> 'Already have an existing record.'
+				'error_msg'	=> 'Already have an existing record.'
 			);
 		}else{
 			$config['upload_path'] = 'uploads/talents_or_models/';

@@ -63,6 +63,7 @@ $('#btnAddTalentResources').click(function(){
 
 $('.btnCheckRequirements').click(function(){
 	var clientId = $(this).data("id");
+	$('input[name=checkReq_clientId').val(clientId);
 	$('.client_requirements').empty();
 
 	var url = base_url() + 'api/client/get_client_requirements?client_id=' + clientId;
@@ -216,15 +217,78 @@ $('#frmUploadTalentGallery').submit(function(e){
 	});
 });
 
-function base_url() {
-	var pathparts = location.pathname.split('/');
-	if (location.host == 'localhost') {
-		var url = location.origin+'/'+pathparts[1].trim('/')+'/'; // http://localhost/myproject/
-	}else{
-		var url = location.origin; // http://stackoverflow.com
-	}
-	return url;
-}
+$('#frmUpdateClientStatus').parsley().on('field:validated', function() {
+	var ok = $('.parsley-error').length === 0;
+});
+
+$("#frmUpdateClientStatus").submit(function(e) {
+	e.preventDefault();
+	var formAction = e.currentTarget.action;
+	var formType = "POST";
+
+	$.confirm({
+		title: 'Confirmation!',
+		content: 'Are you sure you want update status of this client?',
+		useBootstrap: false, 
+		theme: 'supervan',
+		buttons: {
+			NO: function () {
+				//do nothing
+			},
+			YES: function () {
+				$.ajax({
+					url: formAction,
+					type: formType,
+					data: $("#frmUpdateClientStatus").serialize(),
+					success: function(data) {
+						var obj = JSON.parse(data);
+
+						if(obj.flag === 0){
+							$.alert({
+								title: "Oops! We're sorry!",
+								content: 'Failed to update client status. Please try again later.',
+								useBootstrap: false,
+								theme: 'supervan',
+								buttons: {
+									'Ok, Got It!': function () {
+										//do nothing
+									}
+								}
+							});
+						}else{
+							$.alert({
+								title: 'Success!',
+								content: obj.msg,
+								useBootstrap: false,
+								theme: 'supervan',
+								buttons: {
+									'Ok, Got It!': function () {
+										location.replace(base_url());
+									}
+								}
+							});
+						}	
+					},
+					error: function(xhr, status, error){
+						var errorMessage = xhr.status + ': ' + xhr.statusText;
+						$.alert({
+							title: "Oops! We're sorry!",
+							content: errorMessage,
+							useBootstrap: false,
+							theme: 'supervan',
+							buttons: {
+								'Ok, Got It!': function () {
+									//do nothing
+								}
+							}
+						});
+					 }
+				});
+				
+			}
+		}
+	});
+});
 
 function setupFilePond(){
 	// Get a reference to the file input element

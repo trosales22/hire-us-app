@@ -207,6 +207,12 @@ class Home_model extends CI_Model {
 		$this->db->insert('talents_address', $talents_address_fields);
 	}
 
+	public function update_client_status(array $data){
+		$client_params = array('active_flag' => $data['active_flag']);
+		$this->db->where('user_id', $data['user_id']);
+		$this->db->update('users', $client_params);
+	}
+	
 	public function uploadTalentProfilePic(array $fields){
 		//insert to talents_resources table
 		$this->db->insert('talents_resources', $fields);
