@@ -28,8 +28,6 @@
 	<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.css">
 	<link href="<?php echo base_url(); ?>static/css/parsley.css" rel="stylesheet">
-	<link href="<?php echo base_url(); ?>static/js/libraries/filepond/filepond.css" rel="stylesheet">
-	<link href="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.css" rel="stylesheet">
 
   <style>
@@ -594,8 +592,8 @@
 
 							<div class="row form-group">
 								<div class="col-sm-6">
-									<label for="cmbProvince">Region</label>
-									<select name="region" id="cmbRegion" class="form-control" required>
+									<label for="insertTalent_cmbRegion">Region</label>
+									<select name="region" id="insertTalent_cmbRegion" class="form-control" required>
 										<option disabled="disabled" selected="selected">Choose Region</option>
 										<?php foreach($param_regions as $region){?>
 											<option value="<?php echo $region->regCode;?>"><?php echo $region->region_name;?></option>
@@ -604,8 +602,8 @@
 								</div>
 										
 								<div class="col-sm-6">
-									<label for="cmbProvince">Province</label>
-									<select name="province" id="cmbProvince" class="form-control" required>
+									<label for="insertTalent_cmbProvince">Province</label>
+									<select name="province" id="insertTalent_cmbProvince" class="form-control" required>
 										<option disabled="disabled" selected="selected">Choose Province</option>
                   </select>
 								</div>
@@ -613,15 +611,15 @@
 
 							<div class="row form-group">
 								<div class="col-sm-6">
-									<label for="cmbCityMunicipality">City/Municipality</label>
-									<select name="city_muni" id="cmbCityMunicipality" class="form-control" required>
+									<label for="insertTalent_cmbCityMunicipality">City/Municipality</label>
+									<select name="city_muni" id="insertTalent_cmbCityMunicipality" class="form-control" required>
 										<option disabled="disabled" selected="selected">Choose City/Municipality</option>
 									</select>
 								</div>
 
 								<div class="col-sm-6">
-									<label for="cmbBarangay">Barangay</label>
-									<select name="barangay" id="cmbBarangay" class="form-control" required>
+									<label for="insertTalent_cmbBarangay">Barangay</label>
+									<select name="barangay" id="insertTalent_cmbBarangay" class="form-control" required>
 										<option disabled="disabled" selected="selected">Choose Barangay</option>
 									</select>
 								</div>
@@ -861,7 +859,7 @@
 
 							<div class="row form-group">
 								<div class="col-sm-6">
-									<label for="cmbProvince">Region</label>
+									<label for="cmbRegion">Region</label>
 									<select name="region" id="cmbRegion" class="form-control" required>
 										<option disabled="disabled" selected="selected">Choose Region</option>
 										<?php foreach($param_regions as $region){?>
@@ -907,7 +905,7 @@
 							</div>
 
 							<hr width="100%" />
-
+							
               <div class="row form-group">
 								<div class="col-sm-6">
 									<label for="talent_cmbCategory">Category</label>
@@ -962,15 +960,6 @@
   <!-- Page level custom scripts -->
 	<script src="<?php echo base_url(); ?>static/SBAdmin/js/demo/datatables-demo.js"></script>
 	<script src="https://parsleyjs.org/dist/parsley.min.js"></script>
-	<script src="https://cdn.jsdelivr.net/npm/promise-polyfill@8/dist/polyfill.min.js"></script>
-	<script src="https://unpkg.com/filepond-polyfill"></script>
-	<script src="https://unpkg.com/filepond-plugin-image-preview/dist/filepond-plugin-image-preview.js"></script>
-	<script src="https://unpkg.com/filepond-plugin-image-exif-orientation/dist/filepond-plugin-image-exif-orientation.js"></script>
-	<script src="https://unpkg.com/filepond-plugin-image-validate-size/dist/filepond-plugin-image-validate-size.js"></script>
-	<script src="https://unpkg.com/filepond-plugin-file-validate-size/dist/filepond-plugin-file-validate-size.js"></script>
-	<script src="https://unpkg.com/filepond-plugin-file-encode/dist/filepond-plugin-file-encode.js"></script>
-	<script src="https://unpkg.com/filepond-plugin-file-validate-type/dist/filepond-plugin-file-validate-type.js"></script>
-	<script src="<?php echo base_url(); ?>static/js/libraries/filepond/filepond.js"></script>
 	<script src="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.js"></script>
 	<script src="<?php echo base_url(); ?>static/js/home.js"></script>
 

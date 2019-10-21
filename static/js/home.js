@@ -10,24 +10,46 @@ function base_url() {
 	return url;
 }
 
-var region_dropdown = $("select[name='region']");
-var province_dropdown = $("select[name='province']");
-var city_muni_dropdown = $("select[name='city_muni']");
-var barangay_dropdown = $("select[name='barangay']");
+var region_dropdown = $("select#cmbRegion");
+var province_dropdown = $("select#cmbProvince");
+var city_muni_dropdown = $("select#cmbCityMunicipality");
+var barangay_dropdown = $("select#cmbBarangay");
+
+var insert_talent_region_dropdown = $("select#insertTalent_cmbRegion");
+var insert_talent_province_dropdown = $("select#insertTalent_cmbProvince");
+var insert_talent_city_muni_dropdown = $("select#insertTalent_cmbCityMunicipality");
+var insert_talent_barangay_dropdown = $("select#insertTalent_cmbBarangay");
+
+function clearRegion(){
+	region_dropdown.empty();
+	region_dropdown.append('<option disabled="disabled" selected="selected">Choose Region</option>');
+
+	insert_talent_region_dropdown.empty();
+	insert_talent_region_dropdown.append('<option disabled="disabled" selected="selected">Choose Region</option>');
+}
 
 function clearProvince(){
 	province_dropdown.empty();
 	province_dropdown.append('<option disabled="disabled" selected="selected">Choose Province</option>');
-}
 
-function clearBarangay(){
-	barangay_dropdown.empty();
-	barangay_dropdown.append('<option disabled="disabled" selected="selected">Choose Barangay</option>');
+	insert_talent_province_dropdown.empty();
+	insert_talent_province_dropdown.append('<option disabled="disabled" selected="selected">Choose Province</option>');
 }
 
 function clearCityMuni(){
 	city_muni_dropdown.empty();
 	city_muni_dropdown.append('<option disabled="disabled" selected="selected">Choose City/Municipality</option>');
+
+	insert_talent_city_muni_dropdown.empty();
+	insert_talent_city_muni_dropdown.append('<option disabled="disabled" selected="selected">Choose City/Municipality</option>');
+}
+
+function clearBarangay(){
+	barangay_dropdown.empty();
+	barangay_dropdown.append('<option disabled="disabled" selected="selected">Choose Barangay</option>');
+
+	insert_talent_barangay_dropdown.empty();
+	insert_talent_barangay_dropdown.append('<option disabled="disabled" selected="selected">Choose Barangay</option>');
 }
 
 $("#inputBirthdate").flatpickr({
@@ -80,21 +102,21 @@ $('.btnAddTalentOrModel').click(function(){
 	$("textarea[name='talent_description']").val("");
 	$("textarea[name='talent_prev_clients']").val("");
 
-	var $select = $('#cmbRegion').selectize();
- 	var control = $select[0].selectize;
-	control.clear();
+	// var $select = $('#cmbRegion').selectize();
+ 	// var control = $select[0].selectize;
+	// control.clear();
 
-	var $select = $('#cmbProvince').selectize();
- 	var control = $select[0].selectize;
-	control.clear();
+	// var $select = $('#cmbProvince').selectize();
+ 	// var control = $select[0].selectize;
+	// control.clear();
 
-	var $select = $('#cmbCityMunicipality').selectize();
- 	var control = $select[0].selectize;
-	control.clear();
+	// var $select = $('#cmbCityMunicipality').selectize();
+ 	// var control = $select[0].selectize;
+	// control.clear();
 	
-	var $select = $('#cmbBarangay').selectize();
- 	var control = $select[0].selectize;
-	control.clear();
+	// var $select = $('#cmbBarangay').selectize();
+ 	// var control = $select[0].selectize;
+	// control.clear();
 });
 
 $('.btnCheckRequirements').click(function(){
@@ -151,17 +173,19 @@ $('.btnViewOrEditTalent').click(function(){
 		$.getJSON(getAllProvinceUrl, function(provinceResponse) {
 			clearProvince();
 			
+			console.log(provinceResponse['provinces_list']);
+
 			$.each(provinceResponse['provinces_list'], function() {
-				$("select[name='province']").append($("<option />").val(this.provCode).text(this.provDesc));
+				province_dropdown.append($("<option />").val(this.provCode).text(this.provDesc));
 				
 				if(this.provCode === response.province_code){
-					$("select[name='province']").val(response.province_code);
+					province_dropdown.val(response.province_code);
 				}
 			});
 		});
 
-		var getAlLCityMuniUrl = base_url() + 'api/client/get_city_muni_by_province_code?province_code=' + response.province_code;
-		$.getJSON(getAlLCityMuniUrl, function(cityMuniResponse) {
+		var getAllCityMuniUrl = base_url() + 'api/client/get_city_muni_by_province_code?province_code=' + response.province_code;
+		$.getJSON(getAllCityMuniUrl, function(cityMuniResponse) {
 			clearCityMuni();
 			
 			$.each(cityMuniResponse['city_muni_list'], function() {
@@ -326,44 +350,60 @@ $("#frmUpdateClientStatus").submit(function(e) {
 	});
 });
 
-function setupFilePond(){
-	// Get a reference to the file input element
-	var talentProfilePicElement = document.querySelector('input[id="profile_picture"]');
-	var talentGalleryElement = document.querySelector('input[id="talent_gallery"]');
+function setupInsertTalentAddress(){
+	insert_talent_region_dropdown.change(
+		function() {
+			clearProvince();
+			clearCityMuni();
+			clearBarangay();
 
-	FilePond.registerPlugin(
-		FilePondPluginImagePreview,
-		FilePondPluginImageExifOrientation,
-		FilePondPluginFileValidateSize
-	);
-
-	// Create the FilePond instance
-	FilePond.create(
-		talentProfilePicElement,
-		{
-			labelIdle: `Drag & Drop Profile Picture or <span class="filepond--label-action">Browse</span>`,
-			imagePreviewHeight: 170,
-			imagePreviewWidth: 150,
-			imageCropAspectRatio: '1:1',
-			imageResizeTargetWidth: 200,
-			imageResizeTargetHeight: 200,
-			styleLoadIndicatorPosition: 'center bottom',
-			styleProgressIndicatorPosition: 'right bottom',
-			styleButtonRemoveItemPosition: 'left bottom',
-			styleButtonProcessItemPosition: 'right bottom',
+			var region_val = insert_talent_region_dropdown.val();
+			
+			var url = base_url() + 'api/client/get_all_provinces_by_region_code?region_code=' + region_val;
+			$.getJSON(url, function(response) {
+				clearProvince();
+				
+				$.each(response['provinces_list'], function() {
+					insert_talent_province_dropdown.append($("<option />").val(this.provCode).text(this.provDesc));
+				});
+			});
 		}
 	);
 
-	FilePond.create(
-		talentGalleryElement,
-		{
-			labelIdle: `Drag & Drop Images or <span class="filepond--label-action">Browse</span>`,
-			imagePreviewHeight: 100,
+	insert_talent_province_dropdown.change(
+		function() {
+			clearCityMuni();
+			clearBarangay();
+
+			var province_val = insert_talent_province_dropdown.val();
+			
+			var url = base_url() + 'api/client/get_city_muni_by_province_code?province_code=' + province_val;
+			$.getJSON(url, function(response) {
+				clearCityMuni();
+
+				$.each(response['city_muni_list'], function() {
+					insert_talent_city_muni_dropdown.append($("<option />").val(this.citymunCode).text(this.citymunDesc));
+				});
+			});
+		}
+	);
+	
+	insert_talent_city_muni_dropdown.change(
+		function() {
+			var city_muni_code_val = insert_talent_city_muni_dropdown.val();
+			
+			var url = base_url() + 'api/client/get_barangay_by_city_muni_code?city_muni_code=' + city_muni_code_val;
+			$.getJSON(url, function(response) {
+				clearBarangay();
+				$.each(response['barangay_list'], function() {
+					insert_talent_barangay_dropdown.append($("<option />").val(this.id).text(this.brgyDesc));
+				});
+			});
 		}
 	);
 }
 
-function setupAddress(){
+function setupViewEditTalentAddress(){
 	region_dropdown.change(
 		function() {
 			clearProvince();
@@ -481,5 +521,5 @@ $('#frmAddTalentOrModel').parsley().on('field:validated', function() {
 	}
 });
 
-//setupFilePond();
-setupAddress();
+setupInsertTalentAddress();
+setupViewEditTalentAddress();
