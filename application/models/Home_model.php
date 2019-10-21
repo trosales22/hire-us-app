@@ -21,6 +21,21 @@ class Home_model extends CI_Model {
 		return $stmt->result();
 	}
 
+	private function _get_email_of_client($user_id){
+		$params = array($user_id);
+		$query = "
+			SELECT 
+				user_id, email 
+			FROM 
+				users 
+			WHERE 
+				user_id = ?";
+
+		$stmt = $this->db->query($query, $params);
+		$return_val = $stmt->result();
+		return $return_val[0];
+	}
+
   	public function getAllCategories() {
 		$params = array('Y');
 
@@ -203,12 +218,69 @@ class Home_model extends CI_Model {
 		);
 
 		$this->db->insert('talents_address', $talents_address_fields);
+
+		$this->_send_added_talent_email_notif($data);
+	}
+
+	private function _send_client_status_email_notif($email, $status){
+		try{
+			$success = 0;
+			$from = "support@hireusph.com";
+			$to = $email;
+			
+			if($status == 'Y'){
+				$subject = "Account Activated!";
+				$message = "Congratulations! Your account has been activated. You can now login your account. Thank you.";
+			}else{
+				$subject = "Account Deactivated!";
+				$message = "Whoop. We're sorry! Your account has been deactivated!";
+			}
+
+			$headers = "From:" . $from;
+			mail($to, $subject, $message, $headers);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+	}
+
+	private function _send_added_talent_email_notif(array $data){
+		try{
+			$success = 0;
+			$from = "support@hireusph.com";
+			$to = $data['email'];
+			$honorific = '';
+			$message = '';
+			$subject = "Welcome to Hire Us PH!";
+
+			if($data['gender'] == 'Male'){
+				$honorific = 'Mr. ';
+			}else if($data['gender'] == 'Female'){
+				$honorific = 'Ms/Mrs. ';
+			}
+
+			$message = "Hi " . $honorific . $data['firstname'] . ' ' . $data['lastname'] . "!\n\n";
+			$message .= "Below are your account details:\n\n";
+			$message .= "Email: " . $data['email'] . "\n";
+			$message .= "Contact Number: " . $data['contact_number'] . "\n";
+			$message .= "Rate per hour: PHP" . $data['hourly_rate'] . "\n";
+			$message .= "Password: HIRE_US@123\n\nYou can now login your account as a Talent/Model. Thank you & welcome to Hire Us PH.\n";
+			
+			$headers = "From:" . $from;
+			mail($to, $subject, $message, $headers);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
 	}
 
 	public function update_client_status(array $data){
 		$client_params = array('active_flag' => $data['active_flag']);
 		$this->db->where('user_id', $data['user_id']);
 		$this->db->update('users', $client_params);
+		
+		$client_details = $this->_get_email_of_client($data['user_id']);		
+		$this->_send_client_status_email_notif($client_details->email, $data['active_flag']);
 	}
 
 	public function uploadTalentProfilePic(array $fields){
