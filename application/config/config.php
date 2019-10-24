@@ -540,3 +540,7 @@ $config['rewrite_short_tags'] = FALSE;
 | Array:		array('10.0.1.200', '192.168.5.0/24')
 */
 $config['proxy_ips'] = '';
+
+//Stripe Payment API
+$config['stripe_key'] = 'pk_test_pHHixfchBGl7tkRAanAoe7TN00O13SSzVp';
+$config['stripe_secret'] = 'sk_test_Dv44V0peCOJ0FTW0UqeWD1uw00LGRqAlwE';
