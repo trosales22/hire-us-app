@@ -1,12 +1,12 @@
-## Hire Us Application (Web)
+## Hire Us Application (Web + API)
 
 A mobile app/web based booking application that will cater market in entertainment and events industry. 
-To have own payment system that allows customers/client to pay online in order to book using debit card.
+To have own payment system that allows customers/client to pay online in order to book using debit/credit card.
 
 ## Tools
 
 -PHP CodeIgniter<br>
--RESTful<br>
+-RESTful API<br>
 -HTML/CSS/Bootstrap<br>
 -JavaScript<br>
 
