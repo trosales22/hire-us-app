@@ -18,7 +18,7 @@
   <meta name="author" content="Tristan Rosales">
 
   <title>Hire Us - Bookings</title>
-	
+
   <!-- Custom fonts for this template -->
   <link href="<?php echo base_url(); ?>static/SBAdmin/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
   <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
@@ -68,80 +68,11 @@
       <div id="content">
 
 				<?php include 'pages/topbar.php';?>
-				
-        <!-- Begin Talents -->
+
+				<!-- Bookings (Paid/Refunded) -->
         <div class="container-fluid">
-          <!-- Page Heading -->
-          <h1 class="h3 mb-2 text-gray-800">Roster of Talents</h1>
-          <p class="mb-4">"Your Long-Term RAKET Partner"</p>
-
-          <div class="card shadow mb-4">
-            <div class="card-header py-3">
-              <a class="btnAddTalentOrModel btn btn-primary btn-icon-split" href="#" data-toggle="modal" data-target="#addTalentOrModelModal">
-                <span class="icon text-white-50">
-                  <i class="fas fa-plus-circle"></i>
-                </span>
-                <span class="text">Add Talent/Model</span>
-              </a>
-            </div>
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-bordered" id="tbl_talents" width="100%" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>Name</th>
-                      <th>Birth Date</th>
-											<th>Hourly Rate</th>
-											<th>Gender</th>
-                      <th>Actions</th>
-                    </tr>
-                  </thead>
-                  
-                  <tbody>
-										<?php foreach($talents as $talent){?>
-											<tr>
-												<td><?php echo $talent->fullname;?></td>
-												<td><?php echo $talent->birth_date;?></td>
-												<td><?php echo $talent->hourly_rate;?></td>
-												<td><?php echo $talent->gender;?></td>
-												<td>
-													<a href="#" data-toggle="modal" data-id="<?php echo $talent->talent_id;?>" data-target="#viewOrEditTalentOrModelModal" class="btnViewOrEditTalent btn btn-success btn-icon-split">
-														<span class="icon text-white-50">
-															<i class="fas fa-edit"></i>
-														</span>
-														<span class="text">View or Edit</span>
-													</a>
-
-													<a id="btnAddTalentResources" href="#" data-toggle="modal" data-id="<?php echo $talent->talent_id;?>" data-target="#updateTalentResourcesModal" class="btn btn-info btn-icon-split">
-														<span class="icon text-white-50">
-															<i class="fas fa-plus-circle"></i>
-														</span>
-														<span class="text">Add Resources</span>
-													</a>
-												</td>
-											</tr> 
-                     <?php }?>
-                  </tbody>
-
-                  <tfoot>
-                    <tr>
-                      <th>Name</th>
-                      <th>Birth Date</th>
-											<th>Hourly Rate</th>
-											<th>Gender</th>
-                      <th>Actions</th>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-        <!-- End Talents -->
-
-				<!-- Begin Clients -->
-        <div class="container-fluid">
-          <h1 class="h3 mb-2 text-gray-800">Clients</h1>
+					<h1 class="h3 mb-2 text-gray-800">Bookings</h1>
+					<p class="mb-4">Bookings with <b>Paid / Refunded</b> status</p>
 					
           <div class="card shadow mb-4">
             <div class="card-body">
@@ -192,12 +123,12 @@
               </div>
             </div>
           </div>
-        </div>
-        <!-- End Clients -->
-
-				<!-- Begin Applicants -->
+				</div>
+				
+				<!-- Bookings (Pending) -->
         <div class="container-fluid">
-          <h1 class="h3 mb-2 text-gray-800">Applicants</h1>
+					<h1 class="h3 mb-2 text-gray-800">Bookings</h1>
+					<p class="mb-4">Bookings with <b>Pending</b> status</p>
 					
           <div class="card shadow mb-4">
             <div class="card-body">
@@ -246,7 +177,6 @@
             </div>
           </div>
         </div>
-        <!-- End Applicants -->
 
       </div>
       <!-- End of Main Content -->
