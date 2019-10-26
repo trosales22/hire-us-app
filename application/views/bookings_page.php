@@ -77,46 +77,32 @@
           <div class="card shadow mb-4">
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-bordered" id="tbl_clients" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="tbl_paid_refunded_bookings" width="100%" cellspacing="0">
                   <thead>
-                    <tr>
-                      <th>Name</th>
-											<th>Username</th>
-                      <th>Email</th>
-											<th>Type</th>
-											<th>Status</th>
-                      <th>Actions</th>
+										<tr>
+                      <th>Date</th>
+											<th>Talent Fullname</th>
+											<th>Talent Category</th>
+											<th>Client</th>
+											<th>Payment Option</th>
+											<th>Schedule</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   
                   <tbody>
-										<?php foreach($clients as $client){?>
-											<tr>
-												<td><?php echo $client->fullname;?></td>
-												<td><?php echo $client->username;?></td>
-												<td><?php echo $client->email;?></td>
-												<td><?php echo $client->role_name;?></td>
-												<td><?php echo $client->status_flag;?></td>
-												<td>
-													<a href="#" data-toggle="modal" data-id="<?php echo $client->user_id;?>" data-target="#checkRequirementsModal" class="btnCheckRequirements btn btn-success btn-icon-split">
-														<span class="icon text-white-50">
-															<i class="fas fa-edit"></i>
-														</span>
-														<span class="text">Check Requirements</span>
-													</a>
-												</td>
-											</tr> 
-                     <?php }?>
+										
                   </tbody>
 
                   <tfoot>
-                    <tr>
-											<th>Name</th>
-											<th>Username</th>
-                      <th>Email</th>
-											<th>Type</th>
-											<th>Status</th>
-                      <th>Actions</th>
+										<tr>
+                      <th>Date</th>
+											<th>Talent Fullname</th>
+											<th>Talent Category</th>
+											<th>Client</th>
+											<th>Payment Option</th>
+											<th>Schedule</th>
+                      <th>Action</th>
                     </tr>
                   </tfoot>
                 </table>
@@ -133,30 +119,34 @@
           <div class="card shadow mb-4">
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-bordered" id="tbl_applicants" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="tbl_pending_bookings" width="100%" cellspacing="0">
                   <thead>
                     <tr>
-                      <th>Name</th>
-                      <th>Email</th>
-											<th>Contact Number</th>
-											<th>Status</th>
-                      <th>Actions</th>
+                      <th>Date</th>
+											<th>Talent Fullname</th>
+											<th>Talent Category</th>
+											<th>Client</th>
+											<th>Payment Option</th>
+											<th>Schedule</th>
+                      <th>Action</th>
                     </tr>
                   </thead>
                   
                   <tbody>
-										<?php foreach($applicants as $applicant){?>
+										<?php foreach($pending_bookings as $pending_booking){?>
 											<tr>
-												<td><?php echo $applicant->fullname;?></td>
-												<td><?php echo $applicant->email;?></td>
-												<td><?php echo $applicant->contact_number;?></td>
-												<td><?php echo $applicant->status_flag;?></td>
+												<td><?php echo $pending_booking->created_date;?></td>
+												<td><?php echo $pending_booking->temp_talent_id->firstname . ' ' . $pending_booking->temp_talent_id->lastname; ?></td>
+												<td><?php echo $pending_booking->temp_talent_id->category_names;?></td>
+												<td><?php echo $pending_booking->temp_client_id->fullname . ' (' . $pending_booking->temp_client_id->role_name . ')';?></td>
+												<td><?php echo $pending_booking->temp_payment_option;?></td>
+												<td><?php echo $pending_booking->temp_booking_date . ' ' . $pending_booking->temp_booking_time;?></td>
 												<td>
 													<a href="#" class="btn btn-success btn-icon-split">
 														<span class="icon text-white-50">
-															<i class="fas fa-edit"></i>
+															<i class="fas fa-check"></i>
 														</span>
-														<span class="text">Check Requirements</span>
+														<span class="text">Update Status</span>
 													</a>
 												</td>
 											</tr> 
@@ -164,12 +154,14 @@
                   </tbody>
 
                   <tfoot>
-                    <tr>
-											<th>Name</th>
-                      <th>Email</th>
-											<th>Contact Number</th>
-											<th>Status</th>
-                      <th>Actions</th>
+										<tr>
+                      <th>Date</th>
+											<th>Talent Fullname</th>
+											<th>Talent Category</th>
+											<th>Client</th>
+											<th>Payment Option</th>
+											<th>Schedule</th>
+                      <th>Action</th>
                     </tr>
                   </tfoot>
                 </table>
@@ -195,14 +187,6 @@
   </a>
 
   <?php include 'pages/modals/logout.php';?>
-
-  <?php include 'pages/modals/add_talent.php';?>
-	
-	<?php include 'pages/modals/update_talent_resources.php';?>
-	
-	<?php include 'pages/modals/check_requirements.php';?>
-	
-	<?php include 'pages/modals/view_or_edit_talent.php';?>
 	
   <!-- Bootstrap core JavaScript-->
   <script src="<?php echo base_url(); ?>static/SBAdmin/vendor/jquery/jquery.min.js"></script>
@@ -225,7 +209,7 @@
 	<script src="<?php echo base_url(); ?>static/SBAdmin/js/demo/datatables-demo.js"></script>
 	<script src="https://parsleyjs.org/dist/parsley.min.js"></script>
 	<script src="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.js"></script>
-	<script src="<?php echo base_url(); ?>static/js/home.js"></script>
+	<script src="<?php echo base_url(); ?>static/js/bookings.js"></script>
 
 </body>
 

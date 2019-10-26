@@ -1,54 +1,18 @@
 <?php
-class Home_model extends CI_Model {
+class Bookings_model extends CI_Model {
 
-	public function getPersonalInfo($username_or_email){
-		$params = array($username_or_email, $username_or_email, 'Y');
+	public function get_pending_bookings(){
 		$query = "
 			SELECT 
-				A.user_id, A.username, 
-				A.firstname, A.lastname, A.email, 
-				B.role_code, C.role_name
+				A.temp_booking_id, A.temp_talent_id,    
+				A.temp_client_id, 
+				A.temp_booking_date, A.temp_booking_time, 
+				A.temp_total_amount, A.temp_status, A.temp_payment_option,
+				DATE_FORMAT(A.temp_created_date, '%M %d, %Y %r') as created_date
 			FROM 
-				users A
-			LEFT JOIN 
-				user_role B ON A.user_id = B.user_id 
-			LEFT JOIN 
-				param_roles C ON B.role_code = C.role_id 
-			WHERE 
-				A.username = ? OR A.email = ? AND A.active_flag = ?";
+				temp_booking_list A";
 
-		$stmt = $this->db->query($query, $params);
-		return $stmt->result();
-	}
-
-	private function _get_email_of_client($user_id){
-		$params = array($user_id);
-		$query = "
-			SELECT 
-				user_id, email 
-			FROM 
-				users 
-			WHERE 
-				user_id = ?";
-
-		$stmt = $this->db->query($query, $params);
-		$return_val = $stmt->result();
-		return $return_val[0];
-	}
-
-  	public function getAllCategories() {
-		$params = array('Y');
-
-		$query = "
-			SELECT 
-				category_id,category_name
-			FROM 
-				param_categories 
-			WHERE 
-				active_flag = ?
-			";
-
-		$stmt = $this->db->query($query, $params);
+		$stmt = $this->db->query($query);
 		return $stmt->result();
 	}
 
@@ -67,12 +31,7 @@ class Home_model extends CI_Model {
 		return $stmt->result();
 	}
 
-	public function getAllClients($user_id = NULL){
-		$where_condition = '';
-		if(!empty($user_id)){
-			$where_condition .= 'AND A.user_id = ' . $user_id;
-		}
-
+	public function getAllClients(){
 		$query = "
 			SELECT 
 				A.user_id, A.username, A.email, A.contact_number,
@@ -87,7 +46,7 @@ class Home_model extends CI_Model {
 			LEFT JOIN 
 				client_details D ON A.user_id = D.user_id
 			WHERE 
-				B.role_code IN ('CLIENT_COMPANY', 'CLIENT_INDIVIDUAL') $where_condition
+				B.role_code IN ('CLIENT_COMPANY', 'CLIENT_INDIVIDUAL')
 			ORDER BY 
 				A.user_id DESC";
 
