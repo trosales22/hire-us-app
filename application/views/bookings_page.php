@@ -69,15 +69,14 @@
 
 				<?php include 'pages/topbar.php';?>
 
-				<!-- Bookings (Paid/Refunded) -->
+				<!-- Bookings (Paid) -->
         <div class="container-fluid">
-					<h1 class="h3 mb-2 text-gray-800">Bookings</h1>
-					<p class="mb-4">Bookings with <b>Paid / Refunded</b> status</p>
+					<h1 class="h3 mb-2 text-gray-800">Paid Bookings</h1>
 					
           <div class="card shadow mb-4">
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-bordered" id="tbl_paid_refunded_bookings" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="tbl_paid_bookings" width="100%" cellspacing="0">
                   <thead>
 										<tr>
                       <th>Date</th>
@@ -86,12 +85,20 @@
 											<th>Client</th>
 											<th>Payment Option</th>
 											<th>Schedule</th>
-                      <th>Action</th>
                     </tr>
                   </thead>
                   
                   <tbody>
-										
+										<?php foreach($paid_bookings as $paid_booking){?>
+											<tr>
+												<td><?php echo $paid_booking->created_date;?></td>
+												<td><?php echo $paid_booking->talent_id->firstname . ' ' . $paid_booking->talent_id->lastname; ?></td>
+												<td><?php echo $paid_booking->talent_id->category_names;?></td>
+												<td><?php echo $paid_booking->client_id->fullname . ' (' . $paid_booking->client_id->role_name . ')';?></td>
+												<td><?php echo $paid_booking->payment_option;?></td>
+												<td><?php echo $paid_booking->preferred_date . '<br/>' . $paid_booking->preferred_time;?></td>
+											</tr> 
+                     <?php }?>
                   </tbody>
 
                   <tfoot>
@@ -102,7 +109,6 @@
 											<th>Client</th>
 											<th>Payment Option</th>
 											<th>Schedule</th>
-                      <th>Action</th>
                     </tr>
                   </tfoot>
                 </table>
@@ -113,8 +119,7 @@
 				
 				<!-- Bookings (Pending) -->
         <div class="container-fluid">
-					<h1 class="h3 mb-2 text-gray-800">Bookings</h1>
-					<p class="mb-4">Bookings with <b>Pending</b> status</p>
+					<h1 class="h3 mb-2 text-gray-800">Pending Bookings</h1>
 					
           <div class="card shadow mb-4">
             <div class="card-body">
@@ -140,13 +145,20 @@
 												<td><?php echo $pending_booking->temp_talent_id->category_names;?></td>
 												<td><?php echo $pending_booking->temp_client_id->fullname . ' (' . $pending_booking->temp_client_id->role_name . ')';?></td>
 												<td><?php echo $pending_booking->temp_payment_option;?></td>
-												<td><?php echo $pending_booking->temp_booking_date . ' ' . $pending_booking->temp_booking_time;?></td>
+												<td><?php echo $pending_booking->temp_booking_date . '<br/>' . $pending_booking->temp_booking_time;?></td>
 												<td>
-													<a href="#" class="btn btn-success btn-icon-split">
-														<span class="icon text-white-50">
+													<a href="#" class="btn btn-success btn-icon-split" style="width: 100%; margin-bottom: 8px;">
+														<span class="icon text-white-50" style="float: left;">
 															<i class="fas fa-check"></i>
 														</span>
-														<span class="text">Update Status</span>
+														<span class="text">Approve</span>
+													</a>
+													<br/>
+													<a href="#" class="btn btn-danger btn-icon-split" style="width: 100%;">
+														<span class="icon text-white-50" style="float: left;">
+															<i class="fas fa-window-close"></i>
+														</span>
+														<span class="text">Decline</span>
 													</a>
 												</td>
 											</tr> 

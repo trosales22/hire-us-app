@@ -11,4 +11,4 @@ function base_url() {
 }
 
 $('#tbl_pending_bookings').DataTable();
-$('#tbl_paid_refunded_bookings').DataTable();
+$('#tbl_paid_bookings').DataTable();
