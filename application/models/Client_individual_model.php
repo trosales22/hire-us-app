@@ -77,21 +77,22 @@ class Client_individual_model extends CI_Model {
 		$lastInsertedId = $this->db->insert_id();
 	}
 
-	public function add_to_client_booking_list(array $data){
+	public function add_to_client_booking_list(array $booking_params, array $email_params){
 		$client_booking_params = array(
-			'talent_id' 		=> $data['talent_id'],
-			'client_id' 		=> $data['client_id'],
-			'preferred_date' 	=> $data['preferred_date'],
-			'preferred_time' 	=> $data['preferred_time'],
-			'payment_option' 	=> $data['payment_option'],
-			'total_amount' 		=> $data['total_amount']
-			
+			'talent_id' 		=> $booking_params['talent_id'],
+			'client_id' 		=> $booking_params['client_id'],
+			'preferred_date' 	=> $booking_params['preferred_date'],
+			'preferred_time' 	=> $booking_params['preferred_time'],
+			'payment_option' 	=> $booking_params['payment_option'],
+			'total_amount' 		=> $booking_params['total_amount']
 		);
 
 		$this->db->insert('client_booking_list', $client_booking_params);
 		$lastInsertedId = $this->db->insert_id();
+		
+		$this->_send_successful_booking_to_client_email_notif($booking_params, $email_params);
 	}
-
+	
 	public function get_booking_list_by_client_id($client_id){
 		$params = array($client_id);
 
@@ -123,5 +124,32 @@ class Client_individual_model extends CI_Model {
 		
     	$stmt = $this->db->query($query, $params);
     	return $stmt->result();
+	}
+
+	private function _send_successful_booking_to_client_email_notif(array $booking_params, array $email_params){
+		try{
+			$success = 0;
+			$from = "support@hireusph.com";
+			$to = $email_params['client_details']->email;
+			$honorific = '';
+			$message = '';
+			$subject = "Hire Us | Congratulations for a successful booking!";
+			
+			$message = "Hi " . $email_params['client_details']->fullname . "!\n\n";
+			$message .= "Below are your booking details:\n\n";
+			$message .= "Schedule:\n" . $booking_params['preferred_date'] . '\n' . $booking_params['preferred_time']  . "\n";
+			$message .= "Talent Fullname: " . $email_params['talent_details']->fullname . "\n";
+			$message .= "Talent Category: " . $email_params['talent_details']->category_names . "\n";
+			$message .= "Rate per hour: ₱" . $email_params['talent_details']->hourly_rate . "\n";
+			$message .= "Payment Method: " . $booking_params['payment_option'] . "\n";
+			$message .= "Total Amount: ₱" . $booking_params['total_amount'] . "\n";
+			$message .= "Thank you for supporting Hire Us PH.\n";
+			
+			$headers = "From:" . $from;
+			mail($to, $subject, $message, $headers);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
 	}
 }
