@@ -82,7 +82,7 @@
                       <th>Date</th>
 											<th>Talent Fullname</th>
 											<th>Talent Category</th>
-											<th>Client</th>
+											<th>Client Name</th>
 											<th>Payment Option</th>
 											<th>Schedule</th>
                     </tr>
@@ -106,7 +106,7 @@
                       <th>Date</th>
 											<th>Talent Fullname</th>
 											<th>Talent Category</th>
-											<th>Client</th>
+											<th>Client Name</th>
 											<th>Payment Option</th>
 											<th>Schedule</th>
                     </tr>
@@ -130,7 +130,7 @@
                       <th>Date</th>
 											<th>Talent Fullname</th>
 											<th>Talent Category</th>
-											<th>Client</th>
+											<th>Client Name</th>
 											<th>Payment Option</th>
 											<th>Schedule</th>
                       <th>Action</th>
@@ -170,7 +170,7 @@
                       <th>Date</th>
 											<th>Talent Fullname</th>
 											<th>Talent Category</th>
-											<th>Client</th>
+											<th>Client Name</th>
 											<th>Payment Option</th>
 											<th>Schedule</th>
                       <th>Action</th>
