@@ -62,19 +62,21 @@ class Client_individual_model extends CI_Model {
 		$this->db->insert_batch('user_valid_id', $data['valid_id_beside_your_face_image']);
 	}
 
-	public function add_to_temp_booking_list(array $data){
+	public function add_to_temp_booking_list(array $booking_params, array $email_params){
 		$temp_booking_params = array(
-			'temp_client_id' 			=> $data['temp_client_id'],
-			'temp_talent_id' 			=> $data['temp_talent_id'],
-			'temp_booking_date' 		=> $data['temp_booking_date'],
-			'temp_booking_time' 		=> $data['temp_booking_time'],
-			'temp_total_amount' 		=> $data['temp_total_amount'],
-			'temp_status' 				=> $data['temp_status'],
-			'temp_payment_option' 		=> $data['temp_payment_option']
+			'temp_client_id' 			=> $booking_params['temp_client_id'],
+			'temp_talent_id' 			=> $booking_params['temp_talent_id'],
+			'temp_booking_date' 		=> $booking_params['temp_booking_date'],
+			'temp_booking_time' 		=> $booking_params['temp_booking_time'],
+			'temp_total_amount' 		=> $booking_params['temp_total_amount'],
+			'temp_status' 				=> $booking_params['temp_status'],
+			'temp_payment_option' 		=> $booking_params['temp_payment_option']
 		);
 
 		$this->db->insert('temp_booking_list', $temp_booking_params);
 		$lastInsertedId = $this->db->insert_id();
+
+		$this->_send_pending_booking_to_client_email_notif($booking_params, $email_params);
 	}
 
 	public function add_to_client_booking_list(array $booking_params, array $email_params){
@@ -93,7 +95,7 @@ class Client_individual_model extends CI_Model {
 		$this->_send_successful_booking_to_client_email_notif($booking_params, $email_params);
 		$this->_send_successful_booking_to_talent_email_notif($booking_params, $email_params);
 	}
-	
+
 	public function get_booking_list_by_client_id($client_id){
 		$params = array($client_id);
 
@@ -180,6 +182,34 @@ class Client_individual_model extends CI_Model {
 			$message .= "Payment Method: " . $booking_params['payment_option'] . "\n";
 			$message .= "Total Amount: ₱" . $booking_params['total_amount'] . "\n";
 			$message .= "Congratulations from Hire Us PH.\n";
+			
+			$headers = "From:" . $from;
+			mail($to, $subject, $message, $headers);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+	}
+
+	private function _send_pending_booking_to_client_email_notif(array $booking_params, array $email_params){
+		try{
+			$success = 0;
+			$from = "support@hireusph.com";
+			$to = $email_params['client_details']->email;
+			$message = '';
+			$subject = "Hire Us | Congratulations for a successful booking!";
+			
+			$message = "Hi " . $email_params['client_details']->fullname . "!\n\n";
+			$message .= "Below are your booking details:\n\n";
+			$message .= "Schedule:\n" . $booking_params['temp_booking_date'] . '\n' . $booking_params['temp_booking_time']  . "\n";
+			$message .= "Talent Fullname: " . $email_params['talent_details']->fullname . "\n";
+			$message .= "Talent Category: " . $email_params['talent_details']->category_names . "\n";
+			$message .= "Rate per hour: ₱" . $email_params['talent_details']->hourly_rate . "\n";
+			$message .= "Payment Method: " . $booking_params['payment_option'] . "\n";
+			$message .= "Total Amount: ₱" . $booking_params['temp_total_amount'] . "\n";
+			$message .= "Status: PENDING" . "\n\n";
+			$message .= "Note: You have 48hrs to pay your booked talent/model. Otherwise, your booking will be forfeited.\n";
+			$message .= "Thank you for supporting Hire Us PH.\n";
 			
 			$headers = "From:" . $from;
 			mail($to, $subject, $message, $headers);

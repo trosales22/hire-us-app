@@ -155,9 +155,17 @@ class Client extends REST_Controller {
 				
 			if(EMPTY($booking_params['temp_total_amount']))
 				throw new Exception("Total Amount is required.");
-				
+
+			$email_params = array(
+				'talent_details' 	=> $this->talents_model->getTalentDetails($booking_params['temp_talent_id'])[0],
+				'client_details' 	=> $this->home_model->getAllClients($booking_params['temp_client_id'])[0]
+			);
+			
+			// print "<pre>";
+			// die(print_r($email_params));
+			
 			//will soon add validation if client_id & talent_id is existing
-			$this->client_individual_model->add_to_temp_booking_list($booking_params);
+			$this->client_individual_model->add_to_temp_booking_list($booking_params, $email_params);
 			$success  = 1;
 		}catch (Exception $e){
 			$msg = $e->getMessage();
@@ -209,7 +217,7 @@ class Client extends REST_Controller {
 				'talent_details' 	=> $this->talents_model->getTalentDetails($client_booking_params['talent_id'])[0],
 				'client_details' 	=> $this->home_model->getAllClients($client_booking_params['client_id'])[0]
 			);
-			
+
 			// print "<pre>";
 			// die(print_r($email_params));
 
