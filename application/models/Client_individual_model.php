@@ -91,6 +91,7 @@ class Client_individual_model extends CI_Model {
 		$lastInsertedId = $this->db->insert_id();
 		
 		$this->_send_successful_booking_to_client_email_notif($booking_params, $email_params);
+		$this->_send_successful_booking_to_talent_email_notif($booking_params, $email_params);
 	}
 	
 	public function get_booking_list_by_client_id($client_id){
@@ -131,7 +132,6 @@ class Client_individual_model extends CI_Model {
 			$success = 0;
 			$from = "support@hireusph.com";
 			$to = $email_params['client_details']->email;
-			$honorific = '';
 			$message = '';
 			$subject = "Hire Us | Congratulations for a successful booking!";
 			
@@ -144,6 +144,42 @@ class Client_individual_model extends CI_Model {
 			$message .= "Payment Method: " . $booking_params['payment_option'] . "\n";
 			$message .= "Total Amount: ₱" . $booking_params['total_amount'] . "\n";
 			$message .= "Thank you for supporting Hire Us PH.\n";
+			
+			$headers = "From:" . $from;
+			mail($to, $subject, $message, $headers);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+	}
+
+	private function _send_successful_booking_to_talent_email_notif(array $booking_params, array $email_params){
+		try{
+			$success = 0;
+			$from = "support@hireusph.com";
+			$to = $email_params['talent_details']->email;
+			$honorific = '';
+			$message = '';
+			$subject = "Hire Us | Congratulations! You have a client!";
+
+			switch($email_params['talent_details']->gender){
+				case 'Male':
+					$honorific = 'Mr. ';
+					break;
+				case 'Female':
+					$honorific = 'Ms/Mrs. ';
+					break;
+			}
+			
+			$message = "Hi " . $honorific . $email_params['talent_details']->fullname . "!\n\n";
+			$message .= "Below are your booking details:\n\n";
+			$message .= "Schedule:\n" . $booking_params['preferred_date'] . '\n' . $booking_params['preferred_time']  . "\n";
+			$message .= "Client Fullname: " . $email_params['client_details']->fullname . "\n";
+			$message .= "Client Type: " . $email_params['client_details']->role_name . "\n";
+			$message .= "Client Contact Number: " . $email_params['client_details']->contact_number . "\n";
+			$message .= "Payment Method: " . $booking_params['payment_option'] . "\n";
+			$message .= "Total Amount: ₱" . $booking_params['total_amount'] . "\n";
+			$message .= "Congratulations from Hire Us PH.\n";
 			
 			$headers = "From:" . $from;
 			mail($to, $subject, $message, $headers);
