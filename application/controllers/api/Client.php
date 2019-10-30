@@ -136,6 +136,7 @@ class Client extends REST_Controller {
 				'temp_client_id' 			=> trim($this->post('temp_client_id')),
 				'temp_booking_date' 		=> trim($this->post('temp_booking_date')),
 				'temp_booking_time' 		=> trim($this->post('temp_booking_time')),
+				'temp_booking_venue'		=> trim($this->post('temp_booking_venue')),
 				'temp_total_amount' 		=> trim($this->post('temp_total_amount')),
 				'temp_status' 				=> trim($this->post('temp_status')),
 				'temp_payment_option' 		=> trim($this->post('temp_payment_option'))
@@ -152,6 +153,9 @@ class Client extends REST_Controller {
 			
 			if(EMPTY($booking_params['temp_booking_time']))
 				throw new Exception("Preferred Time is required.");
+
+			if(EMPTY($booking_params['temp_booking_venue']))
+				throw new Exception("Preferred Venue is required.");
 				
 			if(EMPTY($booking_params['temp_total_amount']))
 				throw new Exception("Total Amount is required.");
@@ -185,7 +189,7 @@ class Client extends REST_Controller {
 
 		$this->response($response);
 	}
-
+	
 	public function add_to_client_booking_list_post(){
 		try{
 			$success        = 0;
@@ -194,6 +198,7 @@ class Client extends REST_Controller {
 				'client_id' 		=> trim($this->post('client_id')),
 				'preferred_date' 	=> trim($this->post('preferred_date')),
 				'preferred_time' 	=> trim($this->post('preferred_time')),
+				'preferred_venue'	=> trim($this->post('preferred_venue')),
 				'payment_option' 	=> trim($this->post('payment_option')),
 				'total_amount' 		=> trim($this->post('total_amount'))
 			);
@@ -209,7 +214,10 @@ class Client extends REST_Controller {
 			
 			if(EMPTY($client_booking_params['preferred_time']))
 				throw new Exception("Preferred Time is required.");
-				
+
+			if(EMPTY($client_booking_params['preferred_venue']))
+				throw new Exception("Preferred Venue is required.");
+			
 			if(EMPTY($client_booking_params['total_amount']))
 				throw new Exception("Total Amount is required.");
 			

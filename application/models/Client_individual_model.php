@@ -68,6 +68,7 @@ class Client_individual_model extends CI_Model {
 			'temp_talent_id' 			=> $booking_params['temp_talent_id'],
 			'temp_booking_date' 		=> $booking_params['temp_booking_date'],
 			'temp_booking_time' 		=> $booking_params['temp_booking_time'],
+			'temp_booking_venue'		=> $booking_params['temp_booking_venue'],
 			'temp_total_amount' 		=> $booking_params['temp_total_amount'],
 			'temp_status' 				=> $booking_params['temp_status'],
 			'temp_payment_option' 		=> $booking_params['temp_payment_option']
@@ -85,6 +86,7 @@ class Client_individual_model extends CI_Model {
 			'client_id' 		=> $booking_params['client_id'],
 			'preferred_date' 	=> $booking_params['preferred_date'],
 			'preferred_time' 	=> $booking_params['preferred_time'],
+			'preferred_venue'	=> $booking_params['preferred_venue'],
 			'payment_option' 	=> $booking_params['payment_option'],
 			'total_amount' 		=> $booking_params['total_amount']
 		);
@@ -102,7 +104,7 @@ class Client_individual_model extends CI_Model {
 		$query = "
 			SELECT 
 				A.booking_id, A.client_id, A.talent_id, A.total_amount,
-				A.preferred_date, A.preferred_time, A.payment_option,
+				A.preferred_date, A.preferred_time, A.preferred_venue, A.payment_option,
 				DATE_FORMAT(A.created_date, '%M %d, %Y %r') as date_paid
 			FROM 
 				client_booking_list A 
