@@ -4,13 +4,13 @@ class Bookings_model extends CI_Model {
 	public function get_pending_bookings(){
 		$query = "
 			SELECT 
-				A.temp_booking_id, A.temp_talent_id,    
-				A.temp_client_id, 
-				A.temp_booking_date, A.temp_booking_time, 
-				A.temp_total_amount, A.temp_status, A.temp_payment_option,
-				DATE_FORMAT(A.temp_created_date, '%M %d, %Y %r') as created_date
+				temp_booking_id, temp_talent_id,    
+				temp_client_id, temp_booking_date, 
+				temp_booking_time, temp_booking_venue, 
+				temp_total_amount, temp_status, temp_payment_option,
+				DATE_FORMAT(temp_created_date, '%M %d, %Y %r') as created_date
 			FROM 
-				temp_booking_list A";
+				temp_booking_list";
 
 		$stmt = $this->db->query($query);
 		return $stmt->result();
@@ -21,7 +21,7 @@ class Bookings_model extends CI_Model {
 			SELECT 
 				booking_id, talent_id, client_id, 
 				preferred_date, preferred_time, 
-				total_amount, payment_option,
+				preferred_venue, total_amount, payment_option,
 				DATE_FORMAT(created_date, '%M %d, %Y %r') as created_date
 			FROM 
 				client_booking_list";

@@ -96,7 +96,7 @@
 												<td><?php echo $paid_booking->talent_id->category_names;?></td>
 												<td><?php echo $paid_booking->client_id->fullname . ' (' . $paid_booking->client_id->role_name . ')';?></td>
 												<td><?php echo $paid_booking->payment_option;?></td>
-												<td><?php echo $paid_booking->preferred_date . '<br/>' . $paid_booking->preferred_time;?></td>
+												<td><?php echo $paid_booking->preferred_date . '<br/>' . $paid_booking->preferred_time . '<br/>' . $paid_booking->preferred_venue;?></td>
 											</tr> 
                      <?php }?>
                   </tbody>
@@ -145,7 +145,7 @@
 												<td><?php echo $pending_booking->temp_talent_id->category_names;?></td>
 												<td><?php echo $pending_booking->temp_client_id->fullname . ' (' . $pending_booking->temp_client_id->role_name . ')';?></td>
 												<td><?php echo $pending_booking->temp_payment_option;?></td>
-												<td><?php echo $pending_booking->temp_booking_date . '<br/>' . $pending_booking->temp_booking_time;?></td>
+												<td><?php echo $pending_booking->temp_booking_date . '<br/>' . $pending_booking->temp_booking_time . '<br/>' . $pending_booking->temp_booking_venue;?></td>
 												<td>
 													<a href="#" class="btn btn-success btn-icon-split" style="width: 100%; margin-bottom: 8px;">
 														<span class="icon text-white-50" style="float: left;">
