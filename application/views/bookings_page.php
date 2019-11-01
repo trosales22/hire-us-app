@@ -147,14 +147,14 @@
 												<td><?php echo $pending_booking->temp_payment_option;?></td>
 												<td><?php echo $pending_booking->temp_booking_date . '<br/>' . $pending_booking->temp_booking_time . '<br/>' . $pending_booking->temp_booking_venue;?></td>
 												<td>
-													<a href="#" class="btn btn-success btn-icon-split" style="width: 100%; margin-bottom: 8px;">
+													<a class="btnApproveBooking btn btn-success btn-icon-split" style="width: 100%; margin-bottom: 8px; cursor: pointer; color: white;" data-id="<?php echo $pending_booking->temp_booking_id;?>">
 														<span class="icon text-white-50" style="float: left;">
 															<i class="fas fa-check"></i>
 														</span>
 														<span class="text">Approve</span>
 													</a>
 													<br/>
-													<a href="#" class="btn btn-danger btn-icon-split" style="width: 100%;">
+													<a class="btnDeclineBooking btn btn-danger btn-icon-split" style="width: 100%; cursor: pointer; color: white;" data-id="<?php echo $pending_booking->temp_booking_id;?>">
 														<span class="icon text-white-50" style="float: left;">
 															<i class="fas fa-window-close"></i>
 														</span>

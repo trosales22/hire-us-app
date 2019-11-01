@@ -1,7 +1,12 @@
 <?php
 class Bookings_model extends CI_Model {
 
-	public function get_pending_bookings(){
+	public function get_pending_bookings($temp_booking_id = NULL){
+		$where_condition = '';
+		if(!empty($temp_booking_id)){
+			$where_condition .= 'WHERE temp_booking_id = ' . $temp_booking_id;
+		}
+
 		$query = "
 			SELECT 
 				temp_booking_id, temp_talent_id,    
@@ -10,7 +15,7 @@ class Bookings_model extends CI_Model {
 				temp_total_amount, temp_status, temp_payment_option,
 				DATE_FORMAT(temp_created_date, '%M %d, %Y %r') as created_date
 			FROM 
-				temp_booking_list";
+				temp_booking_list $where_condition";
 
 		$stmt = $this->db->query($query);
 		return $stmt->result();
@@ -29,7 +34,7 @@ class Bookings_model extends CI_Model {
 		$stmt = $this->db->query($query);
 		return $stmt->result();
 	}
-
+	
 	private function _send_client_status_email_notif($email, $status){
 		try{
 			$success = 0;
@@ -89,5 +94,84 @@ class Bookings_model extends CI_Model {
 		
 		$client_details = $this->_get_email_of_client($data['user_id']);		
 		$this->_send_client_status_email_notif($client_details->email, $data['active_flag']);
+	}
+
+	private function _send_successful_booking_to_client_email_notif(array $booking_params, array $email_params){
+		try{
+			$success = 0;
+			$from = "support@hireusph.com";
+			$to = $email_params['client_details']->email;
+			$message = '';
+			$subject = "Hire Us | Congratulations for a successful booking!";
+			
+			$message = "Hi " . $email_params['client_details']->fullname . "!\n\n";
+			$message .= "Below are your booking details:\n\n";
+			$message .= "Schedule:\n" . $booking_params['preferred_date'] . '\n' . $booking_params['preferred_time']  . "\n";
+			$message .= "Talent Fullname: " . $email_params['talent_details']->fullname . "\n";
+			$message .= "Talent Category: " . $email_params['talent_details']->category_names . "\n";
+			$message .= "Rate per hour: ₱" . $email_params['talent_details']->hourly_rate . "\n";
+			$message .= "Payment Method: " . $booking_params['payment_option'] . "\n";
+			$message .= "Venue: " . $booking_params['preferred_venue'] . "\n";
+			$message .= "Total Amount: ₱" . $booking_params['total_amount'] . "\n";
+			$message .= "Thank you for supporting Hire Us PH.\n";
+			
+			$headers = "From:" . $from;
+			mail($to, $subject, $message, $headers);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+	}
+
+	private function _send_successful_booking_to_talent_email_notif(array $booking_params, array $email_params){
+		try{
+			$success = 0;
+			$from = "support@hireusph.com";
+			$to = $email_params['talent_details']->email;
+			$honorific = '';
+			$message = '';
+			$subject = "Hire Us | Congratulations! You have a client!";
+
+			switch($email_params['talent_details']->gender){
+				case 'Male':
+					$honorific = 'Mr. ';
+					break;
+				case 'Female':
+					$honorific = 'Ms/Mrs. ';
+					break;
+			}
+			
+			$message = "Hi " . $honorific . $email_params['talent_details']->fullname . "!\n\n";
+			$message .= "Below are your booking details:\n\n";
+			$message .= "Schedule:\n" . $booking_params['preferred_date'] . '\n' . $booking_params['preferred_time']  . "\n";
+			$message .= "Client Fullname: " . $email_params['client_details']->fullname . "\n";
+			$message .= "Client Type: " . $email_params['client_details']->role_name . "\n";
+			$message .= "Client Contact Number: " . $email_params['client_details']->contact_number . "\n";
+			$message .= "Payment Method: " . $booking_params['payment_option'] . "\n";
+			$message .= "Venue: " . $booking_params['preferred_venue'] . "\n";
+			$message .= "Total Amount: ₱" . $booking_params['total_amount'] . "\n";
+			$message .= "Congratulations from Hire Us PH.\n";
+			
+			$headers = "From:" . $from;
+			mail($to, $subject, $message, $headers);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+	}
+
+	public function approve_booking($booking_id, $client_booking_list_params, $email_params){
+		$this->db->insert('client_booking_list', $client_booking_list_params);
+		$lastInsertedId = $this->db->insert_id();
+
+		$this->_send_successful_booking_to_client_email_notif($client_booking_list_params, $email_params);
+		$this->_send_successful_booking_to_talent_email_notif($client_booking_list_params, $email_params);
+
+		$this->db->delete('temp_booking_list', array('temp_booking_id' => $booking_id));
+	}
+
+	public function decline_booking($booking_id){
+		$booking_details = $this->get_pending_bookings($booking_id);
+		$this->db->delete('temp_booking_list', array('temp_booking_id' => $booking_id));
 	}
 }

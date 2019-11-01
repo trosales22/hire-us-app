@@ -146,6 +146,7 @@ class Client_individual_model extends CI_Model {
 			$message .= "Talent Category: " . $email_params['talent_details']->category_names . "\n";
 			$message .= "Rate per hour: ₱" . $email_params['talent_details']->hourly_rate . "\n";
 			$message .= "Payment Method: " . $booking_params['payment_option'] . "\n";
+			$message .= "Venue: " . $booking_params['preferred_venue'] . "\n";
 			$message .= "Total Amount: ₱" . $booking_params['total_amount'] . "\n";
 			$message .= "Thank you for supporting Hire Us PH.\n";
 			
@@ -182,6 +183,7 @@ class Client_individual_model extends CI_Model {
 			$message .= "Client Type: " . $email_params['client_details']->role_name . "\n";
 			$message .= "Client Contact Number: " . $email_params['client_details']->contact_number . "\n";
 			$message .= "Payment Method: " . $booking_params['payment_option'] . "\n";
+			$message .= "Venue: " . $booking_params['preferred_venue'] . "\n";
 			$message .= "Total Amount: ₱" . $booking_params['total_amount'] . "\n";
 			$message .= "Congratulations from Hire Us PH.\n";
 			
@@ -208,6 +210,7 @@ class Client_individual_model extends CI_Model {
 			$message .= "Talent Category: " . $email_params['talent_details']->category_names . "\n";
 			$message .= "Rate per hour: ₱" . $email_params['talent_details']->hourly_rate . "\n";
 			$message .= "Payment Method: " . $booking_params['payment_option'] . "\n";
+			$message .= "Venue: " . $booking_params['temp_booking_venue'] . "\n";
 			$message .= "Total Amount: ₱" . $booking_params['temp_total_amount'] . "\n";
 			$message .= "Status: PENDING" . "\n\n";
 			$message .= "Note: You have 48hrs to pay your booked talent/model. Otherwise, your booking will be forfeited.\n";
