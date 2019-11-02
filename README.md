@@ -7,6 +7,7 @@ To have own payment system that allows customers/client to pay online in order t
 
 -PHP CodeIgniter<br>
 -RESTful API<br>
+-MySQL<br>
 -HTML/CSS/Bootstrap<br>
 -JavaScript<br>
 
