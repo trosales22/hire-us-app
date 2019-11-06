@@ -177,8 +177,8 @@ class Client extends REST_Controller {
 
 		if($success == 1){
 			$response = array(
-				'status' 	=> 'OK',
-				'msg'		=> 'Added to temporary booking list!'
+				'msg'		=> 'Added to temporary booking list!',
+				'flag'      => $success
 			);
 		}else{
 			$response = [

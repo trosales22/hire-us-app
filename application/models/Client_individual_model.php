@@ -1,4 +1,8 @@
 <?php
+require APPPATH . 'libraries/PHPMailer/src/Exception.php';
+require APPPATH . 'libraries/PHPMailer/src/PHPMailer.php';
+require APPPATH . 'libraries/PHPMailer/src/SMTP.php';
+
 class Client_individual_model extends CI_Model {
 	public function add_individual_client(array $data){
 		//insert to talents table
@@ -63,21 +67,26 @@ class Client_individual_model extends CI_Model {
 	}
 
 	public function add_to_temp_booking_list(array $booking_params, array $email_params){
-		$temp_booking_params = array(
-			'temp_client_id' 			=> $booking_params['temp_client_id'],
-			'temp_talent_id' 			=> $booking_params['temp_talent_id'],
-			'temp_booking_date' 		=> $booking_params['temp_booking_date'],
-			'temp_booking_time' 		=> $booking_params['temp_booking_time'],
-			'temp_booking_venue'		=> $booking_params['temp_booking_venue'],
-			'temp_total_amount' 		=> $booking_params['temp_total_amount'],
-			'temp_status' 				=> $booking_params['temp_status'],
-			'temp_payment_option' 		=> $booking_params['temp_payment_option']
-		);
+		try{
+			$temp_booking_params = array(
+				'temp_client_id' 			=> $booking_params['temp_client_id'],
+				'temp_talent_id' 			=> $booking_params['temp_talent_id'],
+				'temp_booking_date' 		=> $booking_params['temp_booking_date'],
+				'temp_booking_time' 		=> $booking_params['temp_booking_time'],
+				'temp_booking_venue'		=> $booking_params['temp_booking_venue'],
+				'temp_total_amount' 		=> $booking_params['temp_total_amount'],
+				'temp_status' 				=> $booking_params['temp_status'],
+				'temp_payment_option' 		=> $booking_params['temp_payment_option']
+			);
 
-		$this->db->insert('temp_booking_list', $temp_booking_params);
-		$lastInsertedId = $this->db->insert_id();
+			$this->db->insert('temp_booking_list', $temp_booking_params);
+			$lastInsertedId = $this->db->insert_id();
 
-		$this->_send_pending_booking_to_client_email_notif($booking_params, $email_params);
+			$this->_send_pending_booking_to_client_email_notif($booking_params, $email_params);
+		}catch(Exception $e){
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
+		}
 	}
 
 	public function add_to_client_booking_list(array $booking_params, array $email_params){
@@ -126,6 +135,21 @@ class Client_individual_model extends CI_Model {
 				client_booking_list A 
 			WHERE 
 				A.talent_id = ? AND A.created_date >= CURDATE()";
+		
+    	$stmt = $this->db->query($query, $params);
+    	return $stmt->result();
+	}
+
+	public function get_already_reserved_schedule_temporary($temp_talent_id){
+		$params = array($temp_talent_id);
+		$query = "
+			SELECT 
+				A.temp_booking_id, A.temp_talent_id, A.temp_booking_date, 
+				A.temp_booking_time, A.temp_created_date
+			FROM 
+				temp_booking_list A 
+			WHERE 
+				A.temp_talent_id = ? AND A.temp_created_date >= CURDATE()";
 		
     	$stmt = $this->db->query($query, $params);
     	return $stmt->result();
@@ -202,25 +226,43 @@ class Client_individual_model extends CI_Model {
 			$to = $email_params['client_details']->email;
 			$message = '';
 			$subject = "Hire Us | Congratulations for a successful booking!";
-			
+
+			$mail = new PHPMailer\PHPMailer\PHPMailer();
+			$mail->isSMTP();
+			$mail->SMTPDebug = 2;
+			$mail->Host = 'smtp.hostinger.com';
+			$mail->Port = 587;
+			$mail->SMTPAuth = true;
+			$mail->Username = $from;
+			$mail->Password = 'kartko90';
+			$mail->setFrom($from, 'HIRE US PH');
+			$mail->addAddress($to, $email_params['client_details']->fullname);
+			$mail->Subject = $subject;
+
 			$message = "Hi " . $email_params['client_details']->fullname . "!\n\n";
 			$message .= "Below are your booking details:\n\n";
 			$message .= "Schedule:\n" . $booking_params['temp_booking_date'] . '\n' . $booking_params['temp_booking_time']  . "\n";
 			$message .= "Talent Fullname: " . $email_params['talent_details']->fullname . "\n";
 			$message .= "Talent Category: " . $email_params['talent_details']->category_names . "\n";
 			$message .= "Rate per hour: ₱" . $email_params['talent_details']->hourly_rate . "\n";
-			$message .= "Payment Method: " . $booking_params['payment_option'] . "\n";
+			$message .= "Payment Method: " . $booking_params['temp_payment_option'] . "\n";
 			$message .= "Venue: " . $booking_params['temp_booking_venue'] . "\n";
 			$message .= "Total Amount: ₱" . $booking_params['temp_total_amount'] . "\n";
 			$message .= "Status: PENDING" . "\n\n";
 			$message .= "Note: You have 48hrs to pay your booked talent/model. Otherwise, your booking will be forfeited.\n";
 			$message .= "Thank you for supporting Hire Us PH.\n";
 			
-			$headers = "From:" . $from;
-			mail($to, $subject, $message, $headers);
+			$mail->AltBody = $message;
+			if (!$mail->send()) {
+				throw new Exception($mail->ErrorInfo);
+			}
+
+			// $headers = "From:" . $from;
+			// mail($to, $subject, $message, $headers);
 			$success  = 1;
 		}catch (Exception $e){
-			$msg = $e->getMessage();      
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
 		}
 	}
 }
