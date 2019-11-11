@@ -1,8 +1,4 @@
 <?php
-require APPPATH . 'libraries/PHPMailer/src/Exception.php';
-require APPPATH . 'libraries/PHPMailer/src/PHPMailer.php';
-require APPPATH . 'libraries/PHPMailer/src/SMTP.php';
-
 class Client_individual_model extends CI_Model {
 	public function add_individual_client(array $data){
 		//insert to talents table
@@ -227,18 +223,6 @@ class Client_individual_model extends CI_Model {
 			$message = '';
 			$subject = "Hire Us | Congratulations for a successful booking!";
 
-			$mail = new PHPMailer\PHPMailer\PHPMailer();
-			$mail->isSMTP();
-			$mail->SMTPDebug = 2;
-			$mail->Host = 'smtp.hostinger.com';
-			$mail->Port = 587;
-			$mail->SMTPAuth = true;
-			$mail->Username = $from;
-			$mail->Password = 'kartko90';
-			$mail->setFrom($from, 'HIRE US PH');
-			$mail->addAddress($to, $email_params['client_details']->fullname);
-			$mail->Subject = $subject;
-
 			$message = "Hi " . $email_params['client_details']->fullname . "!\n\n";
 			$message .= "Below are your booking details:\n\n";
 			$message .= "Schedule:\n" . $booking_params['temp_booking_date'] . '\n' . $booking_params['temp_booking_time']  . "\n";
@@ -252,13 +236,8 @@ class Client_individual_model extends CI_Model {
 			$message .= "Note: You have 48hrs to pay your booked talent/model. Otherwise, your booking will be forfeited.\n";
 			$message .= "Thank you for supporting Hire Us PH.\n";
 			
-			$mail->AltBody = $message;
-			if (!$mail->send()) {
-				throw new Exception($mail->ErrorInfo);
-			}
-
-			// $headers = "From:" . $from;
-			// mail($to, $subject, $message, $headers);
+			$headers = "From:" . $from;
+			mail($to, $subject, $message, $headers);
 			$success  = 1;
 		}catch (Exception $e){
 			$msg = $e->getMessage();
