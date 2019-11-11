@@ -75,15 +75,24 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'root',
-	'password' => '',
-	'database' => 'dbhireus',
 
+	//LOCAL SERVER
+	// 'hostname' => 'localhost',
+	// 'username' => 'root',
+	// 'password' => '',
+	// 'database' => 'dbhireus',
+
+	//PRODUCTION SERVER
 	// 'hostname' => 'localhost',
 	// 'username' => 'u483267008_dbhu',
 	// 'password' => 'canthire01',
 	// 'database' => 'u483267008_hireus',
+
+	//DEVELOPMENT SERVER
+	'hostname' => 'localhost',
+	'username' => 'u191444882_hireus_admin',
+	'password' => 'teamhireus03',
+	'database' => 'u191444882_hireusph_dev',
 	
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
