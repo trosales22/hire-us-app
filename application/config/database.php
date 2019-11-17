@@ -82,17 +82,17 @@ $db['default'] = array(
 	// 'password' => '',
 	// 'database' => 'dbhireus',
 
-	//PRODUCTION SERVER
-	// 'hostname' => 'localhost',
-	// 'username' => 'u483267008_dbhu',
-	// 'password' => 'canthire01',
-	// 'database' => 'u483267008_hireus',
-
 	//DEVELOPMENT SERVER
 	'hostname' => 'localhost',
 	'username' => 'u191444882_hireus_admin',
 	'password' => 'teamhireus03',
 	'database' => 'u191444882_hireusph_dev',
+
+	//PRODUCTION SERVER
+	// 'hostname' => 'localhost',
+	// 'username' => 'u483267008_dbhu',
+	// 'password' => 'canthire01',
+	// 'database' => 'u483267008_hireus',
 	
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',

@@ -119,7 +119,7 @@ class Talents extends REST_Controller {
 
 		if($success == 1){
 			$response = [
-			'reserved_schedule_list' => $reserved_schedule_list
+				'reserved_schedule_list' => $reserved_schedule_list
 			];
 		}else{
 			$response = [
@@ -148,6 +148,35 @@ class Talents extends REST_Controller {
 
 		if($success == 1){
 			$response = $talent_details[0];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+	  
+		$this->response($response);
+	}
+
+	public function get_all_talent_by_category_get(){
+		try{
+			$success 					= 0;
+			$category_id      			= $this->get('category_id');
+
+			if(EMPTY($category_id))
+        		throw new Exception("Category ID is required.");
+			
+			$talents_per_category_list 	= $this->talents_model->get_all_talent_by_category($category_id);
+			
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+				'talents_per_category_list' => $talents_per_category_list
+			];
 		}else{
 			$response = [
 				'msg'       => $msg,

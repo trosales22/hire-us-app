@@ -145,6 +145,25 @@ class Talents_model extends CI_Model {
 		return $stmt->result();
 	}
 
+	public function get_all_talent_by_category($category_id){
+		$params = array($category_id);
+
+		$query = "
+			SELECT
+				A.tc_id, A.talent_id, A.category_id,
+				B.firstname, B.lastname
+			FROM 
+				talents_category A 
+			LEFT JOIN 
+				talents B ON A.talent_id = B.talent_id
+			WHERE 
+				A.category_id = ?
+		";
+		
+		$stmt = $this->db->query($query, $params);
+		return $stmt->result();
+	}
+
 	public function getTalentUnavailableDates($talent_id){
 		$params = array($talent_id);
 
