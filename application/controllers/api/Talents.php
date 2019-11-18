@@ -244,4 +244,49 @@ class Talents extends REST_Controller {
 	  
 		$this->response($response);
 	}
+
+	public function add_talent_reviews_post(){
+		try{
+			$success  = 0;
+			$msg = array();
+
+			$client_reviews_params = array(
+				'review_feedback'	=> trim($this->input->post('review_feedback')),
+				'review_rating'		=> trim($this->input->post('review_rating')),
+				'review_to'			=> trim($this->input->post('review_to')),
+				'review_from'		=> trim($this->input->post('review_from'))
+			);
+
+			if(EMPTY($client_reviews_params['review_feedback']))
+				throw new Exception("Review Feedback is required.");
+			
+			if(EMPTY($client_reviews_params['review_rating']))
+				throw new Exception("Review Rating is required.");
+
+			if(EMPTY($client_reviews_params['review_to']))
+				throw new Exception("Review To is required.");
+			
+			if(EMPTY($client_reviews_params['review_from']))
+				throw new Exception("Review From is required.");
+
+			$this->talents_model->add_talent_reviews($client_reviews_params);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+				'msg'       => 'Client reviews was successfully submitted!',
+				'flag'      => $success
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+
+		$this->response($response);
+	}
 }

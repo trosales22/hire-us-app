@@ -224,4 +224,14 @@ class Talents_model extends CI_Model {
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
 	}
+	
+	public function add_talent_reviews(array $data){
+		try{
+			$this->db->insert('client_reviews', $data);
+			$lastInsertedId = $this->db->insert_id();
+		}catch(PDOException $e){
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
+		}
+	}
 }

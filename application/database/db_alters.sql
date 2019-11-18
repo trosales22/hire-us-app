@@ -9,3 +9,7 @@ ADD COLUMN `preferred_venue` LONGTEXT NOT NULL AFTER `preferred_time`;
 
 ALTER TABLE `temp_booking_list` 
 ADD COLUMN `temp_booking_venue` LONGTEXT NOT NULL AFTER `temp_booking_time`;
+
+-- 11/18/2019
+ALTER TABLE `client_reviews` 
+CHANGE COLUMN `review_rating` `review_rating` VARCHAR(10) NOT NULL;
