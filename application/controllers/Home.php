@@ -23,6 +23,8 @@ class Home extends CI_Controller {
 	}
 	
 	public function addTalentOrModel(){
+		$session_data = $this->session->userdata('logged_in');
+		
     	$talents_fields =   array(
 			'firstname'     		=> trim($this->input->post('firstname')),
 			'middlename'     		=> trim($this->input->post('middlename')),
@@ -47,7 +49,8 @@ class Home extends CI_Controller {
 				'zip_code' 		=> trim($this->input->post('zip_code'))
 			),
 			'categories'      		=> $this->input->post('category'),
-			'genre'      			=> trim($this->input->post('genre'))
+			'genre'      			=> trim($this->input->post('genre')),
+			'created_by'       		=> $session_data['user_id']
 		);
 		
     	$this->home_model->insertTalentOrModel($talents_fields);

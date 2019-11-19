@@ -162,70 +162,74 @@ class Home_model extends CI_Model {
 	}
 
   	public function insertTalentOrModel(array $data) {
-		//insert to talents table
-		$talents_fields = array(
-		'firstname' => $data['firstname'],
-		'middlename' => $data['middlename'],
-		'lastname' => $data['lastname'],
-		'email' => $data['email'],
-		'contact_number' => $data['contact_number'],
-		'gender' => $data['gender'],
-		'height' => $data['height'],
-		'birth_date' => $data['birth_date'],
-		'hourly_rate' => $data['hourly_rate'],
-		'vital_stats'	=> $data['vital_stats'],
-		'fb_followers'	=> $data['fb_followers'],
-		'instagram_followers'	=> $data['instagram_followers'],
-		'genre'	=> $data['genre'],
-		'description'	=> $data['description'],
-		'created_by' => 1,
-		);
-
-		$this->db->insert('talents', $talents_fields);
-		$lastInsertedId = $this->db->insert_id();
-			
-		//insert to talents_category table
-		foreach($data['categories'] as $category){
-			$talents_category_fields = array(
-				'talent_id' => $lastInsertedId,
-				'category_id' => $category,
+		try{
+			//insert to talents table
+			$talents_fields = array(
+				'firstname' => $data['firstname'],
+				'middlename' => $data['middlename'],
+				'lastname' => $data['lastname'],
+				'email' => $data['email'],
+				'contact_number' => $data['contact_number'],
+				'gender' => $data['gender'],
+				'height' => $data['height'],
+				'birth_date' => $data['birth_date'],
+				'hourly_rate' => $data['hourly_rate'],
+				'vital_stats'	=> $data['vital_stats'],
+				'fb_followers'	=> $data['fb_followers'],
+				'instagram_followers'	=> $data['instagram_followers'],
+				'genre'	=> $data['genre'],
+				'description'	=> $data['description'],
+				'created_by' 	=> $data['created_by']
 			);
-
-			$this->db->insert('talents_category', $talents_category_fields);
+			
+			$this->db->insert('talents', $talents_fields);
+			$lastInsertedId = $this->db->insert_id();
+				
+			//insert to talents_category table
+			foreach($data['categories'] as $category){
+				$talents_category_fields = array(
+					'talent_id' => $lastInsertedId,
+					'category_id' => $category,
+				);
+	
+				$this->db->insert('talents_category', $talents_category_fields);
+			}
+	
+			//insert to talents_account table
+			$generated_pin = 'HIRE_US@123';
+	
+			$talents_account_fields = array(
+				'talent_id' => $lastInsertedId,
+				'talent_password' => password_hash($generated_pin, PASSWORD_BCRYPT),
+			);
+			
+			$this->db->insert('talents_account', $talents_account_fields);
+			
+			//insert to talents_exp_or_prev_clients table
+			$talents_prev_clients_fields = array(
+				'talent_id' => $lastInsertedId,
+				'details'		=> $data['prev_clients']
+			);
+	
+			$this->db->insert('talents_exp_or_prev_clients', $talents_prev_clients_fields);
+			
+			//insert to talent_address table
+			$talents_address_fields = array(
+				'talent_id' 		=> $lastInsertedId,
+				'region'			=> $data['address']['region'],
+				'province' 			=> $data['address']['province'],
+				'city_muni' 		=> $data['address']['city_muni'],
+				'barangay' 			=> $data['address']['barangay'],
+				'bldg_village' 		=> $data['address']['bldg_village'],
+				'zip_code' 			=> $data['address']['zip_code']
+			);
+	
+			$this->db->insert('talents_address', $talents_address_fields);
+			$this->_send_added_talent_email_notif($data);
+		}catch(PDOException $e){
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
 		}
-
-		//insert to talents_account table
-		$generated_pin = 'HIRE_US@123';
-
-		$talents_account_fields = array(
-			'talent_id' => $lastInsertedId,
-			'talent_password' => password_hash($generated_pin, PASSWORD_BCRYPT),
-		);
-		
-		$this->db->insert('talents_account', $talents_account_fields);
-		
-		//insert to talents_exp_or_prev_clients table
-		$talents_prev_clients_fields = array(
-			'talent_id' => $lastInsertedId,
-			'details'		=> $data['prev_clients']
-		);
-
-		$this->db->insert('talents_exp_or_prev_clients', $talents_prev_clients_fields);
-		
-		//insert to talent_address table
-		$talents_address_fields = array(
-			'talent_id' 		=> $lastInsertedId,
-			'region'			=> $data['address']['region'],
-			'province' 			=> $data['address']['province'],
-			'city_muni' 		=> $data['address']['city_muni'],
-			'barangay' 			=> $data['address']['barangay'],
-			'bldg_village' 		=> $data['address']['bldg_village'],
-			'zip_code' 			=> $data['address']['zip_code']
-		);
-
-		$this->db->insert('talents_address', $talents_address_fields);
-
-		$this->_send_added_talent_email_notif($data);
 	}
 
 	private function _send_client_status_email_notif($email, $status){
@@ -281,22 +285,37 @@ class Home_model extends CI_Model {
 	}
 
 	public function update_client_status(array $data){
-		$client_params = array('active_flag' => $data['active_flag']);
-		$this->db->where('user_id', $data['user_id']);
-		$this->db->update('users', $client_params);
-		
-		$client_details = $this->_get_email_of_client($data['user_id']);		
-		$this->_send_client_status_email_notif($client_details->email, $data['active_flag']);
+		try{
+			$client_params = array('active_flag' => $data['active_flag']);
+			$this->db->where('user_id', $data['user_id']);
+			$this->db->update('users', $client_params);
+			
+			$client_details = $this->_get_email_of_client($data['user_id']);		
+			$this->_send_client_status_email_notif($client_details->email, $data['active_flag']);
+		}catch(PDOException $e){
+            $msg = $e->getMessage();
+            $this->db->trans_rollback();
+        }	
 	}
 
 	public function uploadTalentProfilePic(array $fields){
-		//insert to talents_resources table
-		$this->db->insert('talents_resources', $fields);
+		try{
+			//insert to talents_resources table
+			$this->db->insert('talents_resources', $fields);
+		}catch(PDOException $e){
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
+		}
 	}
 
 	public function uploadTalentGallery(array $data){
-		//insert to talents_gallery table
-		$insert = $this->db->insert_batch('talents_gallery',$data);
+		try{
+			//insert to talents_gallery table
+			$insert = $this->db->insert_batch('talents_gallery',$data);
+		}catch(PDOException $e){
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
+		}
 	}
 
 	public function getTalentGallery($talent_id = ''){
