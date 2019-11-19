@@ -289,4 +289,38 @@ class Talents extends REST_Controller {
 
 		$this->response($response);
 	}
+
+	public function get_talent_reviews_get(){
+		try{
+			$success = 0;
+			$talent_id = $this->get('talent_id');
+
+			if(EMPTY($talent_id))
+				throw new Exception("Talent ID is required.");
+				
+			$client_reviews_list = $this->talents_model->get_talent_reviews($talent_id);
+			
+			foreach($client_reviews_list as $client_review){
+				$client_details 			= $this->home_model->getAllClients($client_review->review_from);
+				$client_review->review_from = $client_details[0];
+			}
+			
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+				'client_reviews_list' => $client_reviews_list
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+	  
+		$this->response($response);
+	}
 }

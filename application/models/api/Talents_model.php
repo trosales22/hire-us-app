@@ -224,7 +224,7 @@ class Talents_model extends CI_Model {
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
 	}
-	
+
 	public function add_talent_reviews(array $data){
 		try{
 			$this->db->insert('client_reviews', $data);
@@ -233,5 +233,23 @@ class Talents_model extends CI_Model {
 			$msg = $e->getMessage();
 			$this->db->trans_rollback();
 		}
+	}
+
+	public function get_talent_reviews($talent_id){
+		$params = array($talent_id);
+
+		$query = "
+			SELECT 
+				review_id, review_feedback, 
+				review_rating, review_to, review_from, 
+				DATE_FORMAT(review_date, '%M %d, %Y %r') as review_date 
+			FROM 
+				client_reviews 
+			WHERE 
+				review_to = ?
+			ORDER BY review_id DESC";
+
+		$stmt = $this->db->query($query, $params);
+		return $stmt->result();
 	}
 }
