@@ -8,8 +8,12 @@
               <span aria-hidden="true">×</span>
             </button>
           </div>
-
+					
           <div class="modal-body">
+							<div class="row form-group">
+								<img src="<?php echo base_url() . '/static/images/no_profile_pic.png'; ?>" id="viewTalentDisplayPhoto" width="150" height="150" style="margin-left: auto; margin-right: auto; border:1px solid black;" />
+							</div>
+
               <div class="row form-group">
                 <div class="col-xs-4" style="margin-left: 10px; margin-right: 10px;">
                   <label for="inputFirstname">First Name</label>

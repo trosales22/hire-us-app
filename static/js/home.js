@@ -52,6 +52,19 @@ function clearBarangay(){
 	insert_talent_barangay_dropdown.append('<option disabled="disabled" selected="selected">Choose Barangay</option>');
 }
 
+function isEmpty(value){
+	return (
+	  // null or undefined
+	  (value == null) ||
+  
+	  // has length and it's zero
+	  (value.hasOwnProperty('length') && value.length === 0) ||
+  
+	  // is an Object and has no keys
+	  (value.constructor === Object && Object.keys(value).length === 0)
+	);
+}
+
 $("#inputBirthdate").flatpickr({
 	dateFormat: "Y-m-d",
 	static: true,
@@ -166,7 +179,11 @@ $('.btnViewOrEditTalent').click(function(){
 		$("input[name='talent_instagram_followers']").val(response.instagram_followers);
 		$("textarea[name='talent_description']").val(response.talent_description);
 		$("textarea[name='talent_prev_clients']").val(response.talent_experiences);
-
+		
+		if(!isEmpty(response.talent_display_photo)){
+			$('img#viewTalentDisplayPhoto').attr("src", response.talent_display_photo);
+		}
+		
 		region_dropdown.val(response.region_code);
 		
 		var getAllProvinceUrl = base_url() + 'api/client/get_all_provinces_by_region_code?region_code=' + response.region_code;
