@@ -14,7 +14,7 @@ ADD COLUMN `temp_booking_venue` LONGTEXT NOT NULL AFTER `temp_booking_time`;
 ALTER TABLE `client_reviews` 
 CHANGE COLUMN `review_rating` `review_rating` VARCHAR(10) NOT NULL;
 
--- 11/24/2019
+-- 11/24/2019 (DONE)
 ALTER TABLE `talents` 
 CHANGE COLUMN `hourly_rate` `hourly_rate` VARCHAR(255) NULL;
 
