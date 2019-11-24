@@ -9,7 +9,7 @@ To have own payment system that allows customers/client to pay online in order t
 -RESTful API<br>
 -MySQL<br>
 -HTML/CSS/Bootstrap<br>
--JavaScript<br>
+-VanillaJS<br>
 
 ## Server Requirements
 

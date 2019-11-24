@@ -13,3 +13,11 @@ ADD COLUMN `temp_booking_venue` LONGTEXT NOT NULL AFTER `temp_booking_time`;
 -- 11/18/2019 (DONE)
 ALTER TABLE `client_reviews` 
 CHANGE COLUMN `review_rating` `review_rating` VARCHAR(10) NOT NULL;
+
+-- 11/24/2019
+ALTER TABLE `talents` 
+CHANGE COLUMN `hourly_rate` `hourly_rate` VARCHAR(255) NULL;
+
+ALTER TABLE `talents` 
+ADD COLUMN `screen_name` VARCHAR(100) NOT NULL AFTER `lastname`;
+

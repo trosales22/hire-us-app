@@ -477,10 +477,13 @@ function addTalentOrModel(){
 	$("#frmAddTalentOrModel").submit(function(e) {
 		//prevent Default functionality
 		e.preventDefault();
-	
+		var formAction = e.currentTarget.action;
+		var formData = new FormData(this);
+		var formType = "POST";
+		
 		//get the action-url of the form
 		var actionUrl = e.currentTarget.action;
-	
+		
 		$.confirm({
 			title: 'Confirmation!',
 			content: 'Are you sure you want to add this talent/model?',
@@ -493,20 +496,40 @@ function addTalentOrModel(){
 				YES: function () {
 					$.ajax({
 						url: actionUrl,
-						type: 'POST',
-						data: $("#frmAddTalentOrModel").serialize(),
+						type: formType,
+						data: formData,
+						processData: false,
+						contentType: false,
+						cache: false,
+						async: false,
 						success: function(data) {
-							$.alert({
-								title: 'Yehey!',
-								content: 'Talent was successfully added!',
-								useBootstrap: false,
-								theme: 'supervan',
-								buttons: {
-									'Ok, Got It!': function () {
-										location.replace(base_url());
+							var obj = data;
+							
+							if(obj.flag === 0){
+								$.alert({
+									title: "Oops! We're sorry!",
+									content: obj.msg,
+									useBootstrap: false,
+									theme: 'supervan',
+									buttons: {
+										'Ok, Got It!': function () {
+											//do nothing
+										}
 									}
-								}
-							});
+								});
+							}else{
+								$.alert({
+									title: 'Success!',
+									content: obj.msg,
+									useBootstrap: false,
+									theme: 'supervan',
+									buttons: {
+										'Ok, Got It!': function () {
+											location.replace(base_url());
+										}
+									}
+								});
+							}
 						},
 						error: function(xhr, status, error){
 							var errorMessage = xhr.status + ': ' + xhr.statusText;

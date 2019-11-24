@@ -55,8 +55,8 @@ class Home_model extends CI_Model {
   	public function getAllTalents() {
 		$query = "
 			SELECT
-				talent_id,CONCAT(firstname, ' ', lastname) as fullname,
-				hourly_rate,gender,
+				talent_id, CONCAT(firstname, ' ', lastname) as fullname,
+				screen_name, hourly_rate, gender,
 				DATE_FORMAT(birth_date, '%M %d, %Y') as birth_date
 			FROM
 				talents
@@ -161,77 +161,6 @@ class Home_model extends CI_Model {
 		return $pin;
 	}
 
-  	public function insertTalentOrModel(array $data) {
-		try{
-			//insert to talents table
-			$talents_fields = array(
-				'firstname' => $data['firstname'],
-				'middlename' => $data['middlename'],
-				'lastname' => $data['lastname'],
-				'email' => $data['email'],
-				'contact_number' => $data['contact_number'],
-				'gender' => $data['gender'],
-				'height' => $data['height'],
-				'birth_date' => $data['birth_date'],
-				'hourly_rate' => $data['hourly_rate'],
-				'vital_stats'	=> $data['vital_stats'],
-				'fb_followers'	=> $data['fb_followers'],
-				'instagram_followers'	=> $data['instagram_followers'],
-				'genre'	=> $data['genre'],
-				'description'	=> $data['description'],
-				'created_by' 	=> $data['created_by']
-			);
-			
-			$this->db->insert('talents', $talents_fields);
-			$lastInsertedId = $this->db->insert_id();
-				
-			//insert to talents_category table
-			foreach($data['categories'] as $category){
-				$talents_category_fields = array(
-					'talent_id' => $lastInsertedId,
-					'category_id' => $category,
-				);
-	
-				$this->db->insert('talents_category', $talents_category_fields);
-			}
-	
-			//insert to talents_account table
-			$generated_pin = 'HIRE_US@123';
-	
-			$talents_account_fields = array(
-				'talent_id' => $lastInsertedId,
-				'talent_password' => password_hash($generated_pin, PASSWORD_BCRYPT),
-			);
-			
-			$this->db->insert('talents_account', $talents_account_fields);
-			
-			//insert to talents_exp_or_prev_clients table
-			$talents_prev_clients_fields = array(
-				'talent_id' => $lastInsertedId,
-				'details'		=> $data['prev_clients']
-			);
-	
-			$this->db->insert('talents_exp_or_prev_clients', $talents_prev_clients_fields);
-			
-			//insert to talent_address table
-			$talents_address_fields = array(
-				'talent_id' 		=> $lastInsertedId,
-				'region'			=> $data['address']['region'],
-				'province' 			=> $data['address']['province'],
-				'city_muni' 		=> $data['address']['city_muni'],
-				'barangay' 			=> $data['address']['barangay'],
-				'bldg_village' 		=> $data['address']['bldg_village'],
-				'zip_code' 			=> $data['address']['zip_code']
-			);
-	
-			$this->db->insert('talents_address', $talents_address_fields);
-			$this->_send_added_talent_email_notif($data);
-		}catch(PDOException $e){
-			$msg = $e->getMessage();
-			$this->db->trans_rollback();
-		}
-	}
-
 	private function _send_client_status_email_notif($email, $status){
 		try{
 			$success = 0;
@@ -246,36 +175,6 @@ class Home_model extends CI_Model {
 				$message = "Whoop. We're sorry! Your account has been deactivated!";
 			}
 
-			$headers = "From:" . $from;
-			mail($to, $subject, $message, $headers);
-			$success  = 1;
-		}catch (Exception $e){
-			$msg = $e->getMessage();      
-		}
-	}
-
-	private function _send_added_talent_email_notif(array $data){
-		try{
-			$success = 0;
-			$from = "support@hireusph.com";
-			$to = $data['email'];
-			$honorific = '';
-			$message = '';
-			$subject = "Welcome to Hire Us PH!";
-
-			if($data['gender'] == 'Male'){
-				$honorific = 'Mr. ';
-			}else if($data['gender'] == 'Female'){
-				$honorific = 'Ms/Mrs. ';
-			}
-
-			$message = "Hi " . $honorific . $data['firstname'] . ' ' . $data['lastname'] . "!\n\n";
-			$message .= "Below are your account details:\n\n";
-			$message .= "Email: " . $data['email'] . "\n";
-			$message .= "Contact Number: " . $data['contact_number'] . "\n";
-			$message .= "Rate per hour: PHP" . $data['hourly_rate'] . "\n";
-			$message .= "Password: HIRE_US@123\n\nYou can now login your account as a Talent/Model. Thank you & welcome to Hire Us PH.\n";
-			
 			$headers = "From:" . $from;
 			mail($to, $subject, $message, $headers);
 			$success  = 1;

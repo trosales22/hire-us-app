@@ -29,7 +29,6 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.css">
 	<link href="<?php echo base_url(); ?>static/css/parsley.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.css" rel="stylesheet">
-
   <style>
   div.gallery {
     margin: 5px;
@@ -90,6 +89,7 @@
                   <thead>
                     <tr>
                       <th>Name</th>
+                      <th>Screen Name</th>
                       <th>Birth Date</th>
 											<th>Hourly Rate</th>
 											<th>Gender</th>
@@ -100,23 +100,17 @@
                   <tbody>
 										<?php foreach($talents as $talent){?>
 											<tr>
-												<td><?php echo $talent->fullname;?></td>
+                        <td><?php echo $talent->fullname;?></td>
+                        <td><?php echo $talent->screen_name;?></td>
 												<td><?php echo $talent->birth_date;?></td>
 												<td><?php echo $talent->hourly_rate;?></td>
 												<td><?php echo $talent->gender;?></td>
 												<td>
-													<a href="#" data-toggle="modal" data-id="<?php echo $talent->talent_id;?>" data-target="#viewOrEditTalentOrModelModal" class="btnViewOrEditTalent btn btn-success btn-icon-split">
+													<a href="#" data-toggle="modal" data-id="<?php echo $talent->talent_id;?>" data-target="#viewOrEditTalentOrModelModal" class="btnViewOrEditTalent btn btn-info btn-icon-split">
 														<span class="icon text-white-50">
 															<i class="fas fa-edit"></i>
 														</span>
 														<span class="text">View or Edit</span>
-													</a>
-
-													<a id="btnAddTalentResources" href="#" data-toggle="modal" data-id="<?php echo $talent->talent_id;?>" data-target="#updateTalentResourcesModal" class="btn btn-info btn-icon-split">
-														<span class="icon text-white-50">
-															<i class="fas fa-plus-circle"></i>
-														</span>
-														<span class="text">Add Resources</span>
 													</a>
 												</td>
 											</tr> 
@@ -126,6 +120,7 @@
                   <tfoot>
                     <tr>
                       <th>Name</th>
+                      <th>Screen Name</th>
                       <th>Birth Date</th>
 											<th>Hourly Rate</th>
 											<th>Gender</th>
@@ -296,7 +291,6 @@
 	<script src="https://parsleyjs.org/dist/parsley.min.js"></script>
 	<script src="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.js"></script>
 	<script src="<?php echo base_url(); ?>static/js/home.js"></script>
-
 </body>
 
 </html>

@@ -1,7 +1,7 @@
 <div class="modal fade" id="addTalentOrModelModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
 	<div class="modal-dialog modal-lg" role="document">
       <div class="modal-content">
-        <form id="frmAddTalentOrModel" method="POST" action="<?php echo base_url(). 'home/addTalentOrModel'; ?>">
+        <form id="frmAddTalentOrModel" method="POST" action="<?php echo base_url(). 'api/talents/add_talent'; ?>">
           <div class="modal-header">
             <h5 class="modal-title" id="exampleModalLabel">Add Talent or Model</h5>
             <button class="close" type="button" data-dismiss="modal" aria-label="Close">
@@ -61,7 +61,7 @@
 								
                 <div class="col-sm-4">
 									<label for="inputHourlyRate">Rate per hour</label>
-                  <input type="text" class="form-control" id="inputHourlyRate" name="hourly_rate" placeholder="Enter hourly rate" required>
+                  <input type="text" class="form-control" id="inputHourlyRate" name="hourly_rate" placeholder="Enter hourly rate">
                 </div>
               </div>
 
@@ -85,7 +85,7 @@
 							<div class="row form-group">
 								<div class="col-sm-5">
                		<label for="inputDescription">Description</label>
-                	<textarea class="form-control" rows="5" id="inputDescription" name="description" placeholder="Enter talent's motto in life or any other things that describe him/her.." style="resize: none;" required></textarea>
+                	<textarea class="form-control" rows="5" id="inputDescription" name="description" placeholder="Enter talent's motto in life or any other things that describe him/her.." style="resize: none;"></textarea>
 								</div>
 								
 								<div class="col-sm-6">
@@ -160,9 +160,28 @@
 								<div class="col-sm-6">
 									<label for="inputGenre">Genre</label>
                   <input type="text" class="form-control" id="inputGenre" name="genre" placeholder="Enter Genre">
-								</div>		
+								</div>
+							</div>
+							
+							<div class="row form-group">
+								<div class="col-sm-6">
+									<label for="profile_picture">Profile Picture</label>
+									<input type="file" id="profile_picture" name="talent_profile_img" accept="image/png, image/jpeg" required />   
+								</div>
+								
+								<div class="col-sm-6">
+                	<label for="talent_gallery">Gallery (Min/Max: 8-10)</label>
+									<input type="file" name="talent_gallery[]" multiple accept="image/png, image/jpeg" required />
+								</div>
 							</div>
 
+							<div class="row form-group">
+                <div class="col-sm-12">
+                  <label for="inputScreenName">Screen Name</label>
+                  <input type="text" class="form-control" id="inputScreenName" name="screen_name" placeholder="Enter screen name" required>
+                </div>
+              </div>
+							
 							<div class="alert alert-info">
 								<strong>Reminder!</strong> <br />Default password: <b>HIRE_US@123</b>
 							</div>
