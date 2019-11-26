@@ -22,6 +22,35 @@ class Home extends CI_Controller {
     $this->load->view('home_page', $this->data);
 	}
 
+	public function delete_applicant(){
+		try{
+			$success 	= 0;
+			$user_id 	= trim($this->input->get('user_id'));
+			
+			if(EMPTY($user_id))
+				throw new Exception("User ID is required.");
+
+			$this->home_model->delete_applicant($user_id);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();
+		}
+
+		if($success == 1){
+			$response = [
+				'msg'       => 'Applicant was successfully deleted.',
+				'flag'      => $success
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+
+		echo json_encode($response);
+	}
+
 	public function update_client_status(){
 		try{
 			$success       	= 0;

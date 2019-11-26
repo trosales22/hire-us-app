@@ -216,14 +216,14 @@
 												<td><?php echo $applicant->contact_number;?></td>
 												<td><?php echo $applicant->status_flag;?></td>
 												<td>
-													<a href="#" class="btn btn-success btn-icon-split">
-														<span class="icon text-white-50">
-															<i class="fas fa-edit"></i>
+                          <a style="width: 100%; cursor: pointer; color: white;" data-id="<?php echo $applicant->user_id;?>" class="btnDeleteApplicant btn btn-danger btn-icon-split">
+														<span class="icon text-white-50" style="margin-right: auto;">
+															<i class="fas fa-trash"></i>
 														</span>
-														<span class="text">Check Requirements</span>
+														<span class="text" style="margin-right: auto;">Delete Applicant</span>
 													</a>
 												</td>
-											</tr> 
+											</tr>
                      <?php }?>
                   </tbody>
 

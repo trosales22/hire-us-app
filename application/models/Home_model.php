@@ -116,6 +116,16 @@ class Home_model extends CI_Model {
 		$stmt = $this->db->query($query);
 		return $stmt->result();
 	}
+
+	public function delete_applicant($user_id){
+        try {
+			$this->db->delete('users', array('user_id' => $user_id));
+			$this->db->delete('user_role', array('user_id' => $user_id, 'role_code' => 'APPLICANT'));
+        }catch(PDOException $e){
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
+		}
+	}
 	
 	public function getTalentResourceCount($talent_id){
 		$params = array($talent_id);

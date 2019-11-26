@@ -561,5 +561,79 @@ $('#frmAddTalentOrModel').parsley().on('field:validated', function() {
 	}
 });
 
+function deleteApplicant(){
+	$('.btnDeleteApplicant').click(function(){
+		var userId = $(this).data("id");
+		console.log('userId: ' + userId);
+
+		$.confirm({
+			title: 'Confirmation!',
+			content: 'Are you sure you want to delete this applicant?',
+			useBootstrap: false, 
+			theme: 'supervan',
+			buttons: {
+				NO: function () {
+					//do nothing
+				},
+				YES: function () {
+					$.ajax({
+						url: base_url() + 'home/delete_applicant?user_id=' + userId,
+						type: "POST",
+						processData: false,
+						contentType: false,
+						cache: false,
+						async: false,
+						success: function(data) {
+							var obj = JSON.parse(data);
+	
+							if(obj.flag === 0){
+								$.alert({
+									title: "Oops! We're sorry!",
+									content: obj.msg,
+									useBootstrap: false,
+									theme: 'supervan',
+									buttons: {
+										'Ok, Got It!': function () {
+											//do nothing
+										}
+									}
+								});
+							}else{
+								$.alert({
+									title: 'Success!',
+									content: obj.msg,
+									useBootstrap: false,
+									theme: 'supervan',
+									buttons: {
+										'Ok, Got It!': function () {
+											location.replace(base_url());
+										}
+									}
+								});
+							}
+						},
+						error: function(xhr, status, error){
+							var errorMessage = xhr.status + ': ' + xhr.statusText;
+							$.alert({
+								title: "Oops! We're sorry!",
+								content: errorMessage,
+								useBootstrap: false,
+								theme: 'supervan',
+								buttons: {
+									'Ok, Got It!': function () {
+										//do nothing
+									}
+								}
+							});
+						 }
+					});
+					
+				}
+			}
+		});
+	});
+}
+
 setupInsertTalentAddress();
 setupViewEditTalentAddress();
+deleteApplicant();
