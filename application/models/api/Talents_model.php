@@ -175,7 +175,7 @@ class Talents_model extends CI_Model {
 
 		$query = "
 				SELECT
-					A.talent_id, CONCAT(A.firstname, ' ', A.lastname) as fullname,
+					A.talent_id, CONCAT(A.firstname, ' ', A.lastname) as fullname, A.screen_name,
 					A.height, A.hourly_rate, IFNULL(A.description, '') as talent_description,
 					YEAR(CURDATE()) - YEAR(A.birth_date) as age, A.gender,
 					IF( ISNULL(B.talent_display_photo), '', CONCAT('" . base_url() . "uploads/talents_or_models/', B.talent_display_photo) ) as talent_display_photo,
@@ -216,7 +216,7 @@ class Talents_model extends CI_Model {
 			SELECT
 				A.talent_id,
 				IFNULL(A.firstname, '') as firstname, IFNULL(A.middlename, '') as middlename, IFNULL(A.lastname, '') as lastname, 
-				CONCAT(A.firstname, ' ', A.lastname) as fullname,
+				CONCAT(A.firstname, ' ', A.lastname) as fullname, A.screen_name,
 				A.height, A.hourly_rate, A.gender, A.contact_number,
 				IFNULL(A.description, '') as talent_description,
 
