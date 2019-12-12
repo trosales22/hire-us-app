@@ -93,48 +93,50 @@
 		var formData = new FormData(this);
 		var formType = "POST";
 
-		$.confirm({
-			title: 'Confirmation!',
-			content: 'Are you sure you want to register as a company/corporate client?',
-			useBootstrap: false, 
-			theme: 'supervan',
-			buttons: {
-				NO: function () {
-					//do nothing
-				},
-				YES: function () {
-					$.ajax({
-						url: formAction,
-						type: formType,
-						data: formData,
-						processData: false,
-						contentType: false,
-						cache: false,
-						async: false,
-						success: function(data) {
-							console.log('data:' + data);
-							$.alert({
-								title: 'Client successfully registered!',
-								content: 'Please wait for admin approval. Please check your email from time to time. Thank you.',
-								useBootstrap: false,
-								theme: 'supervan',
-								buttons: {
-									'Ok, Got It!': function () {
-										location.replace(base_url());
-									}
+		Swal.fire({
+			title: 'Confirmation',
+			text: "Are you sure you want to register as a company/corporate client?",
+			icon: 'warning',
+			showCancelButton: true,
+			reverseButtons: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes!'
+		}).then((result) => {
+			if (result.value) {
+				$.ajax({
+					url: formAction,
+					type: formType,
+					data: formData,
+					processData: false,
+					contentType: false,
+					cache: false,
+					async: false,
+					success: function(data) {
+						console.log('data:' + data);
+						$.alert({
+							title: 'Company client was successfully registered!',
+							content: 'Please wait for admin approval. Please check your email from time to time. Thank you.',
+							useBootstrap: false,
+							theme: 'supervan',
+							buttons: {
+								'Ok, Got It!': function () {
+									location.replace(base_url());
 								}
-							});
-						},
-						error: function(xhr, status, error){
-							var errorMessage = xhr.status + ': ' + xhr.statusText
-							console.log('Error - ' + errorMessage);
-						 }
-					});
-					
-				}
+							}
+						});
+					},
+					error: function(xhr, status, error){
+						var errorMessage = xhr.status + ': ' + xhr.statusText
+						alert('Error - ' + errorMessage);
+						Swal.fire(
+							'Error!',
+							errorMessage,
+							'danger'
+						);
+					 }
+				});	
 			}
 		});
     });
-
-
 })(jQuery);

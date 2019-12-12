@@ -27,6 +27,7 @@
     <link href="<?php echo base_url(); ?>static/colorlib-regform-4/css/main.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>static/css/parsley.css" rel="stylesheet">
+	<link href="<?php echo base_url(); ?>static/css/sweetalert2.min.css" rel="stylesheet">
 </head>
 
 <body>
@@ -220,6 +221,7 @@
 	
 	<script src="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.js"></script>
 	<script src="https://parsleyjs.org/dist/parsley.min.js"></script>
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 	<script src="<?php echo base_url(); ?>static/js/client_registration_company.js"></script>
 
 </body><!-- This templates was made by Colorlib (https://colorlib.com) -->
