@@ -40,6 +40,30 @@ class Client extends REST_Controller {
 		
 		$this->response($response);
 	}
+	
+	public function get_all_regions_get(){
+		try{
+			$success        = 0;
+			$region_list = $this->clients_model->get_all_regions();
+			
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+			  'region_list' => $region_list
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+		
+		$this->response($response);
+	}
 
 	public function get_all_provinces_by_region_code_get(){
 		try{
