@@ -224,7 +224,8 @@ class Clients_model extends CI_Model {
 				A.booking_id, A.client_id, A.talent_id, A.booking_generated_id, 
 				A.booking_event_title, A.booking_talent_fee, A.booking_venue_location,
 				IFNULL(A.booking_payment_option, 'N/A') as booking_payment_option,
-				A.booking_date, A.booking_time, A.booking_other_details,
+				A.booking_date, A.booking_time, 
+				IFNULL(A.booking_other_details, 'N/A') as booking_other_details,
 				A.booking_offer_status, DATE_FORMAT(A.booking_created_date, '%M %d, %Y %r') as booking_created_date,
 				IFNULL(A.booking_decline_reason, 'N/A') as booking_decline_reason,
 				IFNULL(A.booking_approved_or_declined_date, 'N/A') as booking_approved_or_declined_date
