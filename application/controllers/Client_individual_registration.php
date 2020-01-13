@@ -10,7 +10,6 @@ class Client_individual_registration extends CI_Controller {
 		$this->load->library('session');
 		$this->load->database();
 		$this->load->model('api/Clients_model', 'clients_model');
-   		$this->load->model('Client_individual_model', 'client_individual_model');
 	}
 
   	public function index() {
@@ -99,7 +98,7 @@ class Client_individual_registration extends CI_Controller {
 						'valid_id_beside_your_face_image'			=> $uploadData
 					);
 										
-					$this->client_individual_model->add_individual_client($client_fields);
+					$this->clients_model->add_individual_client($client_fields);
 				}
 			}else{
 				$msg = array(

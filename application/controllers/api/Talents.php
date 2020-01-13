@@ -288,35 +288,6 @@ class Talents extends REST_Controller {
 		$this->response($response);
 	}
 
-	public function get_reserved_schedule_talent_get(){
-		try{
-			$success 					= 0;
-			$talent_id      			= $this->get('talent_id');
-			
-			if(EMPTY($talent_id))
-        		throw new Exception("Talent ID is required.");
-			
-			$reserved_schedule_list = $this->talents_model->get_reserved_schedule_talent($talent_id);
-			
-			$success  = 1;
-		}catch (Exception $e){
-			$msg = $e->getMessage();      
-		}
-
-		if($success == 1){
-			$response = [
-				'reserved_schedule_list' => $reserved_schedule_list
-			];
-		}else{
-			$response = [
-				'msg'       => $msg,
-				'flag'      => $success
-			];
-		}
-	  
-		$this->response($response);
-	}
-
 	public function get_talent_details_get(){
 		try{
 			$success 					= 0;
@@ -362,35 +333,6 @@ class Talents extends REST_Controller {
 		if($success == 1){
 			$response = [
 				'talents_per_category_list' => $talents_per_category_list
-			];
-		}else{
-			$response = [
-				'msg'       => $msg,
-				'flag'      => $success
-			];
-		}
-	  
-		$this->response($response);
-	}
-
-	public function get_talent_unavailable_dates_get(){
-		try{
-			$success 					= 0;
-			$talent_id      			= $this->get('talent_id');
-
-			if(EMPTY($talent_id))
-        		throw new Exception("Talent ID is required.");
-			
-			$talent_unavailable_dates = $this->talents_model->getTalentUnavailableDates($talent_id);
-			
-			$success  = 1;
-		}catch (Exception $e){
-			$msg = $e->getMessage();      
-		}
-
-		if($success == 1){
-			$response = [
-			'talent_unavailable_dates' => $talent_unavailable_dates
 			];
 		}else{
 			$response = [

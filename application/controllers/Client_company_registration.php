@@ -10,9 +10,8 @@ class Client_company_registration extends CI_Controller {
 		$this->load->library('session');
 		$this->load->database();
 		$this->load->model('api/Clients_model', 'clients_model');
-		$this->load->model('Client_company_model', 'client_company_model');
 	}
-
+	
   	public function index() {
 		$this->data['param_valid_ids'] = $this->clients_model->get_all_valid_ids();
 		$this->data['param_regions'] = $this->clients_model->get_all_regions();
@@ -127,7 +126,7 @@ class Client_company_registration extends CI_Controller {
 					
 				);
 				
-				$this->client_company_model->add_company_client($company_client_fields);
+				$this->clients_model->add_company_client($company_client_fields);
 			}
 		}else{
 			$msg = array(

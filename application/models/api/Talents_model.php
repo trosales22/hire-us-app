@@ -8,7 +8,7 @@ class Talents_model extends CI_Model {
 			$honorific = '';
 			$message = '';
 			$subject = "Welcome to Hire Us PH!";
-
+			
 			if($data['gender'] == 'Male'){
 				$honorific = 'Mr. ';
 			}else if($data['gender'] == 'Female'){
@@ -278,40 +278,6 @@ class Talents_model extends CI_Model {
 				talents B ON A.talent_id = B.talent_id
 			WHERE 
 				A.category_id = ?
-		";
-		
-		$stmt = $this->db->query($query, $params);
-		return $stmt->result();
-	}
-
-	public function getTalentUnavailableDates($talent_id){
-		$params = array($talent_id);
-
-		$query = "
-			SELECT
-				ud_talent_id,ud_sched,ud_month_year,ud_created_date
-			FROM 
-				talents_unavailable_dates 
-			WHERE 
-				ud_talent_id = ?
-			ORDER BY ud_id DESC
-		";
-		
-		$stmt = $this->db->query($query, $params);
-		return $stmt->result();
-	}
-
-	public function get_reserved_schedule_talent($talent_id){
-		$params = array($talent_id);
-
-		$query = "
-		SELECT 
-			GROUP_CONCAT(preferred_date SEPARATOR ',') as reserved_date, 
-			GROUP_CONCAT(preferred_time SEPARATOR ',') as reserved_time 
-		FROM 
-			client_booking_list 
-		WHERE 
-			talent_id = ? GROUP BY talent_id
 		";
 		
 		$stmt = $this->db->query($query, $params);

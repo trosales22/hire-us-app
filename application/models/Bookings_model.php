@@ -1,5 +1,17 @@
 <?php
 class Bookings_model extends CI_Model {
+	public function add_to_booking_list(array $booking_params, array $email_params){
+		try{	
+			$this->db->insert('client_booking_list', $booking_params);
+			$lastInsertedId = $this->db->insert_id();
+			
+			//$this->_send_successful_booking_to_client_email_notif($booking_params, $email_params);
+			//$this->_send_successful_booking_to_talent_email_notif($booking_params, $email_params);
+		}catch(PDOException $e){
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
+		}
+	}
 
 	public function get_pending_bookings($temp_booking_id = NULL){
 		$where_condition = '';
@@ -106,13 +118,15 @@ class Bookings_model extends CI_Model {
 			
 			$message = "Hi " . $email_params['client_details']->fullname . "!\n\n";
 			$message .= "Below are your booking details:\n\n";
-			$message .= "Schedule:\n" . $booking_params['preferred_date'] . '\n' . $booking_params['preferred_time']  . "\n";
+			
+			$message .= "Booking ID: " . $booking_params['booking_generated_id'] . "\n";
 			$message .= "Talent Fullname: " . $email_params['talent_details']->fullname . "\n";
 			$message .= "Talent Category: " . $email_params['talent_details']->category_names . "\n";
-			$message .= "Rate per hour: ₱" . $email_params['talent_details']->hourly_rate . "\n";
-			$message .= "Payment Method: " . $booking_params['payment_option'] . "\n";
-			$message .= "Venue: " . $booking_params['preferred_venue'] . "\n";
-			$message .= "Total Amount: ₱" . $booking_params['total_amount'] . "\n";
+			$message .= "Schedule:\n" . $booking_params['booking_date'] . '\n' . $booking_params['booking_date']  . "\n";
+			$message .= "Event Title: " . $booking_params['booking_event_title'] . "\n";
+			$message .= "Venue: " . $booking_params['booking_venue_location'] . "\n";
+			$message .= "Talent Fee: ₱" . $booking_params['booking_talent_fee'] . "\n";
+			$message .= "Other Details: " . $booking_params['booking_other_details'] . "\n\n";
 			$message .= "Thank you for supporting Hire Us PH.\n";
 			
 			$headers = "From:" . $from;
@@ -143,13 +157,16 @@ class Bookings_model extends CI_Model {
 			
 			$message = "Hi " . $honorific . $email_params['talent_details']->fullname . "!\n\n";
 			$message .= "Below are your booking details:\n\n";
-			$message .= "Schedule:\n" . $booking_params['preferred_date'] . '\n' . $booking_params['preferred_time']  . "\n";
+
+			$message .= "Booking ID: " . $booking_params['booking_generated_id'] . "\n";
 			$message .= "Client Fullname: " . $email_params['client_details']->fullname . "\n";
 			$message .= "Client Type: " . $email_params['client_details']->role_name . "\n";
 			$message .= "Client Contact Number: " . $email_params['client_details']->contact_number . "\n";
-			$message .= "Payment Method: " . $booking_params['payment_option'] . "\n";
-			$message .= "Venue: " . $booking_params['preferred_venue'] . "\n";
-			$message .= "Total Amount: ₱" . $booking_params['total_amount'] . "\n";
+			$message .= "Schedule:\n" . $booking_params['booking_date'] . '\n' . $booking_params['booking_time']  . "\n";
+			$message .= "Event Title: " . $booking_params['booking_event_title'] . "\n";
+			$message .= "Venue: " . $booking_params['booking_venue_location'] . "\n";
+			$message .= "Talent Fee: ₱" . $booking_params['booking_talent_fee'] . "\n";
+			$message .= "Other Details: " . $booking_params['booking_other_details'] . "\n\n";
 			$message .= "Congratulations from Hire Us PH.\n";
 			
 			$headers = "From:" . $from;
