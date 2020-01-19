@@ -288,27 +288,24 @@ class Talents_model extends CI_Model {
 		$params = array($talent_id);
 
 		$query = "
-		SELECT 
-			B.booking_id, A.user_id as client_id, B.talent_id, 
-			CONCAT(A.firstname, ' ', A.lastname) as fullname, 
-			IFNULL(A.gender, '') as gender, D.role_id, D.role_name,
-			B.preferred_date, B.preferred_time, 
-			B.payment_option, B.total_amount, DATE_FORMAT(B.created_date, '%M %d, %Y %r') as date_paid
-		FROM 
-			users A 
-		LEFT JOIN 
-			client_booking_list B ON A.user_id = B.client_id 
-		LEFT JOIN 
-			user_role C ON A.user_id = C.user_id 
-		LEFT JOIN 
-			param_roles D ON C.role_code = D.role_id 
-		WHERE 
-			B.talent_id = ? 
-		ORDER BY B.booking_id DESC
-		";
-		
-		$stmt = $this->db->query($query, $params);
-		return $stmt->result();
+			SELECT 
+				A.booking_id, A.client_id, A.talent_id, A.booking_generated_id, 
+				A.booking_event_title, A.booking_talent_fee, A.booking_venue_location,
+				IFNULL(A.booking_payment_option, 'N/A') as booking_payment_option,
+				A.booking_date, A.booking_time, 
+				IFNULL(A.booking_other_details, 'N/A') as booking_other_details,
+				A.booking_offer_status, DATE_FORMAT(A.booking_created_date, '%M %d, %Y %r') as booking_created_date,
+				IFNULL(A.booking_decline_reason, 'N/A') as booking_decline_reason,
+				IFNULL(A.booking_approved_or_declined_date, 'N/A') as booking_approved_or_declined_date
+			FROM 
+				client_booking_list A 
+			WHERE 
+				A.talent_id = ? 
+			ORDER BY 
+				A.booking_id DESC";
+
+    	$stmt = $this->db->query($query, $params);
+    	return $stmt->result();
 	}
 
 	public function add_talent_reviews(array $data){
