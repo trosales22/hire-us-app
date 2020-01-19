@@ -87,7 +87,7 @@ $db['default'] = array(
 	'username' => 'u191444882_hireus_admin',
 	'password' => 'teamhireus03',
 	'database' => 'u191444882_hireusph_dev',
-
+	
 	//PRODUCTION SERVER
 	// 'hostname' => 'localhost',
 	// 'username' => 'u483267008_dbhu',

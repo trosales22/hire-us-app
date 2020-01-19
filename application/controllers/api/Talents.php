@@ -9,6 +9,7 @@ class Talents extends REST_Controller {
 		$this->load->library('session');
 		$this->load->database();
 		$this->load->model('Home_model', 'home_model');
+		$this->load->model('Bookings_model', 'bookings_model');
 		$this->load->model('api/Talents_model', 'talents_model');
 	}
 	
@@ -456,6 +457,97 @@ class Talents extends REST_Controller {
 			];
 		}
 	  
+		$this->response($response);
+	}
+
+	public function approve_booking_post(){
+		try{
+			$success       			= 0;
+			$booking_generated_id 	= trim($this->input->post('booking_generated_id'));
+			
+			if(EMPTY($booking_generated_id))
+				throw new Exception("Booking ID is required.");
+
+			$booking_details = $this->bookings_model->get_booking_by_booking_generated_id($booking_generated_id);
+
+			if(empty($booking_details)){
+				throw new Exception("Booking not found. Please try again.");
+			}
+			
+			$client_booking_list_params = array(
+				'client_id'					=> $booking_details[0]->client_id,
+				'talent_id'					=> $booking_details[0]->talent_id,
+				'working_dates'				=> $booking_details[0]->booking_date,
+				'working_hours'				=> $booking_details[0]->booking_time,
+				'booking_venue_location'	=> $booking_details[0]->booking_venue_location,
+				'booking_payment_option'	=> $booking_details[0]->booking_payment_option,
+				'booking_talent_fee'		=> $booking_details[0]->booking_talent_fee,
+			);
+
+			$email_params = array(
+				'talent_details' 	=> $this->talents_model->getTalentDetails($client_booking_list_params['talent_id'])[0],
+				'client_details' 	=> $this->home_model->getAllClients($client_booking_list_params['client_id'])[0]
+			);
+			
+			$this->bookings_model->approve_booking($booking_generated_id, $client_booking_list_params, $email_params);
+
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+				'msg'       => 'Booking has been approved!',
+				'flag'      => $success
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+
+		$this->response($response);
+	}
+
+	public function decline_booking_post(){
+		try{
+			$success       				= 0;
+			$booking_generated_id 		= trim($this->input->post('booking_generated_id'));
+			$booking_decline_reason 	= trim($this->input->post('booking_decline_reason'));
+			
+			if(EMPTY($booking_generated_id))
+				throw new Exception("Booking ID is required.");
+
+			if(EMPTY($booking_decline_reason))
+				throw new Exception("Booking Decline Reason is required.");
+
+			$booking_details = $this->bookings_model->get_booking_by_booking_generated_id($booking_generated_id);
+			
+			if(empty($booking_details)){
+				throw new Exception("Booking not found. Please try again.");
+			}
+			
+			$this->bookings_model->decline_booking($booking_generated_id, $booking_decline_reason);
+
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+				'msg'       => 'Booking has been declined!',
+				'flag'      => $success
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+
 		$this->response($response);
 	}
 }

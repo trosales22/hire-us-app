@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set("Asia/Manila");
+
 class Bookings_model extends CI_Model {
 	public function add_to_booking_list(array $booking_params, array $email_params){
 		try{	
@@ -13,37 +15,25 @@ class Bookings_model extends CI_Model {
 		}
 	}
 
-	public function get_pending_bookings($temp_booking_id = NULL){
-		$where_condition = '';
-		if(!empty($temp_booking_id)){
-			$where_condition .= 'WHERE temp_booking_id = ' . $temp_booking_id;
-		}
-
+	public function get_booking_by_booking_generated_id($booking_generated_id){
+		$params = array($booking_generated_id);
+		
 		$query = "
 			SELECT 
-				temp_booking_id, temp_talent_id,    
-				temp_client_id, temp_booking_date, 
-				temp_booking_time, temp_booking_venue, 
-				temp_total_amount, temp_status, temp_payment_option,
-				DATE_FORMAT(temp_created_date, '%M %d, %Y %r') as created_date
+				booking_id, booking_generated_id, client_id, talent_id,
+				booking_event_title, booking_talent_fee, booking_venue_location,
+				IFNULL(booking_payment_option, 'N/A') as booking_payment_option,
+				booking_date, booking_time, 
+				IFNULL(booking_other_details, 'N/A') as booking_other_details,
+				booking_offer_status, DATE_FORMAT(booking_created_date, '%M %d, %Y %r') as booking_created_date,
+				IFNULL(booking_decline_reason, 'N/A') as booking_decline_reason,
+				IFNULL(booking_approved_or_declined_date, 'N/A') as booking_approved_or_declined_date
 			FROM 
-				temp_booking_list $where_condition";
-
-		$stmt = $this->db->query($query);
-		return $stmt->result();
-	}
-	
-	public function get_paid_bookings(){
-		$query = "
-			SELECT 
-				booking_id, talent_id, client_id, 
-				preferred_date, preferred_time, 
-				preferred_venue, total_amount, payment_option,
-				DATE_FORMAT(created_date, '%M %d, %Y %r') as created_date
-			FROM 
-				client_booking_list";
-
-		$stmt = $this->db->query($query);
+				client_booking_list 
+			WHERE 
+				booking_generated_id = ?";
+		
+		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
 	}
 	
@@ -104,7 +94,7 @@ class Bookings_model extends CI_Model {
 		$this->db->where('user_id', $data['user_id']);
 		$this->db->update('users', $client_params);
 		
-		$client_details = $this->_get_email_of_client($data['user_id']);		
+		$client_details = $this->_get_email_of_client($data['user_id']);
 		$this->_send_client_status_email_notif($client_details->email, $data['active_flag']);
 	}
 
@@ -177,18 +167,27 @@ class Bookings_model extends CI_Model {
 		}
 	}
 
-	public function approve_booking($booking_id, $client_booking_list_params, $email_params){
-		$this->db->insert('client_booking_list', $client_booking_list_params);
-		$lastInsertedId = $this->db->insert_id();
+	public function approve_booking($booking_generated_id, $client_booking_list_params, $email_params){
+		$booking_params = array(
+			'booking_offer_status' => 'APPROVED',
+			'booking_approved_or_declined_date' => date("Y-m-d H:i:s")
+		);
 
-		$this->_send_successful_booking_to_client_email_notif($client_booking_list_params, $email_params);
-		$this->_send_successful_booking_to_talent_email_notif($client_booking_list_params, $email_params);
-
-		$this->db->delete('temp_booking_list', array('temp_booking_id' => $booking_id));
+		$this->db->where('booking_generated_id', $booking_generated_id);
+		$this->db->update('client_booking_list', $booking_params);
+		
+		//$this->_send_successful_booking_to_client_email_notif($client_booking_list_params, $email_params);
+		//$this->_send_successful_booking_to_talent_email_notif($client_booking_list_params, $email_params);
 	}
 
-	public function decline_booking($booking_id){
-		$booking_details = $this->get_pending_bookings($booking_id);
-		$this->db->delete('temp_booking_list', array('temp_booking_id' => $booking_id));
+	public function decline_booking($booking_generated_id, $booking_decline_reason){
+		$booking_params = array(
+			'booking_offer_status' => 'DECLINED',
+			'booking_decline_reason' => $booking_decline_reason,
+			'booking_approved_or_declined_date' => date("Y-m-d H:i:s")
+		);
+
+		$this->db->where('booking_generated_id', $booking_generated_id);
+		$this->db->update('client_booking_list', $booking_params);
 	}
 }

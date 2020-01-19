@@ -41,7 +41,7 @@ $base_url_str 		= '';
 if( ISSET( $_SERVER['HTTP_HOST'] ) ){
 	//LOCAL
 	//$base_url_str 	= $http_request.'://'.$_SERVER['HTTP_HOST'].'/hire-us/';
-
+	
 	//DEVELOPMENT
 	$base_url_str 	= $http_request.'://'.$_SERVER['HTTP_HOST'].'/';
 }

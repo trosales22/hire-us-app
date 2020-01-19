@@ -43,3 +43,7 @@ CHANGE COLUMN `booking_remarks` `booking_other_details` LONGTEXT NULL DEFAULT NU
 
 ALTER TABLE `client_booking_list` 
 ADD COLUMN `booking_generated_id` VARCHAR(50) NOT NULL AFTER `talent_id`;
+
+-- 01/19/2020 (DONE)
+ALTER TABLE `client_booking_list` 
+ADD COLUMN `booking_date_paid` DATETIME NULL DEFAULT NULL AFTER `booking_approved_or_declined_date`;

@@ -296,7 +296,7 @@ class Talents_model extends CI_Model {
 				IFNULL(A.booking_other_details, 'N/A') as booking_other_details,
 				A.booking_offer_status, DATE_FORMAT(A.booking_created_date, '%M %d, %Y %r') as booking_created_date,
 				IFNULL(A.booking_decline_reason, 'N/A') as booking_decline_reason,
-				IFNULL(A.booking_approved_or_declined_date, 'N/A') as booking_approved_or_declined_date
+				IFNULL(DATE_FORMAT(A.booking_approved_or_declined_date, '%M %d, %Y %r'), 'N/A') as booking_approved_or_declined_date
 			FROM 
 				client_booking_list A 
 			WHERE 
