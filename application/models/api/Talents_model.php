@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set("Asia/Manila");
+
 class Talents_model extends CI_Model {
 	private function _send_added_talent_email_notif(array $data){
 		try{
