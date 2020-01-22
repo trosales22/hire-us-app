@@ -9,7 +9,6 @@ class Home extends CI_Controller {
 	$this->load->library('session');
     $this->load->database();
 	$this->load->model('Home_model', 'home_model');
-	$this->load->model('Client_individual_model', 'client_individual_model');
 	$this->load->model('api/Clients_model', 'clients_model');
   }
 

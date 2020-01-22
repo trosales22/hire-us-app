@@ -91,7 +91,6 @@
                       <th>Name</th>
                       <th>Screen Name</th>
                       <th>Birth Date</th>
-											<th>Hourly Rate</th>
 											<th>Gender</th>
                       <th>Actions</th>
                     </tr>
@@ -103,7 +102,6 @@
                         <td><?php echo $talent->fullname;?></td>
                         <td><?php echo $talent->screen_name;?></td>
 												<td><?php echo $talent->birth_date;?></td>
-												<td><?php echo $talent->hourly_rate;?></td>
 												<td><?php echo $talent->gender;?></td>
 												<td>
 													<a href="#" data-toggle="modal" data-id="<?php echo $talent->talent_id;?>" data-target="#viewOrEditTalentOrModelModal" class="btnViewOrEditTalent btn btn-info btn-icon-split">
@@ -122,7 +120,6 @@
                       <th>Name</th>
                       <th>Screen Name</th>
                       <th>Birth Date</th>
-											<th>Hourly Rate</th>
 											<th>Gender</th>
                       <th>Actions</th>
                     </tr>

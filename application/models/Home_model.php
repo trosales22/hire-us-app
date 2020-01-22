@@ -56,8 +56,7 @@ class Home_model extends CI_Model {
 		$query = "
 			SELECT
 				talent_id, CONCAT(firstname, ' ', lastname) as fullname,
-				screen_name, hourly_rate, gender,
-				DATE_FORMAT(birth_date, '%M %d, %Y') as birth_date
+				screen_name, gender, DATE_FORMAT(birth_date, '%M %d, %Y') as birth_date
 			FROM
 				talents
 			ORDER BY talent_id DESC

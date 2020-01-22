@@ -85,7 +85,6 @@ $('#tbl_clients').DataTable();
 $('#tbl_applicants').DataTable();
 
 $('#inputHeight').maskMoney();
-$('#inputHourlyRate').maskMoney();
 $('#zipCode').maskMoney({precision: 0, thousands: ''});
 
 $('#inputFbFollowers').maskMoney({precision: 0});
@@ -108,7 +107,6 @@ $('.btnAddTalentOrModel').click(function(){
 	$("select[name='talent_gender']").val("");
 	$("input[name='talent_height']").val("");
 	$("input[name='talent_birth_date']").val("");
-	$("input[name='talent_hourly_rate']").val("");
 	$("input[name='talent_vital_stats']").val("");
 	$("input[name='talent_fb_followers']").val("");
 	$("input[name='talent_instagram_followers']").val("");
@@ -173,7 +171,6 @@ $('.btnViewOrEditTalent').click(function(){
 		$("select[name='talent_gender']").val(response.gender);
 		$("input[name='talent_height']").val(response.height);
 		$("input[name='talent_birth_date']").val(response.birth_date);
-		$("input[name='talent_hourly_rate']").val(response.hourly_rate);
 		$("input[name='talent_vital_stats']").val(response.vital_stats);
 		$("input[name='talent_fb_followers']").val(response.fb_followers);
 		$("input[name='talent_instagram_followers']").val(response.instagram_followers);

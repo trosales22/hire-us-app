@@ -53,20 +53,15 @@
                     </div>
 
                     <div class="row form-group">
-                        <div class="col-xs-4" style="margin-left: 10px; margin-right: 10px;">
+                        <div class="col-sm-4">
                             <label for="inputHeight">Height <b>(in inches)</b></label>
                             <input type="text" class="form-control" id="inputHeight" name="talent_height" placeholder="Enter height in inches" required>
                         </div>
 
-                        <div class="col-xs-4">
+                        <div class="col-sm-4">
                             <label for="inputBirthdate">Birth Date</label>
                             <br>
                             <input type="text" class="form-control" id="inputBirthdate" name="talent_birth_date" placeholder="Choose birthdate" required>
-                        </div>
-
-                        <div class="col-sm-4">
-                            <label for="inputHourlyRate">Rate per hour</label>
-                            <input type="text" class="form-control" id="inputHourlyRate" name="talent_hourly_rate" placeholder="Enter hourly rate" required>
                         </div>
                     </div>
 

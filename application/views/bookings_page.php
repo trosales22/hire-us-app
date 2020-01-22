@@ -69,46 +69,61 @@
 
 				<?php include 'pages/topbar.php';?>
 
-				<!-- Bookings (Paid) -->
+				<!-- Bookings -->
         <div class="container-fluid">
-					<h1 class="h3 mb-2 text-gray-800">Paid Bookings</h1>
+					<h1 class="h3 mb-2 text-gray-800">Bookings</h1>
 					
           <div class="card shadow mb-4">
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table table-bordered" id="tbl_paid_bookings" width="100%" cellspacing="0">
+                <table class="table table-bordered" id="tbl_bookings" width="100%" cellspacing="0">
                   <thead>
 										<tr>
-                      <th>Date</th>
-											<th>Talent Fullname</th>
-											<th>Talent Category</th>
-											<th>Client Name</th>
+                      <th>Booking ID</th>
+											<th>Event Title</th>
+											<th>Talent Fee Offer</th>
+											<th>Venue/Location</th>
 											<th>Payment Option</th>
-											<th>Schedule</th>
+											<th>Working Dates</th>
+											<th>Working Hours</th>
+											<th>Offer Status</th>
+											<th>Client</th>
+											<th>Talent</th>
+											<th>Created Date</th>
                     </tr>
                   </thead>
                   
                   <tbody>
-										<?php foreach($paid_bookings as $paid_booking){?>
+										<?php foreach($booking_list as $booking){?>
 											<tr>
-												<td><?php echo $paid_booking->created_date;?></td>
-												<td><?php echo $paid_booking->talent_id->firstname . ' ' . $paid_booking->talent_id->lastname; ?></td>
-												<td><?php echo $paid_booking->talent_id->category_names;?></td>
-												<td><?php echo $paid_booking->client_id->fullname . ' (' . $paid_booking->client_id->role_name . ')';?></td>
-												<td><?php echo $paid_booking->payment_option;?></td>
-												<td><?php echo $paid_booking->preferred_date . '<br/>' . $paid_booking->preferred_time . '<br/>' . $paid_booking->preferred_venue;?></td>
+												<td><?php echo $booking->booking_generated_id;?></td>
+												<td><?php echo $booking->booking_event_title;?></td>
+												<td><?php echo $booking->booking_talent_fee;?></td>
+												<td><?php echo $booking->booking_venue_location;?></td>
+												<td><?php echo $booking->booking_payment_option;?></td>
+												<td><?php echo $booking->booking_date;?></td>
+												<td><?php echo $booking->booking_time;?></td>
+												<td><?php echo $booking->booking_offer_status;?></td>
+												<td><?php echo $booking->client_id->fullname . ' (' . $booking->client_id->role_name . ')';?></td>
+												<td><?php echo $booking->talent_id->firstname . ' ' . $booking->talent_id->lastname; ?></td>
+												<td><?php echo $booking->booking_created_date;?></td>
 											</tr> 
                      <?php }?>
                   </tbody>
 
                   <tfoot>
 										<tr>
-                      <th>Date</th>
-											<th>Talent Fullname</th>
-											<th>Talent Category</th>
-											<th>Client Name</th>
+											<th>Booking ID</th>
+											<th>Event Title</th>
+											<th>Talent Fee Offer</th>
+											<th>Venue/Location</th>
 											<th>Payment Option</th>
-											<th>Schedule</th>
+											<th>Working Dates</th>
+											<th>Working Hours</th>
+											<th>Offer Status</th>
+											<th>Client</th>
+											<th>Talent</th>
+											<th>Created Date</th>
                     </tr>
                   </tfoot>
                 </table>
@@ -117,71 +132,6 @@
           </div>
 				</div>
 				
-				<!-- Bookings (Pending) -->
-        <div class="container-fluid">
-					<h1 class="h3 mb-2 text-gray-800">Pending Bookings</h1>
-					
-          <div class="card shadow mb-4">
-            <div class="card-body">
-              <div class="table-responsive">
-                <table class="table table-bordered" id="tbl_pending_bookings" width="100%" cellspacing="0">
-                  <thead>
-                    <tr>
-                      <th>Date</th>
-											<th>Talent Fullname</th>
-											<th>Talent Category</th>
-											<th>Client Name</th>
-											<th>Payment Option</th>
-											<th>Schedule</th>
-                      <th>Action</th>
-                    </tr>
-                  </thead>
-                  
-                  <tbody>
-										<?php foreach($pending_bookings as $pending_booking){?>
-											<tr>
-												<td><?php echo $pending_booking->created_date;?></td>
-												<td><?php echo $pending_booking->temp_talent_id->firstname . ' ' . $pending_booking->temp_talent_id->lastname; ?></td>
-												<td><?php echo $pending_booking->temp_talent_id->category_names;?></td>
-												<td><?php echo $pending_booking->temp_client_id->fullname . ' (' . $pending_booking->temp_client_id->role_name . ')';?></td>
-												<td><?php echo $pending_booking->temp_payment_option;?></td>
-												<td><?php echo $pending_booking->temp_booking_date . '<br/>' . $pending_booking->temp_booking_time . '<br/>' . $pending_booking->temp_booking_venue;?></td>
-												<td>
-													<a class="btnApproveBooking btn btn-success btn-icon-split" style="width: 100%; margin-bottom: 8px; cursor: pointer; color: white;" data-id="<?php echo $pending_booking->temp_booking_id;?>">
-														<span class="icon text-white-50" style="float: left;">
-															<i class="fas fa-check"></i>
-														</span>
-														<span class="text">Approve</span>
-													</a>
-													<br/>
-													<a class="btnDeclineBooking btn btn-danger btn-icon-split" style="width: 100%; cursor: pointer; color: white;" data-id="<?php echo $pending_booking->temp_booking_id;?>">
-														<span class="icon text-white-50" style="float: left;">
-															<i class="fas fa-window-close"></i>
-														</span>
-														<span class="text">Decline</span>
-													</a>
-												</td>
-											</tr> 
-                     <?php }?>
-                  </tbody>
-
-                  <tfoot>
-										<tr>
-                      <th>Date</th>
-											<th>Talent Fullname</th>
-											<th>Talent Category</th>
-											<th>Client Name</th>
-											<th>Payment Option</th>
-											<th>Schedule</th>
-                      <th>Action</th>
-                    </tr>
-                  </tfoot>
-                </table>
-              </div>
-            </div>
-          </div>
-        </div>
-
       </div>
       <!-- End of Main Content -->
 

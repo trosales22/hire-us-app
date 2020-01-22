@@ -21,7 +21,6 @@ class Talents_model extends CI_Model {
 			$message .= "Below are your account details:\n\n";
 			$message .= "Email: " . $data['email'] . "\n";
 			$message .= "Contact Number: " . $data['contact_number'] . "\n";
-			$message .= "Rate per hour: PHP" . $data['hourly_rate'] . "\n";
 			$message .= "Password: HIRE_US@123\n\nYou can now login your account as a Talent/Model. Thank you & welcome to Hire Us PH.\n";
 			
 			$headers = "From:" . $from;
@@ -48,7 +47,6 @@ class Talents_model extends CI_Model {
 				'gender' 				=> $data['gender'],
 				'height' 				=> $data['height'],
 				'birth_date' 			=> $data['birth_date'],
-				'hourly_rate' 			=> $data['hourly_rate'],
 				'vital_stats'			=> $data['vital_stats'],
 				'fb_followers'			=> $data['fb_followers'],
 				'instagram_followers'	=> $data['instagram_followers'],
@@ -154,22 +152,6 @@ class Talents_model extends CI_Model {
 				$where_additional_filtering .= ' AND YEAR(CURDATE()) - YEAR(A.birth_date) >= ' . $additional_filtering['age_from'];
 			}
 		}
-		
-		if(!empty($additional_filtering['rate_per_hour_from'])){
-			if(!empty($additional_filtering['rate_per_hour_to'])){
-				$where_additional_filtering .= ' AND A.hourly_rate BETWEEN "' . $additional_filtering['rate_per_hour_from'] . '" AND "' . $additional_filtering['rate_per_hour_to'] . '"';
-			}else{
-				$where_additional_filtering .= ' AND A.hourly_rate >= "' . $additional_filtering['rate_per_hour_from'] . '"';
-			}
-		}
-
-		if(!empty($additional_filtering['province_code'])){
-			$where_additional_filtering .= ' AND F.province = "' . $additional_filtering['province_code'] . '"';
-		}
-
-		if(!empty($additional_filtering['city_muni_code'])){
-			$where_additional_filtering .= ' AND F.city_muni = "' . $additional_filtering['city_muni_code'] . '"';
-		}
 
 		if(!empty($additional_filtering['gender'])){
 			$where_additional_filtering .= ' AND A.gender = "' . $additional_filtering['gender'] . '"';
@@ -178,7 +160,7 @@ class Talents_model extends CI_Model {
 		$query = "
 				SELECT
 					A.talent_id, CONCAT(A.firstname, ' ', A.lastname) as fullname, A.screen_name,
-					A.height, A.hourly_rate, IFNULL(A.description, '') as talent_description,
+					A.height, IFNULL(A.description, '') as talent_description,
 					YEAR(CURDATE()) - YEAR(A.birth_date) as age, A.gender,
 					IF( ISNULL(B.talent_display_photo), '', CONCAT('" . base_url() . "uploads/talents_or_models/', B.talent_display_photo) ) as talent_display_photo,
 					GROUP_CONCAT(D.category_name SEPARATOR '\n') as category_names,
@@ -221,8 +203,7 @@ class Talents_model extends CI_Model {
 				A.talent_id,
 				IFNULL(A.firstname, '') as firstname, IFNULL(A.middlename, '') as middlename, IFNULL(A.lastname, '') as lastname, 
 				CONCAT(A.firstname, ' ', A.lastname) as fullname, A.screen_name,
-				A.height, A.hourly_rate, A.gender, A.contact_number,
-				IFNULL(A.description, '') as talent_description,
+				A.height, A.gender, A.contact_number, IFNULL(A.description, '') as talent_description,
 
 				J.regCode as region_code, J.regDesc as region, 
 				G.provCode as province_code, G.provDesc as province, 
@@ -274,8 +255,7 @@ class Talents_model extends CI_Model {
 
 		$query = "
 			SELECT
-				A.tc_id, A.talent_id, A.category_id,
-				B.firstname, B.lastname
+				A.tc_id, A.talent_id, A.category_id, B.firstname, B.lastname
 			FROM 
 				talents_category A 
 			LEFT JOIN 

@@ -31,7 +31,6 @@ class Talents extends REST_Controller {
 				'gender'       			=> trim($this->input->post('gender')),
 				'height'       			=> trim($this->input->post('height')),
 				'birth_date'    		=> trim($this->input->post('birth_date')),
-				'hourly_rate'    		=> trim($this->input->post('hourly_rate')),
 				'vital_stats'    		=> trim($this->input->post('vital_stats')),
 				'fb_followers'    		=> trim($this->input->post('fb_followers')),
 				'instagram_followers' 	=> trim($this->input->post('instagram_followers')),
@@ -73,7 +72,7 @@ class Talents extends REST_Controller {
 
 			if(EMPTY($talents_fields['birth_date']))
 				throw new Exception("Birthdate is required.");
-
+			
 			if(EMPTY($talents_fields['prev_clients']))
 				throw new Exception("Previous clients/experience is required.");
 

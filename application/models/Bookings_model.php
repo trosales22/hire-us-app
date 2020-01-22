@@ -15,6 +15,24 @@ class Bookings_model extends CI_Model {
 		}
 	}
 
+	public function get_all_bookings(){
+		$query = "
+			SELECT 
+				booking_id, booking_generated_id, client_id, talent_id,
+				booking_event_title, booking_talent_fee, booking_venue_location,
+				IFNULL(booking_payment_option, 'N/A') as booking_payment_option,
+				booking_date, booking_time, 
+				IFNULL(booking_other_details, 'N/A') as booking_other_details,
+				booking_offer_status, DATE_FORMAT(booking_created_date, '%M %d, %Y %r') as booking_created_date,
+				IFNULL(booking_decline_reason, 'N/A') as booking_decline_reason,
+				IFNULL(booking_approved_or_declined_date, 'N/A') as booking_approved_or_declined_date
+			FROM 
+				client_booking_list";
+		
+		$stmt = $this->db->query($query);
+		return $stmt->result();
+	}
+	
 	public function get_booking_by_booking_generated_id($booking_generated_id){
 		$params = array($booking_generated_id);
 		
@@ -78,7 +96,6 @@ class Bookings_model extends CI_Model {
 			$message .= "Below are your account details:\n\n";
 			$message .= "Email: " . $data['email'] . "\n";
 			$message .= "Contact Number: " . $data['contact_number'] . "\n";
-			$message .= "Rate per hour: PHP" . $data['hourly_rate'] . "\n";
 			$message .= "Password: HIRE_US@123\n\nYou can now login your account as a Talent/Model. Thank you & welcome to Hire Us PH.\n";
 			
 			$headers = "From:" . $from;

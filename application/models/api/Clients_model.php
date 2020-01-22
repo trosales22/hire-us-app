@@ -282,7 +282,6 @@ class Clients_model extends CI_Model {
 			$message .= "Schedule:\n" . $booking_params['preferred_date'] . '\n' . $booking_params['preferred_time']  . "\n";
 			$message .= "Talent Fullname: " . $email_params['talent_details']->fullname . "\n";
 			$message .= "Talent Category: " . $email_params['talent_details']->category_names . "\n";
-			$message .= "Rate per hour: ₱" . $email_params['talent_details']->hourly_rate . "\n";
 			$message .= "Payment Method: " . $booking_params['payment_option'] . "\n";
 			$message .= "Venue: " . $booking_params['preferred_venue'] . "\n";
 			$message .= "Total Amount: ₱" . $booking_params['total_amount'] . "\n";
@@ -346,7 +345,6 @@ class Clients_model extends CI_Model {
 			$message .= "Schedule:\n" . $booking_params['temp_booking_date'] . '\n' . $booking_params['temp_booking_time']  . "\n";
 			$message .= "Talent Fullname: " . $email_params['talent_details']->fullname . "\n";
 			$message .= "Talent Category: " . $email_params['talent_details']->category_names . "\n";
-			$message .= "Rate per hour: ₱" . $email_params['talent_details']->hourly_rate . "\n";
 			$message .= "Payment Method: " . $booking_params['temp_payment_option'] . "\n";
 			$message .= "Venue: " . $booking_params['temp_booking_venue'] . "\n";
 			$message .= "Total Amount: ₱" . $booking_params['temp_total_amount'] . "\n";
