@@ -182,8 +182,8 @@ class Talents_model extends CI_Model {
 					YEAR(CURDATE()) - YEAR(A.birth_date) as age, A.gender,
 					IF( ISNULL(B.talent_display_photo), '', CONCAT('" . base_url() . "uploads/talents_or_models/', B.talent_display_photo) ) as talent_display_photo,
 					GROUP_CONCAT(D.category_name SEPARATOR '\n') as category_names,
-					F.province as province_code, F.city_muni as city_muni_code,
-					G.provDesc as province, H.citymunDesc as city_muni, I.brgyDesc as barangay,
+					J.regCode as region_code, F.province as province_code, F.city_muni as city_muni_code,
+					J.regDesc as region, G.provDesc as province, H.citymunDesc as city_muni, I.brgyDesc as barangay,
 					F.bldg_village, F.zip_code
 				FROM 
 					talents A 
@@ -201,6 +201,8 @@ class Talents_model extends CI_Model {
 					param_city_muni H ON F.city_muni = H.citymunCode 
 				LEFT JOIN 
 					param_barangay I ON F.barangay = I.id 
+				LEFT JOIN 
+					param_region J ON F.region = J.regCode 
 				WHERE 
 					A.active_flag = ? $where_selected_categories $where_additional_filtering 
 				GROUP BY A.talent_id 
