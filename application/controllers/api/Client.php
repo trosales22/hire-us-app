@@ -209,7 +209,7 @@ class Client extends REST_Controller {
 		if($success == 1){
 			$response = array(
 				'status' 	=> 'OK',
-				'msg'		=> 'Booking successful! Please check your email for more info. Thank you.'
+				'msg'		=> 'Your offer was successfully send to the chosen talent/s. Please check your email for more info. Thank you.'
 			);
 		}else{
 			$response = [
