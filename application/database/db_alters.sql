@@ -50,3 +50,25 @@ ADD COLUMN `booking_date_paid` DATETIME NULL DEFAULT NULL AFTER `booking_approve
 
 -- 01/22/2020 (DONE)
 ALTER TABLE `talents` DROP COLUMN `hourly_rate`;
+
+-- 01/26/2020
+CREATE TABLE `announcements` (
+  `announcement_id` INT(255) NOT NULL AUTO_INCREMENT,
+  `announcement_caption` VARCHAR(100) NOT NULL,
+  `announcement_details` LONGTEXT NOT NULL,
+  `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_by` MEDIUMINT(8) NOT NULL,
+  `active_flag` ENUM('Y', 'N') NOT NULL DEFAULT 'Y',
+  PRIMARY KEY (`announcement_id`));
+
+  CREATE TABLE `news_and_updates` (
+  `news_id` INT(255) NOT NULL AUTO_INCREMENT,
+  `news_display_pic` VARCHAR(100) NULL,
+  `news_caption` VARCHAR(50) NOT NULL,
+  `news_details` LONGTEXT NOT NULL,
+  `news_link` VARCHAR(100) NULL,
+  `created_date` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP(),
+  `created_by` MEDIUMINT(8) NOT NULL,
+  `active_flag` ENUM('Y', 'N') NOT NULL DEFAULT 'Y',
+  PRIMARY KEY (`news_id`));
+
