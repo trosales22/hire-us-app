@@ -51,7 +51,7 @@ ADD COLUMN `booking_date_paid` DATETIME NULL DEFAULT NULL AFTER `booking_approve
 -- 01/22/2020 (DONE)
 ALTER TABLE `talents` DROP COLUMN `hourly_rate`;
 
--- 01/26/2020
+-- 01/26/2020 (DONE)
 CREATE TABLE `announcements` (
   `announcement_id` INT(255) NOT NULL AUTO_INCREMENT,
   `announcement_caption` VARCHAR(100) NOT NULL,
