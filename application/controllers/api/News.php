@@ -12,15 +12,15 @@ class News extends REST_Controller {
 	public function get_all_announcements_get(){
 		try{
 			$success        = 0;
-			$announcement_id		= trim($this->get('announcement_id'));
-			$announcement_caption 	= trim($this->get('announcement_caption'));
+			$news_id		= trim($this->input->get('news_id'));
+			$news_caption 	= trim($this->input->get('news_caption'));
 
-			$announcement_params = array(
-				'announcement_id'		=> $announcement_id,
-				'announcement_caption' 	=> $announcement_caption
+			$news_params = array(
+				'news_id'		=> $news_id,
+				'news_caption' 	=> $news_caption
 			);
 			
-			$announcements_list = $this->announcements_model->get_announcements($announcement_params);
+			$news_list = $this->news_model->get_news_and_updates($news_params);
 			$success  = 1;
 		}catch (Exception $e){
 			$msg = $e->getMessage();      
@@ -28,7 +28,7 @@ class News extends REST_Controller {
 
 		if($success == 1){
 			$response = [
-			  'announcements_list' => $announcements_list
+			  'news_list' => $news_list
 			];
 		}else{
 			$response = [
