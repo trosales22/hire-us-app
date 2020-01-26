@@ -21,19 +21,16 @@
 
 <li class="nav-item">
 	<a class="nav-link" href="<?php echo base_url(); ?>bookings">
-	<i class="fas fa-fw fa-calendar-alt"></i>
 	<span>Bookings</span></a>
 </li>
 
 <li class="nav-item">
 	<a class="nav-link" href="<?php echo base_url(); ?>announcements">
-	<i class="fas fa-fw fa-calendar-alt"></i>
 	<span>Announcements</span></a>
 </li>
 
 <li class="nav-item">
 	<a class="nav-link" href="<?php echo base_url(); ?>news">
-	<i class="fas fa-fw fa-calendar-alt"></i>
 	<span>News & Updates</span></a>
 </li>
 	  
