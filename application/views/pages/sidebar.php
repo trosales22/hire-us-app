@@ -24,6 +24,12 @@
 	<i class="fas fa-fw fa-calendar-alt"></i>
 	<span>Bookings</span></a>
 </li>
+
+<li class="nav-item">
+	<a class="nav-link" href="<?php echo base_url(); ?>announcements">
+	<i class="fas fa-fw fa-calendar-alt"></i>
+	<span>Announcements</span></a>
+</li>
 	  
 <!-- Divider -->
 <hr class="sidebar-divider d-none d-md-block">
