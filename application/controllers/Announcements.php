@@ -8,7 +8,7 @@ class Announcements extends CI_Controller {
 		$this->load->helper('url', 'form');
 		$this->load->library('session');
 		$this->load->database();
-		$this->load->model('Announcements_model', 'announcements_model');
+		$this->load->model('api/Announcements_model', 'announcements_model');
 	}
 	
 	public function index() {
