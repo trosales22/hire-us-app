@@ -9,7 +9,7 @@ class News extends REST_Controller {
 		$this->load->model('api/News_model', 'news_model');
 	}
 	
-	public function get_all_announcements_get(){
+	public function get_all_news_get(){
 		try{
 			$success        = 0;
 			$news_id		= trim($this->input->get('news_id'));
