@@ -21,7 +21,8 @@ class Announcements_model extends CI_Model {
 			LEFT JOIN 
 				users B ON A.created_by = B.user_id 
 			WHERE 
-				A.active_flag = 'Y' $where_condition
+				A.active_flag = 'Y' $where_condition 
+			ORDER BY A.announcement_id DESC
 			";
 		
 		$stmt = $this->db->query($query);

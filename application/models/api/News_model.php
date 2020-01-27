@@ -3,7 +3,7 @@ class News_model extends CI_Model {
 	public function get_news_and_updates(array $news_params = NULL){
 		$params = array('Y');
 		$where_condition = '';
-		
+
 		if(!empty($news_params['news_id'])){
 			$where_condition .= "AND A.news_id = " . $news_params['news_id'] . "";
 		}
@@ -23,7 +23,8 @@ class News_model extends CI_Model {
 			LEFT JOIN 
 				users B ON A.created_by = B.user_id 
 			WHERE 
-				A.active_flag = ? $where_condition
+				A.active_flag = ? $where_condition 
+			ORDER BY A.news_id DESC
 			";
 		
 		$stmt = $this->db->query($query, $params);
