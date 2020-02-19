@@ -89,4 +89,74 @@ class Announcements extends CI_Controller {
 
 		echo json_encode($response);
 	}
+
+	public function modify_announcement(){
+		try{
+			$success  = 0;
+			$msg = array();
+
+			$announcement_params = array(
+				'announcement_id'		=> trim($this->input->post('announcement_id')),
+				'announcement_caption'	=> trim($this->input->post('announcement_caption')),
+				'announcement_details'	=> trim($this->input->post('announcement_details'))
+			);
+
+			if(EMPTY($announcement_params['announcement_id']))
+				throw new Exception("Announcement ID is required.");
+
+			if(EMPTY($announcement_params['announcement_caption']))
+				throw new Exception("Announcement Caption is required.");
+			
+			if(EMPTY($announcement_params['announcement_details']))
+				throw new Exception("Announcement Details is required.");
+
+			$this->announcements_model->modify_announcement($announcement_params);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+				'msg'       => 'Announcement was successfully updated!',
+				'flag'      => $success
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+
+		echo json_encode($response);
+	}
+
+	public function delete_announcement(){
+		try{
+			$success 	= 0;
+			$announcement_id 	= trim($this->input->get('announcement_id'));
+			
+			if(EMPTY($announcement_id))
+				throw new Exception("Announcement ID is required.");
+
+			$this->announcements_model->delete_announcement($announcement_id);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();
+		}
+
+		if($success == 1){
+			$response = [
+				'msg'       => 'Announcement was successfully deleted.',
+				'flag'      => $success
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+
+		echo json_encode($response);
+	}
 }

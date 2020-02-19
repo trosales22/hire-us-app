@@ -44,4 +44,28 @@ class Announcements_model extends CI_Model {
 			$this->db->trans_rollback();
 		}
 	}
+
+	public function modify_announcement(array $data){
+		try{
+			$announcement_params = 
+								array(
+									'announcement_caption' => $data['announcement_caption'],
+									'announcement_details' => $data['announcement_details']
+								);
+			$this->db->where('announcement_id', $data['announcement_id']);
+			$this->db->update('announcements', $announcement_params);
+		}catch(PDOException $e){
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
+		}
+	}
+	
+	public function delete_announcement($announcement_id){
+        try {
+			$this->db->delete('announcements', array('announcement_id' => $announcement_id));
+        }catch(PDOException $e){
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
+		}
+	}
 }

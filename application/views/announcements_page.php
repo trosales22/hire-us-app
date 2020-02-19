@@ -93,6 +93,7 @@
                                                         <th>Details</th>
 														<th>Creator</th>
                                                         <th>Created Date</th>
+														<th>Actions</th>
                                                     </tr>
                                                 </thead>
 
@@ -111,6 +112,20 @@
                                                             <td>
                                                                 <?php echo $announcement->announcement_created_date;?>
                                                             </td>
+															<td>
+																<a style="width: 100%; cursor: pointer; color: white; margin-bottom: 5px;" data-toggle="modal" data-id="<?php echo $announcement->announcement_id;?>" data-target="#modifyAnnouncementModal" class="btnModifyAnnouncement btn btn-info btn-icon-split">
+																	<span class="icon text-white-50" style="margin-right: auto;">
+																		<i class="fas fa-edit"></i>
+																	</span>
+																	<span class="text" style="margin-right: auto;">Modify</span>
+																</a><br/>
+																<a style="width: 100%; cursor: pointer; color: white;" data-id="<?php echo $announcement->announcement_id;?>" class="btnDeleteAnnouncement btn btn-danger btn-icon-split">
+																	<span class="icon text-white-50" style="margin-right: auto;">
+																		<i class="fas fa-trash"></i>
+																	</span>
+																	<span class="text" style="margin-right: auto;">Delete</span>
+																</a>
+															</td>
                                                         </tr>
                                                         <?php }?>
                                                 </tbody>
@@ -121,6 +136,7 @@
                                                         <th>Details</th>
 														<th>Creator</th>
                                                         <th>Created Date</th>
+														<th>Actions</th>
                                                     </tr>
                                                 </tfoot>
                                             </table>
@@ -146,6 +162,8 @@
         </a>
 
 		<?php include 'pages/modals/add_announcement.php';?>
+
+		<?php include 'pages/modals/edit_announcement.php';?>
 		
         <?php include 'pages/modals/logout.php';?>
 

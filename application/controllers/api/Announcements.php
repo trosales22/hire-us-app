@@ -39,4 +39,31 @@ class Announcements extends REST_Controller {
 	  
 		$this->response($response);
 	}
+
+	public function get_announcement_by_id_get(){
+		try{
+			$success        = 0;
+			$announcement_id		= trim($this->get('announcement_id'));
+
+			$announcement_params = array(
+				'announcement_id'		=> $announcement_id
+			);
+			
+			$announcements_list = $this->announcements_model->get_announcements($announcement_params);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = $announcements_list[0];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+	  
+		$this->response($response);
+	}
 }
