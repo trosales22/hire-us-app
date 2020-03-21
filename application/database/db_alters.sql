@@ -72,3 +72,5 @@ CREATE TABLE `announcements` (
   `active_flag` ENUM('Y', 'N') NOT NULL DEFAULT 'Y',
   PRIMARY KEY (`news_id`));
 
+-- 03/21/2020 (DONE)
+ALTER TABLE `news_and_updates` ADD COLUMN `news_author` VARCHAR(100) NOT NULL AFTER `news_link`;

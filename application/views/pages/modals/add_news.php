@@ -11,30 +11,42 @@
 
           <div class="modal-body">
             <div class="row form-group">
-							<div class="col-sm-12">
-								<label for="inputNewsCaption">Caption</label>
-								<input type="text" class="form-control" id="inputNewsCaption" name="news_caption" placeholder="Enter news caption.." required>
-							</div>
-						</div>
-						
-						<div class="row form-group">
-							<div class="col-sm-12">
-								<label for="inputNewsDetails">Details</label>
-								<textarea class="form-control" rows="5" id="inputNewsDetails" name="news_details" placeholder="Write details.." style="resize: none;" required></textarea>
-							</div>
-						</div>
+				<div class="col-sm-12">
+					<label for="inputNewsCaption">Caption</label>
+					<input type="text" class="form-control" id="inputNewsCaption" name="news_caption" placeholder="Enter caption.." required>
+				</div>
+			</div>
+			
+			<div class="row form-group">
+				<div class="col-sm-12">
+					<label for="inputNewsDetails">Details</label>
+					<textarea class="form-control" rows="5" id="inputNewsDetails" name="news_details" placeholder="Write details.." style="resize: none;" required></textarea>
+				</div>
+			</div>
 
-						<div class="row form-group">
-							<div class="col-sm-6">
-									<label for="imgNewsDisplayPhoto">Display Photo</label>
-									<input type="file" id="imgNewsDisplayPhoto" name="news_display_pic" accept="image/png, image/jpeg" required />
-							</div>
+			<div class="row form-group">
+				<div class="col-sm-6">
+						<label for="imgNewsDisplayPhoto">Display Photo</label>
+						<input type="file" id="imgNewsDisplayPhoto" name="news_display_pic" accept="image/png, image/jpeg" />
+				</div>
 
-							<div class="col-sm-6">
-								<label for="inputNewsLink">Link</label>
-								<input type="text" class="form-control" id="inputNewsLink" name="news_url" placeholder="Enter news URL/link..">
-							</div>
-						</div>
+				<div class="col-sm-6">
+					<label for="inputNewsLink">Link</label>
+					<input type="text" class="form-control" id="inputNewsLink" name="news_url" placeholder="Enter URL/link..">
+				</div>
+			</div>
+
+			<div class="row form-group">
+				<div class="col-sm-12">
+					<label for="inputNewsAuthor">Author</label>
+					<input type="text" class="form-control" id="inputNewsAuthor" name="news_author" placeholder="Enter author.." required>
+				</div>
+			</div>
+
+			<div class="alert alert-info">
+				<strong>Reminder!</strong>
+				<br />Maximum width: <b>1000px</b> | Maximum height: <b>1000px</b> | Maximum file size: <b>2MB</b>
+			</div>
           </div>
           
           <div class="modal-footer">

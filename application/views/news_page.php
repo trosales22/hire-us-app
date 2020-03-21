@@ -91,25 +91,32 @@
                                                     <tr>
 														<th>Display Photo</th>
                                                         <th>Caption</th>
-														<th>Details</th>
 														<th>Link</th>
-														<th>Creator</th>
+														<th>Author</th>
                                                         <th>Created Date</th>
+                                                        <th>Actions</th>
                                                     </tr>
                                                 </thead>
 
                                                 <tbody>
                                                     <?php foreach($news_list as $news){?>
                                                         <tr>
-															<td style="text-align: center;">
-																<img src="<?php echo $news->news_display_photo ?>" style="width: 150px; height: 150px;" />
+                                                            <td style="text-align: center;">
+                                                                <?php 
+																	if(empty($news->news_display_photo)){
+																		echo '<div class="alert alert-danger">
+																						<span class="icon text-red-50" style="margin-right: auto;">
+																							<i class="fas fa-exclamation-triangle"></i>
+																						</span> <b>NO IMAGE AVAILABLE!</b>
+																					</div>';
+																	}else{
+																		echo "<img src='" . $news->news_display_photo . "' style='width: 150px; height: 150px;' />";
+																	}
+																?>
                                                             </td>
                                                             <td>
                                                                 <?php echo $news->news_caption;?>
                                                             </td>
-                                                            <td>
-                                                                <?php echo $news->news_details;?>
-															</td>
 															<td>
 																<?php 
 																	if(empty($news->news_link)){
@@ -124,11 +131,25 @@
 																?>
                                                             </td>
                                                             <td>
-                                                                <?php echo $news->news_creator;?>
+                                                                <?php echo $news->news_author;?>
                                                             </td>
                                                             <td>
                                                                 <?php echo $news->news_created_date;?>
                                                             </td>
+                                                            <td>
+																<a style="width: 100%; cursor: pointer; color: white; margin-bottom: 5px;" data-toggle="modal" data-id="<?php echo $news->news_id;?>" data-target="#modifyNewsModal" class="btnModifyNews btn btn-info btn-icon-split">
+																	<span class="icon text-white-50" style="margin-right: auto;">
+																		<i class="fas fa-edit"></i>
+																	</span>
+																	<span class="text" style="margin-right: auto;">Modify</span>
+																</a><br/>
+																<a style="width: 100%; cursor: pointer; color: white;" data-id="<?php echo $news->news_id;?>" class="btnDeleteNews btn btn-danger btn-icon-split">
+																	<span class="icon text-white-50" style="margin-right: auto;">
+																		<i class="fas fa-trash"></i>
+																	</span>
+																	<span class="text" style="margin-right: auto;">Delete</span>
+																</a>
+															</td>
                                                         </tr>
                                                         <?php }?>
                                                 </tbody>
@@ -137,10 +158,10 @@
                                                     <tr>
 														<th>Display Photo</th>
 														<th>Caption</th>
-														<th>Details</th>
 														<th>Link</th>
-														<th>Creator</th>
+														<th>Author</th>
                                                         <th>Created Date</th>
+                                                        <th>Actions</th>
                                                     </tr>
                                                 </tfoot>
                                             </table>
@@ -165,7 +186,9 @@
             <i class="fas fa-angle-up"></i>
         </a>
 
-		<?php include 'pages/modals/add_news.php';?>
+        <?php include 'pages/modals/add_news.php';?>
+        
+        <?php include 'pages/modals/edit_news.php';?>
 		
         <?php include 'pages/modals/logout.php';?>
 

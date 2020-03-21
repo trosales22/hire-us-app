@@ -39,4 +39,31 @@ class News extends REST_Controller {
 	  
 		$this->response($response);
 	}
+
+	public function get_news_by_id_get(){
+		try{
+			$success        = 0;
+			$news_id		= trim($this->get('news_id'));
+
+			$news_params = array(
+				'news_id'		=> $news_id
+			);
+			
+			$news_list = $this->news_model->get_news_and_updates($news_params);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = $news_list[0];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+	  
+		$this->response($response);
+	}
 }

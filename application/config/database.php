@@ -79,8 +79,8 @@ $db['default'] = array(
 	//LOCAL SERVER
 	// 'hostname' => 'localhost',
 	// 'username' => 'root',
-	// 'password' => '',
-	// 'database' => 'dbhireus',
+	// 'password' => 'root',
+	// 'database' => 'db_hireus',
 
 	//DEVELOPMENT SERVER
 	'hostname' => 'localhost',
