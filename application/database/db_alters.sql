@@ -74,3 +74,12 @@ CREATE TABLE `announcements` (
 
 -- 03/21/2020 (DONE)
 ALTER TABLE `news_and_updates` ADD COLUMN `news_author` VARCHAR(100) NOT NULL AFTER `news_link`;
+
+-- 03/28/2020 (DONE)
+ALTER TABLE `talents_category` 
+DROP COLUMN `tc_id`,
+ADD UNIQUE INDEX `talent_id_UNIQUE` (`talent_id` ASC),
+DROP PRIMARY KEY;
+
+ALTER TABLE `talents_category` 
+CHANGE COLUMN `category_id` `category_id` LONGTEXT NOT NULL;

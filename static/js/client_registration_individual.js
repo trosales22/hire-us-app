@@ -128,11 +128,10 @@
 					},
 					error: function(xhr, status, error){
 						var errorMessage = xhr.status + ': ' + xhr.statusText
-						alert('Error - ' + errorMessage);
 						Swal.fire(
 							'Error!',
 							errorMessage,
-							'danger'
+							'error'
 						);
 					 }
 				});	

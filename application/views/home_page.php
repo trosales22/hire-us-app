@@ -29,6 +29,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.css">
 	<link href="<?php echo base_url(); ?>static/css/parsley.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>static/css/sweetalert2.min.css" rel="stylesheet">
   <style>
   div.gallery {
     margin: 5px;
@@ -88,6 +89,7 @@
                 <table class="table table-bordered" id="tbl_talents" width="100%" cellspacing="0">
                   <thead>
                     <tr>
+                      <th>Profile Picture</th>
                       <th>Name</th>
                       <th>Screen Name</th>
                       <th>Birth Date</th>
@@ -99,16 +101,29 @@
                   <tbody>
 										<?php foreach($talents as $talent){?>
 											<tr>
+                        <td style="text-align: center;">
+                          <?php 
+                            if(empty($talent->talent_profile_picture)){
+                              echo '<div class="alert alert-danger">
+                                      <span class="icon text-red-50" style="margin-right: auto;">
+                                        <i class="fas fa-exclamation-triangle"></i>
+                                      </span> <b>NO IMAGE AVAILABLE!</b>
+                                    </div>';
+                            }else{
+                              echo "<img src='" . $talent->talent_profile_picture . "' style='width: 150px; height: 150px;' />";
+                            }
+                          ?>
+                        </td>
                         <td><?php echo $talent->fullname;?></td>
                         <td><?php echo $talent->screen_name;?></td>
 												<td><?php echo $talent->birth_date;?></td>
 												<td><?php echo $talent->gender;?></td>
 												<td>
-													<a href="#" data-toggle="modal" data-id="<?php echo $talent->talent_id;?>" data-target="#viewOrEditTalentOrModelModal" class="btnViewOrEditTalent btn btn-info btn-icon-split">
+													<a href="#" data-toggle="modal" data-id="<?php echo $talent->talent_id;?>" data-target="#viewOrEditTalentOrModelModal" class="btnViewOrModifyTalent btn btn-info btn-icon-split">
 														<span class="icon text-white-50">
 															<i class="fas fa-edit"></i>
 														</span>
-														<span class="text">View or Edit</span>
+														<span class="text">View or Modify</span>
 													</a>
 												</td>
 											</tr> 
@@ -117,6 +132,7 @@
 
                   <tfoot>
                     <tr>
+                      <th>Profile Picture</th>
                       <th>Name</th>
                       <th>Screen Name</th>
                       <th>Birth Date</th>
@@ -264,7 +280,7 @@
 	
 	<?php include 'pages/modals/check_requirements.php';?>
 	
-	<?php include 'pages/modals/view_or_edit_talent.php';?>
+	<?php include 'pages/modals/modify_talent.php';?>
 	
   <!-- Bootstrap core JavaScript-->
   <script src="<?php echo base_url(); ?>static/SBAdmin/vendor/jquery/jquery.min.js"></script>
@@ -287,6 +303,7 @@
 	<script src="<?php echo base_url(); ?>static/SBAdmin/js/demo/datatables-demo.js"></script>
 	<script src="https://parsleyjs.org/dist/parsley.min.js"></script>
 	<script src="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 	<script src="<?php echo base_url(); ?>static/js/home.js"></script>
 </body>
 

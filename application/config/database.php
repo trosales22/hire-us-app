@@ -81,7 +81,7 @@ $db['default'] = array(
 	// 'username' => 'root',
 	// 'password' => 'root',
 	// 'database' => 'db_hireus',
-
+	
 	//DEVELOPMENT SERVER
 	'hostname' => 'localhost',
 	'username' => 'u191444882_hireus_admin',

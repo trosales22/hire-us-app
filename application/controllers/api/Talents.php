@@ -97,22 +97,18 @@ class Talents extends REST_Controller {
 
 			$config['upload_path'] = 'uploads/talents_or_models/';
 			$config['allowed_types'] = 'jpg|jpeg|png';
-			$config['max_size'] = 5000;
-			$config['max_width'] = 1500;
-			$config['max_height'] = 1500;
-			$config['file_name'] = md5(time() . rand()) . '_' . mt_rand();
+			$config['max_size'] = 5000; //set the maximum file size in kilobytes (5MB)
+			$config['max_width'] = 1000;
+			$config['max_height'] = 1000;
+			$config['file_name'] = time() . '_' . rand(1000,9999);
 
 			$this->load->library('upload', $config);
 
 
 			//upload talent profile picture
 			if(!$this->upload->do_upload('talent_profile_img')) {
-				// $msg = array(
-				// 	'status'	=> 'FAILED',
-				// 	'error'	 	=> $this->upload->display_errors()
-				// );
-				
-				throw new Exception("There's an unexpected error in uploading talent gallery. Please contact administrator/developer.");
+				$msg = $this->upload->display_errors();			
+				throw new Exception($msg);
 			}else{
 				$upload_img_output = array(
 					'image_metadata' => $this->upload->data()
@@ -130,7 +126,7 @@ class Talents extends REST_Controller {
 			
 			
 			//upload talent gallery
-			if(!empty($_FILES['talent_gallery']['name'])){
+			if(!EMPTY($_FILES['talent_gallery']['name'])){
 				$filesCount = count($_FILES['talent_gallery']['name']);
 				
 				for($i = 0; $i < $filesCount; $i++){
@@ -160,20 +156,11 @@ class Talents extends REST_Controller {
 						
 						$talents_fields['talent_gallery'] = $talent_gallery_output;
 					}else{
-						// $msg = array(
-						// 	'status'	=> 'FAILED',
-						// 	'error'	 	=> $this->upload->display_errors()
-						// );
-						
-						throw new Exception("There's an unexpected error in uploading talent gallery. Please contact administrator/developer.");
+						$msg = $this->upload->display_errors();			
+						throw new Exception($msg);
 					}
 				}
-			}else{
-				throw new Exception("Talent gallery is required.");
 			}
-			
-			//print "<pre>";
-			//die(print_r($talents_fields));
 
 			$this->talents_model->add_talent($talents_fields);
 			$success  = 1;
@@ -184,6 +171,212 @@ class Talents extends REST_Controller {
 		if($success == 1){
 			$response = [
 				'msg'       => 'Talent was successfully added!',
+				'flag'      => $success
+			];
+		}else{
+			$response = [
+				'msg'       => $msg,
+				'flag'      => $success
+			];
+		}
+
+		$this->response($response);
+	}
+
+	public function modify_talent_post(){
+		try{
+			$success  = 0;
+			$msg = array();
+			$talent_profile_image_output = array();
+			$talent_gallery_output = array();
+			$session_data = $this->session->userdata('logged_in');
+			$does_error_occur = FALSE;
+			$validation_error_msg = '';
+			
+			$talents_fields =   array(
+				'talent_id'				=> trim($this->input->post('talent_id')),
+				'firstname'     		=> trim($this->input->post('talent_firstname')),
+				'middlename'     		=> trim($this->input->post('talent_middlename')),
+				'lastname'       		=> trim($this->input->post('talent_lastname')),
+				'screen_name'       	=> trim($this->input->post('talent_screen_name')),
+				'email'       			=> trim($this->input->post('talent_email')),
+				'contact_number'  		=> trim($this->input->post('talent_contact_number')),
+				'gender'       			=> trim($this->input->post('talent_gender')),
+				'height'       			=> trim($this->input->post('talent_height')),
+				'birth_date'    		=> trim($this->input->post('talent_birth_date')),
+				'vital_stats'    		=> trim($this->input->post('talent_vital_stats')),
+				'fb_followers'    		=> trim($this->input->post('talent_fb_followers')),
+				'instagram_followers' 	=> trim($this->input->post('talent_instagram_followers')),
+				'description'    		=> trim($this->input->post('talent_description')),
+				'prev_clients'			=> trim($this->input->post('talent_prev_clients')),
+				'address'       		=> array(
+					'region'		=> trim($this->input->post('region')),
+					'province' 		=> trim($this->input->post('province')),
+					'city_muni' 	=> trim($this->input->post('city_muni')),
+					'barangay' 		=> trim($this->input->post('barangay')),
+					'bldg_village' 	=> trim($this->input->post('talent_bldg_village')),
+					'zip_code' 		=> trim($this->input->post('talent_zip_code'))
+				),
+				'categories'      		=> $this->input->post('category'),
+				'genre'      			=> trim($this->input->post('talent_genre')),
+				'created_by'       		=> $session_data['user_id'],
+				'modified_date'			=> date("Y-m-d H:i:s"),
+				'modified_by'       	=> $session_data['user_id']
+			);
+			
+			//start validation
+			if(EMPTY($talents_fields['talent_id'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'Talent ID is required.<br/>';
+			}
+
+			if(EMPTY($talents_fields['firstname'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'First name is required.<br/>';
+			}
+
+			if(EMPTY($talents_fields['middlename'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'Middlename is required.<br/>';
+			}
+			
+			if(EMPTY($talents_fields['lastname'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'Lastname is required.<br/>';
+			}
+
+			if(EMPTY($talents_fields['email'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'Email address is required.<br/>';
+			}
+			
+			if(EMPTY($talents_fields['contact_number'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'Contact number is required.<br/>';
+			}
+
+			if(EMPTY($talents_fields['gender'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'Gender is required.<br/>';
+			}
+
+			if(EMPTY($talents_fields['height'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'Height is required.<br/>';
+			}
+
+			if(EMPTY($talents_fields['birth_date'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'Birthdate is required.<br/>';
+			}
+			
+			if(EMPTY($talents_fields['prev_clients'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'Previous clients/experience is required.<br/>';
+			}
+
+			//address
+			if(EMPTY($talents_fields['address']['region'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'Region is required.<br/>';
+			}
+
+			if(EMPTY($talents_fields['address']['province'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'Province is required.<br/>';
+			}
+
+			if(EMPTY($talents_fields['address']['city_muni'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'City/Municipality is required.<br/>';
+			}
+
+			if(EMPTY($talents_fields['address']['barangay'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'Barangay is required.<br/>';
+			}
+
+			if(EMPTY($talents_fields['address']['bldg_village'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'Bldg/Village is required.<br/>';
+			}
+
+			if(EMPTY($talents_fields['address']['zip_code'])){
+				$does_error_occur = TRUE;
+				$validation_error_msg .= 'ZIP/Postal Code is required.<br/>';
+			}
+
+			$detect_if_talent_profile_pic_exist = $this->talents_model->detect_if_talent_profile_pic_exist($talents_fields['talent_id']);
+			//die(print_r(EMPTY($detect_if_talent_profile_pic_exist)));
+			
+			$latest_talent_profile_pic = '';
+			$latest_talent_profile_pic_raw = '';
+
+			if(!EMPTY($detect_if_talent_profile_pic_exist)){
+				$latest_talent_profile_pic = $detect_if_talent_profile_pic_exist[0]->talent_display_photo == 'NO IMAGE' ? '' : $detect_if_talent_profile_pic_exist[0]->talent_display_photo;
+				$latest_talent_profile_pic_raw = $detect_if_talent_profile_pic_exist[0]->talent_display_photo_raw == 'NO IMAGE' ? '' : $detect_if_talent_profile_pic_exist[0]->talent_display_photo_raw;
+				//die(print_r($latest_talent_profile_pic_raw));
+			}
+			
+			//validate file upload
+			if (EMPTY($_FILES['talent_profile_img']['name'])){
+				if(EMPTY($latest_talent_profile_pic)){
+					$does_error_occur = TRUE;
+					$validation_error_msg .= 'Talent profile picture is required.<br/>';
+				}else{
+					$talents_fields['talent_profile_img'] = $latest_talent_profile_pic_raw;
+				}
+			}else{
+				$config['upload_path'] = 'uploads/talents_or_models/';
+				$config['allowed_types'] = 'jpg|jpeg|png';
+				$config['max_size'] = 5000; //set the maximum file size in kilobytes (5MB)
+				$config['max_width'] = 1000;
+				$config['max_height'] = 1000;
+				$config['file_name'] = time() . '_' . rand(1000,9999);
+				$this->load->library('upload', $config);
+
+				if(!$this->upload->do_upload('talent_profile_img')) {
+					$msg = $this->upload->display_errors();
+					$does_error_occur = TRUE;
+					$validation_error_msg .= $msg;
+				}else{
+					if(!EMPTY($latest_news_display_photo_raw)){
+						unlink("uploads/talents_or_models/" . $latest_talent_profile_pic_raw);
+					}
+					
+					$upload_img_output = array(
+						'image_metadata' => $this->upload->data()
+					);
+					
+					$img_output = array(
+						'talent_profile_img'	=> $upload_img_output['image_metadata']['file_name']
+					);
+					
+					$talents_fields['talent_profile_img'] = $img_output['talent_profile_img'];
+
+					if(EMPTY($talents_fields['talent_profile_img'])){
+						$does_error_occur = TRUE;
+						$validation_error_msg .= 'Talent profile picture is required.<br/>';
+					}
+				}
+			}
+
+			if($does_error_occur){
+				throw new Exception($validation_error_msg);
+			}
+			
+			// print "<pre>";
+			// die(print_r($talents_fields));
+			
+			$this->talents_model->modify_talent($talents_fields);
+			$success  = 1;
+		}catch (Exception $e){
+			$msg = $e->getMessage();      
+		}
+
+		if($success == 1){
+			$response = [
+				'msg'       => 'Talent was successfully modified!',
 				'flag'      => $success
 			];
 		}else{
@@ -296,7 +489,7 @@ class Talents extends REST_Controller {
 			if(EMPTY($talent_id))
         		throw new Exception("Talent ID is required.");
 			
-			$talent_details 	= $this->talents_model->getTalentDetails($talent_id);
+			$talent_details 	= $this->talents_model->get_talent_details($talent_id);
 			
 			$success  = 1;
 		}catch (Exception $e){

@@ -10,48 +10,6 @@ function base_url() {
 	return url;
 }
 
-var region_dropdown = $("select#cmbRegion");
-var province_dropdown = $("select#cmbProvince");
-var city_muni_dropdown = $("select#cmbCityMunicipality");
-var barangay_dropdown = $("select#cmbBarangay");
-
-var insert_talent_region_dropdown = $("select#insertTalent_cmbRegion");
-var insert_talent_province_dropdown = $("select#insertTalent_cmbProvince");
-var insert_talent_city_muni_dropdown = $("select#insertTalent_cmbCityMunicipality");
-var insert_talent_barangay_dropdown = $("select#insertTalent_cmbBarangay");
-
-function clearRegion(){
-	region_dropdown.empty();
-	region_dropdown.append('<option disabled="disabled" selected="selected">Choose Region</option>');
-
-	insert_talent_region_dropdown.empty();
-	insert_talent_region_dropdown.append('<option disabled="disabled" selected="selected">Choose Region</option>');
-}
-
-function clearProvince(){
-	province_dropdown.empty();
-	province_dropdown.append('<option disabled="disabled" selected="selected">Choose Province</option>');
-
-	insert_talent_province_dropdown.empty();
-	insert_talent_province_dropdown.append('<option disabled="disabled" selected="selected">Choose Province</option>');
-}
-
-function clearCityMuni(){
-	city_muni_dropdown.empty();
-	city_muni_dropdown.append('<option disabled="disabled" selected="selected">Choose City/Municipality</option>');
-
-	insert_talent_city_muni_dropdown.empty();
-	insert_talent_city_muni_dropdown.append('<option disabled="disabled" selected="selected">Choose City/Municipality</option>');
-}
-
-function clearBarangay(){
-	barangay_dropdown.empty();
-	barangay_dropdown.append('<option disabled="disabled" selected="selected">Choose Barangay</option>');
-
-	insert_talent_barangay_dropdown.empty();
-	insert_talent_barangay_dropdown.append('<option disabled="disabled" selected="selected">Choose Barangay</option>');
-}
-
 function isEmpty(value){
 	return (
 	  // null or undefined
@@ -65,17 +23,59 @@ function isEmpty(value){
 	);
 }
 
-$("#inputBirthdate").flatpickr({
+var region_dropdown = $("select#region");
+var province_dropdown = $("select#province");
+var city_muni_dropdown = $("select#city_muni");
+var barangay_dropdown = $("select#barangay");
+
+var talent_region_dropdown = $("select#talent_region");
+var talent_province_dropdown = $("select#talent_province");
+var talent_city_muni_dropdown = $("select#talent_city_muni");
+var talent_barangay_dropdown = $("select#talent_barangay");
+
+function clearRegion(){
+	region_dropdown.empty();
+	region_dropdown.append('<option disabled="disabled" selected="selected">Choose Region</option>');
+
+	talent_region_dropdown.empty();
+	talent_region_dropdown.append('<option disabled="disabled" selected="selected">Choose Region</option>');
+}
+
+function clearProvince(){
+	province_dropdown.empty();
+	province_dropdown.append('<option disabled="disabled" selected="selected">Choose Province</option>');
+
+	talent_province_dropdown.empty();
+	talent_province_dropdown.append('<option disabled="disabled" selected="selected">Choose Province</option>');
+}
+
+function clearCityMuni(){
+	city_muni_dropdown.empty();
+	city_muni_dropdown.append('<option disabled="disabled" selected="selected">Choose City/Municipality</option>');
+
+	talent_city_muni_dropdown.empty();
+	talent_city_muni_dropdown.append('<option disabled="disabled" selected="selected">Choose City/Municipality</option>');
+}
+
+function clearBarangay(){
+	barangay_dropdown.empty();
+	barangay_dropdown.append('<option disabled="disabled" selected="selected">Choose Barangay</option>');
+
+	talent_barangay_dropdown.empty();
+	talent_barangay_dropdown.append('<option disabled="disabled" selected="selected">Choose Barangay</option>');
+}
+
+$("input[name='birth_date']").flatpickr({
 	dateFormat: "Y-m-d",
 	static: true,
 	allowInput: true
 });
 
-$('select#cmbCategory').selectize({
+$("select[name='category[]']").selectize({
 	placeholder: 'Choose category'
 });
 
-$('select#talent_cmbCategory').selectize({
+$("select#talent_category").selectize({
 	placeholder: 'Choose category'
 });
 
@@ -112,22 +112,10 @@ $('.btnAddTalentOrModel').click(function(){
 	$("input[name='talent_instagram_followers']").val("");
 	$("textarea[name='talent_description']").val("");
 	$("textarea[name='talent_prev_clients']").val("");
+	$("input[name='talent_screen_name']").val("");
+	$("input[name='talent_id']").val("");
 
-	// var $select = $('#cmbRegion').selectize();
- 	// var control = $select[0].selectize;
-	// control.clear();
-
-	// var $select = $('#cmbProvince').selectize();
- 	// var control = $select[0].selectize;
-	// control.clear();
-
-	// var $select = $('#cmbCityMunicipality').selectize();
- 	// var control = $select[0].selectize;
-	// control.clear();
-	
-	// var $select = $('#cmbBarangay').selectize();
- 	// var control = $select[0].selectize;
-	// control.clear();
+	setupAddress(region_dropdown, province_dropdown, city_muni_dropdown, barangay_dropdown);
 });
 
 $('.btnCheckRequirements').click(function(){
@@ -157,12 +145,14 @@ $('.btnCheckRequirements').click(function(){
 	});
 });
 
-$('.btnViewOrEditTalent').click(function(){
+$('.btnViewOrModifyTalent').click(function(){
 	var talentId = $(this).data("id");
 	$('.talent_gallery').empty();
 
 	var talentDetailsUrl = base_url() + 'api/talents/get_talent_details?talent_id=' + talentId;
 	$.getJSON(talentDetailsUrl, function(response) {
+		console.log(response);
+		$("input[name='talent_id']").val(talentId);
 		$("input[name='talent_firstname']").val(response.firstname);
 		$("input[name='talent_middlename']").val(response.middlename);
 		$("input[name='talent_lastname']").val(response.lastname);
@@ -176,24 +166,19 @@ $('.btnViewOrEditTalent').click(function(){
 		$("input[name='talent_instagram_followers']").val(response.instagram_followers);
 		$("textarea[name='talent_description']").val(response.talent_description);
 		$("textarea[name='talent_prev_clients']").val(response.talent_experiences);
+		$("input[name='talent_screen_name']").val(response.screen_name);
 		
-		if(!isEmpty(response.talent_display_photo)){
-			$('img#viewTalentDisplayPhoto').attr("src", response.talent_display_photo);
-		}
-		
-		region_dropdown.val(response.region_code);
+		talent_region_dropdown.val(response.region_code);
 		
 		var getAllProvinceUrl = base_url() + 'api/client/get_all_provinces_by_region_code?region_code=' + response.region_code;
 		$.getJSON(getAllProvinceUrl, function(provinceResponse) {
 			clearProvince();
-			
-			console.log(provinceResponse['provinces_list']);
 
 			$.each(provinceResponse['provinces_list'], function() {
-				province_dropdown.append($("<option />").val(this.provCode).text(this.provDesc));
+				talent_province_dropdown.append($("<option />").val(this.provCode).text(this.provDesc));
 				
 				if(this.provCode === response.province_code){
-					province_dropdown.val(response.province_code);
+					talent_province_dropdown.val(response.province_code);
 				}
 			});
 		});
@@ -203,10 +188,10 @@ $('.btnViewOrEditTalent').click(function(){
 			clearCityMuni();
 			
 			$.each(cityMuniResponse['city_muni_list'], function() {
-				city_muni_dropdown.append($("<option />").val(this.citymunCode).text(this.citymunDesc));
+				talent_city_muni_dropdown.append($("<option />").val(this.citymunCode).text(this.citymunDesc));
 				
 				if(this.citymunCode == response.city_muni_code){
-					city_muni_dropdown.val(response.city_muni_code);
+					talent_city_muni_dropdown.val(response.city_muni_code);
 				}
 			});
 		});
@@ -216,10 +201,10 @@ $('.btnViewOrEditTalent').click(function(){
 			clearBarangay();
 
 			$.each(barangayResponse['barangay_list'], function() {
-				barangay_dropdown.append($("<option />").val(this.id).text(this.brgyDesc));
+				talent_barangay_dropdown.append($("<option />").val(this.id).text(this.brgyDesc));
 				
 				if(this.id === response.barangay_code){
-					barangay_dropdown.val(response.barangay_code);
+					talent_barangay_dropdown.val(response.barangay_code);
 				}
 			});
 		});
@@ -228,13 +213,23 @@ $('.btnViewOrEditTalent').click(function(){
 		$("input[name='talent_zip_code']").val(response.zip_code);
 		$("input[name='talent_genre']").val(response.genre);
 
-		$("select#talent_cmbCategory")[0].selectize.setValue([response.category_ids]);
+		var selected_category_ids_arr = [];
+		var category_ids = response.category_ids.split("*");
+		
+		$("select#talent_category")[0].selectize.setValue(category_ids);
 	});
 
 	var talentGalleryUrl = base_url() + 'api/talents/get_talent_gallery?talent_id=' + talentId;
 	$.getJSON(talentGalleryUrl, function(response) {
 		if(response['talent_gallery'].length === 0){
-			$('.talent_gallery').append('No images as of the moment.');
+			$('.talent_gallery').append(
+				'<div class="alert alert-danger">' +
+					'<span class="icon text-red-50" style="margin-right: auto;">' +
+			  		'<i class="fas fa-exclamation-triangle"></i>' +
+					'</span>' + 
+					'<b>NO IMAGE GALLERY AVAILABLE!</b>' +
+				  '</div>'
+			);
 		}else{
 			$.each(response['talent_gallery'], function() {
 				$('.talent_gallery').append(
@@ -364,60 +359,7 @@ $("#frmUpdateClientStatus").submit(function(e) {
 	});
 });
 
-function setupInsertTalentAddress(){
-	insert_talent_region_dropdown.change(
-		function() {
-			clearProvince();
-			clearCityMuni();
-			clearBarangay();
-
-			var region_val = insert_talent_region_dropdown.val();
-			
-			var url = base_url() + 'api/client/get_all_provinces_by_region_code?region_code=' + region_val;
-			$.getJSON(url, function(response) {
-				clearProvince();
-				
-				$.each(response['provinces_list'], function() {
-					insert_talent_province_dropdown.append($("<option />").val(this.provCode).text(this.provDesc));
-				});
-			});
-		}
-	);
-
-	insert_talent_province_dropdown.change(
-		function() {
-			clearCityMuni();
-			clearBarangay();
-
-			var province_val = insert_talent_province_dropdown.val();
-			
-			var url = base_url() + 'api/client/get_city_muni_by_province_code?province_code=' + province_val;
-			$.getJSON(url, function(response) {
-				clearCityMuni();
-
-				$.each(response['city_muni_list'], function() {
-					insert_talent_city_muni_dropdown.append($("<option />").val(this.citymunCode).text(this.citymunDesc));
-				});
-			});
-		}
-	);
-	
-	insert_talent_city_muni_dropdown.change(
-		function() {
-			var city_muni_code_val = insert_talent_city_muni_dropdown.val();
-			
-			var url = base_url() + 'api/client/get_barangay_by_city_muni_code?city_muni_code=' + city_muni_code_val;
-			$.getJSON(url, function(response) {
-				clearBarangay();
-				$.each(response['barangay_list'], function() {
-					insert_talent_barangay_dropdown.append($("<option />").val(this.id).text(this.brgyDesc));
-				});
-			});
-		}
-	);
-}
-
-function setupViewEditTalentAddress(){
+function setupAddress(region_dropdown, province_dropdown, city_muni_dropdown, barangay_dropdown){
 	region_dropdown.change(
 		function() {
 			clearProvince();
@@ -431,7 +373,7 @@ function setupViewEditTalentAddress(){
 				clearProvince();
 				
 				$.each(response['provinces_list'], function() {
-					province_dropdown.append($("<option />").val(this.provCode).text(this.provDesc));
+					region_dropdown.append($("<option />").val(this.provCode).text(this.provDesc));
 				});
 			});
 		}
@@ -449,7 +391,7 @@ function setupViewEditTalentAddress(){
 				clearCityMuni();
 
 				$.each(response['city_muni_list'], function() {
-					city_muni_dropdown.append($("<option />").val(this.citymunCode).text(this.citymunDesc));
+					muni_dropdown.append($("<option />").val(this.citymunCode).text(this.citymunDesc));
 				});
 			});
 		}
@@ -470,81 +412,66 @@ function setupViewEditTalentAddress(){
 	);
 }
 
-function addTalentOrModel(){
+function addTalent(){
 	$("#frmAddTalentOrModel").submit(function(e) {
-		//prevent Default functionality
 		e.preventDefault();
 		var formAction = e.currentTarget.action;
 		var formData = new FormData(this);
 		var formType = "POST";
 		
-		//get the action-url of the form
-		var actionUrl = e.currentTarget.action;
-		
-		$.confirm({
-			title: 'Confirmation!',
-			content: 'Are you sure you want to add this talent/model?',
-			useBootstrap: false, 
-			theme: 'supervan',
-			buttons: {
-				NO: function () {
-					//do nothing
-				},
-				YES: function () {
-					$.ajax({
-						url: actionUrl,
-						type: formType,
-						data: formData,
-						processData: false,
-						contentType: false,
-						cache: false,
-						async: false,
-						success: function(data) {
-							var obj = data;
+		Swal.fire({
+			title: 'Confirmation',
+			text: "Are you sure you want to add this talent/model?",
+			icon: 'warning',
+			showCancelButton: true,
+			reverseButtons: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes!'
+		}).then((result) => {
+			if (result.value) {
+				$.ajax({
+					url: formAction,
+					type: formType,
+					data: formData,
+					processData: false,
+					contentType: false,
+					cache: false,
+					async: false,
+					success: function(data) {
+						var obj = data;
 							
-							if(obj.flag === 0){
-								$.alert({
-									title: "Oops! We're sorry!",
-									content: obj.msg,
-									useBootstrap: false,
-									theme: 'supervan',
-									buttons: {
-										'Ok, Got It!': function () {
-											//do nothing
-										}
-									}
-								});
-							}else{
-								$.alert({
-									title: 'Success!',
-									content: obj.msg,
-									useBootstrap: false,
-									theme: 'supervan',
-									buttons: {
-										'Ok, Got It!': function () {
-											location.replace(base_url());
-										}
-									}
-								});
-							}
-						},
-						error: function(xhr, status, error){
-							var errorMessage = xhr.status + ': ' + xhr.statusText;
-							$.alert({
-								title: "Oops! We're sorry!",
-								content: errorMessage,
-								useBootstrap: false,
-								theme: 'supervan',
-								buttons: {
-									'Ok, Got It!': function () {
-										//do nothing
-									}
+						if(obj.flag === 0){
+							Swal.fire(
+								'Error!',
+								obj.msg,
+								'error'
+							);
+						}else{
+							Swal.fire({
+								title: 'Success!',
+								text: obj.msg,
+								icon: 'success',
+								allowOutsideClick: false,
+								allowEscapeKey: false,
+								showCancelButton: false,
+								confirmButtonText: 'Ok, Got It!'
+							}).then((result) => {
+								if (result.value) {
+									location.replace(base_url());
 								}
 							});
 						}
-					});
-					
-				}
+					},
+					error: function(xhr, status, error){
+						var errorMessage = xhr.status + ': ' + xhr.statusText;
+						Swal.fire(
+							'Error!',
+							errorMessage,
+							'error'
+						);
+					 }
+				});	
 			}
 		});
 	});
@@ -554,9 +481,80 @@ $('#frmAddTalentOrModel').parsley().on('field:validated', function() {
 	var ok = $('.parsley-error').length === 0;
 	
 	if(ok){
-		addTalentOrModel();
+		addTalent();
 	}
 });
+
+function modifyTalent(){
+	$("#frmModifyTalent").submit(function(e) {
+		e.preventDefault();
+		var formAction = e.currentTarget.action;
+		var formData = new FormData(this);
+		var formType = "POST";
+
+		Swal.fire({
+			title: 'Confirmation',
+			text: "Are you sure you want to modify this talent/model?",
+			icon: 'warning',
+			showCancelButton: true,
+			reverseButtons: true,
+			confirmButtonColor: '#3085d6',
+			cancelButtonColor: '#d33',
+			confirmButtonText: 'Yes!'
+		}).then((result) => {
+			if (result.value) {
+				$.ajax({
+					url: formAction,
+					type: formType,
+					data: formData,
+					processData: false,
+					contentType: false,
+					cache: false,
+					async: false,
+					success: function(data) {
+						var obj = data;
+							
+						if(obj.flag === 0){
+							Swal.fire(
+								'Error!',
+								obj.msg,
+								'error'
+							);
+						}else{
+							Swal.fire({
+								title: 'Success!',
+								text: obj.msg,
+								icon: 'success',
+								allowOutsideClick: false,
+								allowEscapeKey: false,
+								showCancelButton: false,
+								confirmButtonText: 'Ok, Got It!'
+							}).then((result) => {
+								if (result.value) {
+									location.replace(base_url());
+								}
+							});
+						}
+					},
+					error: function(xhr, status, error){
+						var errorMessage = xhr.status + ': ' + xhr.statusText;
+						Swal.fire(
+							'Error!',
+							errorMessage,
+							'error'
+						);
+					 }
+				});	
+			}
+		});
+	});
+}
+
+$('#frmModifyTalent').parsley().on('field:validated', function() {
+	var ok = $('.parsley-error').length === 0;
+});
+
+modifyTalent();
 
 function deleteApplicant(){
 	$('.btnDeleteApplicant').click(function(){
@@ -631,6 +629,4 @@ function deleteApplicant(){
 	});
 }
 
-setupInsertTalentAddress();
-setupViewEditTalentAddress();
 deleteApplicant();

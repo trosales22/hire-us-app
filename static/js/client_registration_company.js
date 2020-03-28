@@ -113,7 +113,6 @@
 					cache: false,
 					async: false,
 					success: function(data) {
-						console.log('data:' + data);
 						$.alert({
 							title: 'Company client was successfully registered!',
 							content: 'Please wait for admin approval. Please check your email from time to time. Thank you.',
@@ -127,12 +126,11 @@
 						});
 					},
 					error: function(xhr, status, error){
-						var errorMessage = xhr.status + ': ' + xhr.statusText
-						alert('Error - ' + errorMessage);
+						var errorMessage = xhr.status + ': ' + xhr.statusText;
 						Swal.fire(
 							'Error!',
 							errorMessage,
-							'danger'
+							'error'
 						);
 					 }
 				});	

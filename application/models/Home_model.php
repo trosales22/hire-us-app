@@ -55,11 +55,15 @@ class Home_model extends CI_Model {
   	public function getAllTalents() {
 		$query = "
 			SELECT
-				talent_id, CONCAT(firstname, ' ', lastname) as fullname,
-				screen_name, gender, DATE_FORMAT(birth_date, '%M %d, %Y') as birth_date
+				IF( ISNULL(B.talent_display_photo), '', CONCAT('" . base_url() . "uploads/talents_or_models/', B.talent_display_photo) ) as talent_profile_picture,
+				A.talent_id, CONCAT(A.firstname, ' ', A.lastname) as fullname,
+				A.screen_name, A.gender, DATE_FORMAT(A.birth_date, '%M %d, %Y') as birth_date
 			FROM
-				talents
-			ORDER BY talent_id DESC
+				talents A
+			LEFT JOIN 
+				talents_resources B ON A.talent_id = B.talent_id
+			ORDER BY 
+				A.talent_id DESC
 		";
 
 		$stmt = $this->db->query($query);

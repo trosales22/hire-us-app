@@ -31,11 +31,25 @@ class Talents_model extends CI_Model {
 		}
 	}
 
+	public function detect_if_talent_profile_pic_exist($talent_id){
+		$params = array($talent_id);
+
+		$query = "
+			SELECT 
+				IF( ISNULL(talent_display_photo), 'NO IMAGE', CONCAT('" . base_url() . "uploads/talents_or_models/', talent_display_photo) ) as talent_display_photo,
+				IF( ISNULL(talent_display_photo), 'NO IMAGE', talent_display_photo) as talent_display_photo_raw 
+			FROM
+				talents_resources 
+			WHERE 
+				talent_id = ?
+		";
+
+		$stmt = $this->db->query($query, $params);
+		return $stmt->result();
+	}
+
 	public function add_talent(array $data) {
 		try{
-			// print "<pre>";
-			// die(print_r($data));
-
 			//insert to talents table
 			$talents_fields = array(
 				'firstname' 			=> $data['firstname'],
@@ -57,16 +71,20 @@ class Talents_model extends CI_Model {
 			
 			$this->db->insert('talents', $talents_fields);
 			$lastInsertedId = $this->db->insert_id();
-				
+
 			//insert to talents_category table
+			$talent_category = array();
+
 			foreach($data['categories'] as $category){
-				$talents_category_fields = array(
-					'talent_id' => $lastInsertedId,
-					'category_id' => $category,
-				);
-				
-				$this->db->insert('talents_category', $talents_category_fields);
+				array_push($talent_category, $category);
 			}
+
+			$talents_category_fields = array(
+				'talent_id'		=> $lastInsertedId,
+				'category_id'	=> implode('*', $talent_category)
+			);
+			
+			$this->db->insert('talents_category', $talents_category_fields);
 	
 			//insert to talents_account table
 			$generated_pin = 'HIRE_US@123';
@@ -99,7 +117,7 @@ class Talents_model extends CI_Model {
 	
 			$this->db->insert('talents_address', $talents_address_fields);
 
-			//insert to event_images table
+			//insert to talents_resources table
 			$talent_resources_fields = array(
 				'talent_id' 				=> $lastInsertedId,
 				'talent_display_photo'		=> $data['talent_profile_img'],
@@ -114,6 +132,107 @@ class Talents_model extends CI_Model {
 			
 			$this->db->insert_batch('talents_gallery', $data['talent_gallery']);
 			//$this->_send_added_talent_email_notif($data);
+		}catch(PDOException $e){
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
+		}catch(Exception $e){
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
+		}
+	}
+
+	public function modify_talent(array $data){
+		try{
+			$talent_id = $data['talent_id'];
+
+			$talents_fields = array(
+				'firstname' 			=> $data['firstname'],
+				'middlename' 			=> $data['middlename'],
+				'lastname' 				=> $data['lastname'],
+				'screen_name'			=> $data['screen_name'],
+				'email' 				=> $data['email'],
+				'contact_number' 		=> $data['contact_number'],
+				'gender' 				=> $data['gender'],
+				'height' 				=> $data['height'],
+				'birth_date' 			=> $data['birth_date'],
+				'vital_stats'			=> $data['vital_stats'],
+				'fb_followers'			=> $data['fb_followers'],
+				'instagram_followers'	=> $data['instagram_followers'],
+				'genre'					=> $data['genre'],
+				'description'			=> $data['description'],
+				'modified_date' 		=> $data['modified_date'],
+				'modified_by'			=> $data['modified_by']
+			);
+
+			//update talents
+			$this->db->where('talent_id', $talent_id);
+			$this->db->update('talents', $talents_fields);
+
+			$talents_address_fields = array(
+				'region'			=> $data['address']['region'],
+				'province' 			=> $data['address']['province'],
+				'city_muni' 		=> $data['address']['city_muni'],
+				'barangay' 			=> $data['address']['barangay'],
+				'bldg_village' 		=> $data['address']['bldg_village'],
+				'zip_code' 			=> $data['address']['zip_code']
+			);
+
+			//update talents_address
+			$this->db->where('talent_id', $talent_id);
+			$this->db->update('talents_address', $talents_address_fields);
+
+			$talents_prev_clients_fields = array(
+				'talent_id' 	=> $talent_id,
+				'details'		=> $data['prev_clients']
+			);
+
+			//update talents_exp_or_prev_clients
+			$this->db->where('talent_id', $talent_id);
+			$this->db->update('talents_exp_or_prev_clients', $talents_prev_clients_fields);
+
+			$talent_category = array();
+
+			foreach($data['categories'] as $category){
+				array_push($talent_category, $category);
+			}
+
+			$talent_category_fields = array(
+				'category_id'	=> implode('*', $talent_category)
+			);
+
+			//update talents_category
+			$this->db->where('talent_id', $talent_id);
+			$this->db->update('talents_category', $talent_category_fields);
+			
+			//for uploading talent profile picture
+			$talent_resources_fields = array();
+			$detect_if_talent_profile_pic_exist = $this->detect_if_talent_profile_pic_exist($talent_id);
+
+			if(!EMPTY($detect_if_talent_profile_pic_exist)){
+				if(!EMPTY($data['talent_profile_img'])){
+					$talent_resources_fields = array(
+						'talent_display_photo'		=> $data['talent_profile_img'],
+						'modified_by'				=> $data['modified_by'],
+						'modified_date'				=> $data['modified_date']
+					);
+					
+					//update talents_resources
+					$this->db->where('talent_id', $talent_id);
+					$this->db->update('talents_resources', $talent_resources_fields);
+				}
+			}else{
+				$talent_resources_fields = array(
+					'talent_id' 				=> $talent_id,
+					'talent_display_photo'		=> $data['talent_profile_img'],
+					'created_by'				=> $data['created_by']
+				);
+
+				//insert to talents_resources
+				$this->db->insert('talents_resources', $talent_resources_fields);
+			}
+		}catch(PDOException $e){
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
 		}catch(Exception $e){
 			$msg = $e->getMessage();
 			$this->db->trans_rollback();
@@ -188,14 +307,14 @@ class Talents_model extends CI_Model {
 				WHERE 
 					A.active_flag = ? $where_selected_categories $where_additional_filtering 
 				GROUP BY A.talent_id 
-				ORDER BY talent_id DESC
+				ORDER BY A.talent_id DESC
 			";
 		
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
 	}
 
-	public function getTalentDetails($talent_id){
+	public function get_talent_details($talent_id){
 		$params = array($talent_id);
 
 		$query = "
@@ -205,16 +324,15 @@ class Talents_model extends CI_Model {
 				CONCAT(A.firstname, ' ', A.lastname) as fullname, A.screen_name,
 				A.height, A.gender, A.contact_number, IFNULL(A.description, '') as talent_description,
 
-				J.regCode as region_code, J.regDesc as region, 
-				G.provCode as province_code, G.provDesc as province, 
-				H.citymunCode as city_muni_code, H.citymunDesc as city_muni, 
+				ANY_VALUE(J.regCode) as region_code, ANY_VALUE(J.regDesc) as region, 
+				ANY_VALUE(G.provCode) as province_code, ANY_VALUE(G.provDesc) as province, 
+				ANY_VALUE(H.citymunCode) as city_muni_code, ANY_VALUE(H.citymunDesc) as city_muni, 
 				I.id as barangay_code, I.brgyDesc as barangay,
 				F.bldg_village, F.zip_code, A.birth_date, 
 				YEAR(CURDATE()) - YEAR(A.birth_date) as age, A.email,
 				IF( ISNULL(B.talent_display_photo), '', CONCAT('" . base_url() . "uploads/talents_or_models/', B.talent_display_photo) ) as talent_display_photo,
 
-				GROUP_CONCAT(D.category_id SEPARATOR '|') as category_ids,
-				GROUP_CONCAT(D.category_name SEPARATOR '\n') as category_names,
+				C.category_id as category_ids,
 				IFNULL(E.details, 'N/A') as talent_experiences,
 
 				IFNULL(A.vital_stats, 'N/A') as vital_stats,
