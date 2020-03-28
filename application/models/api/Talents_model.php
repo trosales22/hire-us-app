@@ -324,9 +324,9 @@ class Talents_model extends CI_Model {
 				CONCAT(A.firstname, ' ', A.lastname) as fullname, A.screen_name,
 				A.height, A.gender, A.contact_number, IFNULL(A.description, '') as talent_description,
 
-				ANY_VALUE(J.regCode) as region_code, ANY_VALUE(J.regDesc) as region, 
-				ANY_VALUE(G.provCode) as province_code, ANY_VALUE(G.provDesc) as province, 
-				ANY_VALUE(H.citymunCode) as city_muni_code, ANY_VALUE(H.citymunDesc) as city_muni, 
+				MAX(J.regCode) as region_code, MAX(J.regDesc) as region, 
+				MAX(G.provCode) as province_code, MAX(G.provDesc) as province, 
+				MAX(H.citymunCode) as city_muni_code, MAX(H.citymunDesc) as city_muni, 
 				I.id as barangay_code, I.brgyDesc as barangay,
 				F.bldg_village, F.zip_code, A.birth_date, 
 				YEAR(CURDATE()) - YEAR(A.birth_date) as age, A.email,

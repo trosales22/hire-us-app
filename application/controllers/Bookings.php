@@ -24,7 +24,7 @@ class Bookings extends CI_Controller {
 			$client_booking_list = $this->bookings_model->get_all_bookings();
 
 			foreach($client_booking_list as $booking){
-				$talent_details 	= $this->talents_model->getTalentDetails($booking->talent_id);
+				$talent_details 	= $this->talents_model->get_talent_details($booking->talent_id);
 				$client_details		= $this->home_model->getAllClients($booking->client_id);
 				
 				$booking->talent_id = $talent_details[0];
