@@ -550,7 +550,7 @@ class Talents extends REST_Controller {
 				$client_details 	= $this->home_model->getAllClients($booking->client_id);
 				$booking->client_id = $client_details[0];
 				
-				$talent_details 	= $this->talents_model->getTalentDetails($booking->talent_id);
+				$talent_details 	= $this->talents_model->get_talent_details($booking->talent_id);
 				$booking->talent_id = $talent_details[0];
 			}
 			
@@ -677,7 +677,7 @@ class Talents extends REST_Controller {
 			);
 
 			$email_params = array(
-				'talent_details' 	=> $this->talents_model->getTalentDetails($client_booking_list_params['talent_id'])[0],
+				'talent_details' 	=> $this->talents_model->get_talent_details($client_booking_list_params['talent_id'])[0],
 				'client_details' 	=> $this->home_model->getAllClients($client_booking_list_params['client_id'])[0]
 			);
 			

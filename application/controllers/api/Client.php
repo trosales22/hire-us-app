@@ -192,7 +192,7 @@ class Client extends REST_Controller {
 				throw new Exception("Booking time is required.");
 
 			$email_params = array(
-				'talent_details' 	=> $this->talents_model->getTalentDetails($client_booking_params['talent_id'])[0],
+				'talent_details' 	=> $this->talents_model->get_talent_details($client_booking_params['talent_id'])[0],
 				'client_details' 	=> $this->home_model->getAllClients($client_booking_params['client_id'])[0]
 			);
 
@@ -231,7 +231,7 @@ class Client extends REST_Controller {
 			
 			$booking_list = $this->clients_model->get_booking_list_by_client_id($client_id);
 			foreach($booking_list as $booking){
-				$talent_details 	= $this->talents_model->getTalentDetails($booking->talent_id);
+				$talent_details 	= $this->talents_model->get_talent_details($booking->talent_id);
 				$booking->talent_id = $talent_details[0];
 			}
 			

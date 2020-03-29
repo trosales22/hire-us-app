@@ -282,9 +282,11 @@ class Talents_model extends CI_Model {
 					A.height, IFNULL(A.description, '') as talent_description,
 					YEAR(CURDATE()) - YEAR(A.birth_date) as age, A.gender,
 					IF( ISNULL(B.talent_display_photo), '', CONCAT('" . base_url() . "uploads/talents_or_models/', B.talent_display_photo) ) as talent_display_photo,
-					GROUP_CONCAT(D.category_name SEPARATOR '\n') as category_names,
-					J.regCode as region_code, F.province as province_code, F.city_muni as city_muni_code,
-					J.regDesc as region, G.provDesc as province, H.citymunDesc as city_muni, I.brgyDesc as barangay,
+					C.category_id as category_ids,
+					MAX(J.regCode) as region_code, MAX(J.regDesc) as region,
+					MAX(F.province) as province_code, MAX(G.provDesc) as province,
+					MAX(F.city_muni) as city_muni_code, MAX(H.citymunDesc) as city_muni,
+					MAX(I.brgyDesc) as barangay,
 					F.bldg_village, F.zip_code
 				FROM 
 					talents A 
