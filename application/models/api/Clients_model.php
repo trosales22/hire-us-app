@@ -228,9 +228,11 @@ class Clients_model extends CI_Model {
 				IFNULL(A.booking_other_details, 'N/A') as booking_other_details,
 				A.booking_offer_status, DATE_FORMAT(A.booking_created_date, '%M %d, %Y %r') as booking_created_date,
 				IFNULL(A.booking_decline_reason, 'N/A') as booking_decline_reason,
-				IFNULL(A.booking_approved_or_declined_date, 'N/A') as booking_approved_or_declined_date,
-				IFNULL(A.booking_date_paid, 'PENDING') as booking_date_paid,
-				DATE_FORMAT(DATE_ADD(A.booking_approved_or_declined_date, INTERVAL 24 hour), '%M %d, %Y %h:%i') as booking_pay_until
+				IF(A.booking_approved_or_declined_date = NULL, 'N/A', DATE_FORMAT(A.booking_approved_or_declined_date, '%M %d, %Y %r')) as booking_approved_or_declined_date,
+				IF(A.booking_date_paid = NULL, 'PENDING', DATE_FORMAT(A.booking_date_paid, '%M %d, %Y %r')) as booking_date_paid,
+                DATE_FORMAT(DATE_ADD(A.booking_approved_or_declined_date, INTERVAL 24 hour), '%M %d, %Y %r') as booking_pay_on_or_before,
+                NOW() as datetime_today,
+                IF(NOW() > DATE_FORMAT(DATE_ADD(A.booking_approved_or_declined_date, INTERVAL 24 hour), '%Y-%m-%d %T'), 'EXPIRED', 'ACTIVE') as booking_payment_status
 			FROM 
 				client_booking_list A 
 			WHERE 

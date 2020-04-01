@@ -9,19 +9,28 @@ class Payment extends REST_Controller {
 		$this->load->database();
 		$this->load->model('Login_model', 'login_model');
 		$this->load->model('Home_model', 'home_model');
+		$this->load->model('Bookings_model', 'bookings_model');
 	}
 
 	public function start_payment_post(){
 		try {
 			// Use Stripe's library to make requests...
-			$success 		= 0;
-			$stripe_token 	= $this->post('stripe_token');
-			$amount 		= $this->post('amount');
-			$description 	= $this->post('description');
-			$currency 		= 'PHP';
+			$success 				= 0;
+			$stripe_token 			= $this->post('stripe_token');
+			$booking_generated_id 	= $this->post('booking_generated_id');
+			$booking_payment_option = $this->post('booking_payment_option');
+			$amount 				= $this->post('amount');
+			$description 			= $this->post('description');
+			$currency 				= 'PHP';
 			
 			if(EMPTY($stripe_token))
 				throw new Exception("Stripe token is required.");
+
+			if(EMPTY($booking_generated_id))
+				throw new Exception("Booking ID is required.");
+
+			if(EMPTY($booking_payment_option))
+				throw new Exception("Booking Payment Option is required.");
 
 			if(EMPTY($amount))
 				throw new Exception("Amount is required.");
@@ -71,6 +80,13 @@ class Payment extends REST_Controller {
 		}
 
 		if($success == 1){
+			$params = array(
+				'booking_generated_id'		=> $booking_generated_id,
+				'booking_payment_option'	=> $booking_payment_option
+			);
+
+			$this->bookings_model->update_booking_payment_status($params);
+
 			$response = [
 				'msg'       => 'Payment successful. Thank you.',
 				'flag'		=> $success

@@ -207,4 +207,19 @@ class Bookings_model extends CI_Model {
 		$this->db->where('booking_generated_id', $booking_generated_id);
 		$this->db->update('client_booking_list', $booking_params);
 	}
+
+	public function update_booking_payment_status(array $params){
+		try{
+			$booking_params = array(
+				'booking_payment_option' 	=> $params['booking_payment_option'], 
+				'booking_date_paid' 		=> date("Y-m-d H:i:s")
+			);
+			
+			$this->db->where('booking_generated_id', $params['booking_generated_id']);
+			$this->db->update('client_booking_list', $booking_params);
+		}catch(Exception $ex){
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
+		}
+	}
 }
