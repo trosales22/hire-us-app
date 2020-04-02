@@ -1,4 +1,7 @@
 <?php
+date_default_timezone_set("Asia/Manila");
+require APPPATH . 'models/Tables.php';
+
 class Clients_model extends CI_Model {
 	public function get_all_valid_ids(){
 		$params = array('Y');
@@ -234,7 +237,7 @@ class Clients_model extends CI_Model {
                 NOW() as datetime_today,
                 IF(NOW() > DATE_FORMAT(DATE_ADD(A.booking_approved_or_declined_date, INTERVAL 24 hour), '%Y-%m-%d %T'), 'EXPIRED', 'ACTIVE') as booking_payment_status
 			FROM 
-				client_booking_list A 
+				" . Tables::$CLIENT_BOOKING_LIST . " A 
 			WHERE 
 				A.client_id = ? 
 			ORDER BY 
@@ -250,24 +253,9 @@ class Clients_model extends CI_Model {
 			SELECT 
 				A.booking_id, A.talent_id, A.preferred_date, A.preferred_time, A.created_date
 			FROM 
-				client_booking_list A 
+				" . Tables::$CLIENT_BOOKING_LIST . " A 
 			WHERE 
 				A.talent_id = ? AND A.created_date >= CURDATE()";
-		
-    	$stmt = $this->db->query($query, $params);
-    	return $stmt->result();
-	}
-
-	public function get_already_reserved_schedule_temporary($temp_talent_id){
-		$params = array($temp_talent_id);
-		$query = "
-			SELECT 
-				A.temp_booking_id, A.temp_talent_id, A.temp_booking_date, 
-				A.temp_booking_time, A.temp_created_date
-			FROM 
-				temp_booking_list A 
-			WHERE 
-				A.temp_talent_id = ? AND A.temp_created_date >= CURDATE()";
 		
     	$stmt = $this->db->query($query, $params);
     	return $stmt->result();

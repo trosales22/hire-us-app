@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set("Asia/Manila");
+
 class News_model extends CI_Model {
 	public function detect_if_display_pic_exist($news_id){
 		$params = array($news_id);

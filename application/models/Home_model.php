@@ -1,6 +1,7 @@
 <?php
-class Home_model extends CI_Model {
+date_default_timezone_set("Asia/Manila");
 
+class Home_model extends CI_Model {
 	public function getPersonalInfo($username_or_email){
 		$params = array($username_or_email, $username_or_email, 'Y');
 		$query = "

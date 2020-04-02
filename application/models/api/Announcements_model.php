@@ -1,4 +1,6 @@
 <?php
+date_default_timezone_set("Asia/Manila");
+
 class Announcements_model extends CI_Model {
 	public function get_announcements(array $announcement_params = NULL){
 		$where_condition = '';

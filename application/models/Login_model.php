@@ -1,6 +1,7 @@
 <?php
-class Login_model extends CI_Model {
+date_default_timezone_set("Asia/Manila");
 
+class Login_model extends CI_Model {
 	private function _generatePIN($digits = 4) {
 		$i = 0; //counter
 		$pin = ""; //our default pin is blank.
