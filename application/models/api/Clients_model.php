@@ -9,10 +9,11 @@ class Clients_model extends CI_Model {
 			SELECT 
 				valid_id_code,valid_id_name,active_flag
 			FROM 
-				param_valid_ids 
+				" . Tables::$PARAM_VALID_IDS . " 
 			WHERE 
 				active_flag = ?
-			ORDER BY valid_id_name ASC";
+			ORDER BY 
+				valid_id_name ASC";
 
     	$stmt = $this->db->query($query, $params);
     	return $stmt->result();
@@ -23,8 +24,9 @@ class Clients_model extends CI_Model {
 			SELECT 
 				id,regDesc as region_name,regCode
 			FROM 
-				param_region 
-			ORDER BY regDesc ASC";
+				" . Tables::$PARAM_REGION . "  
+			ORDER BY 
+				regDesc ASC";
 
     	$stmt = $this->db->query($query);
     	return $stmt->result();
@@ -37,9 +39,11 @@ class Clients_model extends CI_Model {
 			SELECT 
 				id,provDesc,provCode
 			FROM 
-				param_province 
-			WHERE regCode = ?
-			ORDER BY provDesc ASC";
+				" . Tables::$PARAM_PROVINCE . "  
+			WHERE 
+				regCode = ?
+			ORDER BY 
+				provDesc ASC";
 
     	$stmt = $this->db->query($query, $params);
     	return $stmt->result();
@@ -52,9 +56,11 @@ class Clients_model extends CI_Model {
 			SELECT 
 				id,citymunDesc,provCode,citymunCode
 			FROM 
-				param_city_muni 
-			WHERE provCode = ? 
-			ORDER BY citymunDesc ASC";
+				" . Tables::$PARAM_CITY_MUNI . "  
+			WHERE 
+				provCode = ? 
+			ORDER BY 
+				citymunDesc ASC";
 
     	$stmt = $this->db->query($query, $params);
     	return $stmt->result();
@@ -67,9 +73,11 @@ class Clients_model extends CI_Model {
 			SELECT 
 				id,brgyDesc,provCode,citymunCode
 			FROM 
-				param_barangay 
-			WHERE citymunCode = ? 
-			ORDER BY brgyDesc ASC";
+				" . Tables::$PARAM_BARANGAY . "  
+			WHERE 
+				citymunCode = ? 
+			ORDER BY 
+				brgyDesc ASC";
 
     	$stmt = $this->db->query($query, $params);
     	return $stmt->result();
@@ -89,7 +97,7 @@ class Clients_model extends CI_Model {
 			);
 		
 			//insert to users table
-			$this->db->insert('users', $client_fields);
+			$this->db->insert(Tables::$USERS, $client_fields);
 			$lastInsertedId = $this->db->insert_id();
 
 			//insert to user_birth_date table
@@ -98,7 +106,7 @@ class Clients_model extends CI_Model {
 				'birthdate'		=> $data['birth_date']
 			);
 
-			$this->db->insert('user_birth_date', $user_birthdate_fields);
+			$this->db->insert(Tables::$USER_BIRTH_DATE, $user_birthdate_fields);
 
 			//insert to role table
 			$user_role_fields = array(
@@ -106,7 +114,7 @@ class Clients_model extends CI_Model {
 				'role_code'		=> 'CLIENT_INDIVIDUAL'
 			);
 
-			$this->db->insert('user_role', $user_role_fields);
+			$this->db->insert(Tables::$USER_ROLE, $user_role_fields);
 
 			//insert to user_address table
 			$client_address_fields = array(
@@ -119,7 +127,7 @@ class Clients_model extends CI_Model {
 				'zip_code' 			=> $data['address']['zip_code']
 			);
 
-			$this->db->insert('user_address', $client_address_fields);
+			$this->db->insert(Tables::$USER_ADDRESS, $client_address_fields);
 
 			//insert to user_valid_id table
 			$individual_government_issued_id_fields = array(
@@ -128,13 +136,13 @@ class Clients_model extends CI_Model {
 				'file_name'		=> $data['individual_government_issued_id_image']
 			);
 
-			$this->db->insert('user_valid_id', $individual_government_issued_id_fields);
+			$this->db->insert(Tables::$USER_VALID_ID, $individual_government_issued_id_fields);
 			
 			for($i = 0; $i < count($data['valid_id_beside_your_face_image']); $i++){
 				$data['valid_id_beside_your_face_image'][$i]['user_id'] = $lastInsertedId;
 			}
 			
-			$this->db->insert_batch('user_valid_id', $data['valid_id_beside_your_face_image']);
+			$this->db->insert_batch(Tables::$USER_VALID_ID, $data['valid_id_beside_your_face_image']);
 		}catch(PDOException $e){
 			$msg = $e->getMessage();
 			$this->db->trans_rollback();
@@ -152,7 +160,7 @@ class Clients_model extends CI_Model {
 				'active_flag'		=> 'N'
 			);
 			
-			$this->db->insert('users', $users_fields);
+			$this->db->insert(Tables::$USERS, $users_fields);
 			$lastInsertedId = $this->db->insert_id();
 
 			//insert to client_details table
@@ -164,7 +172,7 @@ class Clients_model extends CI_Model {
 				'length_of_service' 		=> $data['company_length_of_service']
 			);
 			
-			$this->db->insert('client_details', $client_details_fields);
+			$this->db->insert(Tables::$CLIENT_DETAILS, $client_details_fields);
 			
 			//insert to role table
 			$user_role_fields = array(
@@ -172,7 +180,7 @@ class Clients_model extends CI_Model {
 				'role_code'		=> 'CLIENT_COMPANY'
 			);
 
-			$this->db->insert('user_role', $user_role_fields);
+			$this->db->insert(Tables::$USER_ROLE, $user_role_fields);
 
 			//insert to user_address table
 			$client_address_fields = array(
@@ -185,7 +193,7 @@ class Clients_model extends CI_Model {
 				'zip_code' 			=> $data['address']['zip_code']
 			);
 
-			$this->db->insert('user_address', $client_address_fields);
+			$this->db->insert(Tables::$USER_ADDRESS, $client_address_fields);
 
 			//insert to user_valid_id table
 
@@ -196,7 +204,7 @@ class Clients_model extends CI_Model {
 				'file_name'		=> $data['valid_ids']['company_id_image']
 			);
 
-			$this->db->insert('user_valid_id', $company_id_fields);
+			$this->db->insert(Tables::$USER_VALID_ID, $company_id_fields);
 
 			//insert company_government_issued_id
 			$company_government_issued_id_fields = array(
@@ -205,14 +213,14 @@ class Clients_model extends CI_Model {
 				'file_name'		=> $data['valid_ids']['company_government_issued_id_image']
 			);
 
-			$this->db->insert('user_valid_id', $company_government_issued_id_fields);
+			$this->db->insert(Tables::$USER_VALID_ID, $company_government_issued_id_fields);
 			
 			//insert valid_id_beside_your_face
 			for($i = 0; $i < count($data['valid_ids']['valid_id_beside_your_face_image']); $i++){
 				$data['valid_ids']['valid_id_beside_your_face_image'][$i]['user_id'] = $lastInsertedId;
 			}
 			
-			$this->db->insert_batch('user_valid_id', $data['valid_ids']['valid_id_beside_your_face_image']);
+			$this->db->insert_batch(Tables::$USER_VALID_ID, $data['valid_ids']['valid_id_beside_your_face_image']);
 		}catch(PDOException $e){
 			$msg = $e->getMessage();
 			$this->db->trans_rollback();

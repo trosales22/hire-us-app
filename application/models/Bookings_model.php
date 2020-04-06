@@ -1,10 +1,11 @@
 <?php
 date_default_timezone_set("Asia/Manila");
+require APPPATH . 'models/Tables.php';
 
 class Bookings_model extends CI_Model {
 	public function add_to_booking_list(array $booking_params, array $email_params){
 		try{	
-			$this->db->insert('client_booking_list', $booking_params);
+			$this->db->insert(Tables::$CLIENT_BOOKING_LIST, $booking_params);
 			$lastInsertedId = $this->db->insert_id();
 			
 			//$this->_send_successful_booking_to_client_email_notif($booking_params, $email_params);
@@ -26,8 +27,7 @@ class Bookings_model extends CI_Model {
 				booking_offer_status, DATE_FORMAT(booking_created_date, '%M %d, %Y %r') as booking_created_date,
 				IFNULL(booking_decline_reason, 'N/A') as booking_decline_reason,
 				IFNULL(booking_approved_or_declined_date, 'N/A') as booking_approved_or_declined_date
-			FROM 
-				client_booking_list";
+			FROM " . Tables::$CLIENT_BOOKING_LIST;
 		
 		$stmt = $this->db->query($query);
 		return $stmt->result();
@@ -47,7 +47,7 @@ class Bookings_model extends CI_Model {
 				IFNULL(booking_decline_reason, 'N/A') as booking_decline_reason,
 				IFNULL(booking_approved_or_declined_date, 'N/A') as booking_approved_or_declined_date
 			FROM 
-				client_booking_list 
+				" . Tables::$CLIENT_BOOKING_LIST . "  
 			WHERE 
 				booking_generated_id = ?";
 		
@@ -109,7 +109,7 @@ class Bookings_model extends CI_Model {
 	public function update_client_status(array $data){
 		$client_params = array('active_flag' => $data['active_flag']);
 		$this->db->where('user_id', $data['user_id']);
-		$this->db->update('users', $client_params);
+		$this->db->update(Tables::$USERS, $client_params);
 		
 		$client_details = $this->_get_email_of_client($data['user_id']);
 		$this->_send_client_status_email_notif($client_details->email, $data['active_flag']);
@@ -191,7 +191,7 @@ class Bookings_model extends CI_Model {
 		);
 
 		$this->db->where('booking_generated_id', $booking_generated_id);
-		$this->db->update('client_booking_list', $booking_params);
+		$this->db->update(Tables::$CLIENT_BOOKING_LIST, $booking_params);
 		
 		//$this->_send_successful_booking_to_client_email_notif($client_booking_list_params, $email_params);
 		//$this->_send_successful_booking_to_talent_email_notif($client_booking_list_params, $email_params);
@@ -205,7 +205,7 @@ class Bookings_model extends CI_Model {
 		);
 
 		$this->db->where('booking_generated_id', $booking_generated_id);
-		$this->db->update('client_booking_list', $booking_params);
+		$this->db->update(Tables::$CLIENT_BOOKING_LIST, $booking_params);
 	}
 
 	public function update_booking_payment_status(array $params){
@@ -216,7 +216,7 @@ class Bookings_model extends CI_Model {
 			);
 			
 			$this->db->where('booking_generated_id', $params['booking_generated_id']);
-			$this->db->update('client_booking_list', $booking_params);
+			$this->db->update(Tables::$CLIENT_BOOKING_LIST, $booking_params);
 		}catch(Exception $ex){
 			$msg = $e->getMessage();
 			$this->db->trans_rollback();

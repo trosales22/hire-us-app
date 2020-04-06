@@ -1,7 +1,19 @@
 <?php
 date_default_timezone_set("Asia/Manila");
+require APPPATH . 'models/Tables.php';
 
 class Home_model extends CI_Model {
+	private function _generatePIN($digits = 4) {
+		$i = 0; //counter
+		$pin = ""; //our default pin is blank.
+		while ($i < $digits) {
+		//generate a random number between 0 and 9.
+		$pin .= mt_rand(0, 9);
+		$i++;
+		}
+		return $pin;
+	}
+
 	public function getPersonalInfo($username_or_email){
 		$params = array($username_or_email, $username_or_email, 'Y');
 		$query = "
@@ -10,11 +22,11 @@ class Home_model extends CI_Model {
 				A.firstname, A.lastname, A.email, 
 				B.role_code, C.role_name
 			FROM 
-				users A
+				" . Tables::$USERS . " A
 			LEFT JOIN 
-				user_role B ON A.user_id = B.user_id 
+				" . Tables::$USER_ROLE . " B ON A.user_id = B.user_id 
 			LEFT JOIN 
-				param_roles C ON B.role_code = C.role_id 
+				" . Tables::$PARAM_ROLES . " C ON B.role_code = C.role_id 
 			WHERE 
 				A.username = ? OR A.email = ? AND A.active_flag = ?";
 
@@ -28,7 +40,7 @@ class Home_model extends CI_Model {
 			SELECT 
 				user_id, email 
 			FROM 
-				users 
+				" . Tables::$USERS . "  
 			WHERE 
 				user_id = ?";
 
@@ -44,10 +56,9 @@ class Home_model extends CI_Model {
 			SELECT 
 				category_id,category_name
 			FROM 
-				param_categories 
+				" . Tables::$PARAM_CATEGORIES . " 
 			WHERE 
-				active_flag = ?
-			";
+				active_flag = ?";
 
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
@@ -60,12 +71,11 @@ class Home_model extends CI_Model {
 				A.talent_id, CONCAT(A.firstname, ' ', A.lastname) as fullname,
 				A.screen_name, A.gender, DATE_FORMAT(A.birth_date, '%M %d, %Y') as birth_date
 			FROM
-				talents A
+				" . Tables::$TALENTS . " A
 			LEFT JOIN 
-				talents_resources B ON A.talent_id = B.talent_id
+				" . Tables::$TALENTS_RESOURCES . " B ON A.talent_id = B.talent_id
 			ORDER BY 
-				A.talent_id DESC
-		";
+				A.talent_id DESC";
 
 		$stmt = $this->db->query($query);
 		return $stmt->result();
@@ -84,13 +94,13 @@ class Home_model extends CI_Model {
 				IFNULL(A.gender, '') as gender,
 				B.role_code, IF(C.role_name = 'Client (Individual)', 'INDIVIDUAL', 'COMPANY / CORPORATE') as role_name,  IF(A.active_flag = 'Y', 'Active', 'Inactive') as status_flag
 			FROM 
-				users A
+				" . Tables::$USERS . " A
 			LEFT JOIN 
-				user_role B ON A.user_id = B.user_id 
+				" . Tables::$USER_ROLE . " B ON A.user_id = B.user_id 
 			LEFT JOIN 
-				param_roles C ON B.role_code = C.role_id 
+				" . Tables::$PARAM_ROLES . " C ON B.role_code = C.role_id 
 			LEFT JOIN 
-				client_details D ON A.user_id = D.user_id
+				" . Tables::$CLIENT_DETAILS . " D ON A.user_id = D.user_id
 			WHERE 
 				B.role_code IN ('CLIENT_COMPANY', 'CLIENT_INDIVIDUAL') $where_condition
 			ORDER BY 
@@ -107,11 +117,11 @@ class Home_model extends CI_Model {
 				CONCAT(A.firstname, ' ', A.lastname) as fullname,
 				B.role_code, C.role_name,  IF(A.active_flag = 'Y', 'Active', 'Inactive') as status_flag
 			FROM 
-				users A
+				" . Tables::$USERS . " A
 			LEFT JOIN 
-				user_role B ON A.user_id = B.user_id 
+				" . Tables::$USER_ROLE . " B ON A.user_id = B.user_id 
 			LEFT JOIN 
-				param_roles C ON B.role_code = C.role_id 
+				" . Tables::$PARAM_ROLES . " C ON B.role_code = C.role_id 
 			WHERE 
 				B.role_code IN ('APPLICANT')
 			ORDER BY 
@@ -123,8 +133,8 @@ class Home_model extends CI_Model {
 
 	public function delete_applicant($user_id){
         try {
-			$this->db->delete('users', array('user_id' => $user_id));
-			$this->db->delete('user_role', array('user_id' => $user_id, 'role_code' => 'APPLICANT'));
+			$this->db->delete(Tables::$USERS, array('user_id' => $user_id));
+			$this->db->delete(Tables::$USER_ROLE, array('user_id' => $user_id, 'role_code' => 'APPLICANT'));
         }catch(PDOException $e){
 			$msg = $e->getMessage();
 			$this->db->trans_rollback();
@@ -138,8 +148,9 @@ class Home_model extends CI_Model {
 			SELECT 
 				count(*) as talent_res_count
 			FROM 
-				talents_resources 
-			WHERE talent_id = ?";
+				" . Tables::$TALENTS_RESOURCES . "  
+			WHERE 
+				talent_id = ?";
 
 		$stmt = $this->db->query($query, $params);
     	return $stmt->result();
@@ -154,25 +165,14 @@ class Home_model extends CI_Model {
 				IF( ISNULL(A.file_name), '', CONCAT('" . base_url() . "uploads/id_verification/', A.file_name) ) as file_name,
 				DATE_FORMAT(A.created_date, '%M %d, %Y %r') as created_date
 			FROM 
-				user_valid_id A 
+				" . Tables::$USER_VALID_ID . " A 
 			LEFT JOIN 
-				param_valid_ids B ON A.id_type = B.valid_id_code 
-			WHERE user_id = ?;
-		";
+				" . Tables::$PARAM_VALID_IDS . " B ON A.id_type = B.valid_id_code 
+			WHERE 
+				user_id = ?";
 		
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
-	}
-
-	private function _generatePIN($digits = 4) {
-		$i = 0; //counter
-		$pin = ""; //our default pin is blank.
-		while ($i < $digits) {
-		//generate a random number between 0 and 9.
-		$pin .= mt_rand(0, 9);
-		$i++;
-		}
-		return $pin;
 	}
 
 	private function _send_client_status_email_notif($email, $status){
@@ -201,7 +201,7 @@ class Home_model extends CI_Model {
 		try{
 			$client_params = array('active_flag' => $data['active_flag']);
 			$this->db->where('user_id', $data['user_id']);
-			$this->db->update('users', $client_params);
+			$this->db->update(Tables::$USERS, $client_params);
 			
 			$client_details = $this->_get_email_of_client($data['user_id']);		
 			$this->_send_client_status_email_notif($client_details->email, $data['active_flag']);
@@ -213,8 +213,7 @@ class Home_model extends CI_Model {
 
 	public function uploadTalentProfilePic(array $fields){
 		try{
-			//insert to talents_resources table
-			$this->db->insert('talents_resources', $fields);
+			$this->db->insert(Tables::$TALENTS_RESOURCES, $fields);
 		}catch(PDOException $e){
 			$msg = $e->getMessage();
 			$this->db->trans_rollback();
@@ -223,8 +222,7 @@ class Home_model extends CI_Model {
 
 	public function uploadTalentGallery(array $data){
 		try{
-			//insert to talents_gallery table
-			$insert = $this->db->insert_batch('talents_gallery',$data);
+			$insert = $this->db->insert_batch(Tables::$TALENTS_GALLERY,$data);
 		}catch(PDOException $e){
 			$msg = $e->getMessage();
 			$this->db->trans_rollback();
@@ -239,10 +237,9 @@ class Home_model extends CI_Model {
 				IF( ISNULL(file_name), '', CONCAT('" . base_url() . "uploads/talents_or_models/', file_name) ) as file_name,
 				DATE_FORMAT(uploaded_on, '%M %d, %Y %r') as created_date
 			FROM
-				talents_gallery
+				" . Tables::$TALENTS_GALLERY . " 
 			ORDER BY 
-				uploaded_on DESC
-  			";
+				uploaded_on DESC";
 
     	$stmt = $this->db->query($query, $params);
 		return $stmt->result();

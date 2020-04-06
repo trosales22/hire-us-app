@@ -1,5 +1,6 @@
 <?php
 date_default_timezone_set("Asia/Manila");
+require APPPATH . 'models/Tables.php';
 
 class Announcements_model extends CI_Model {
 	public function get_announcements(array $announcement_params = NULL){
@@ -19,13 +20,13 @@ class Announcements_model extends CI_Model {
 				B.user_id, CONCAT(B.firstname, ' ', B.lastname) as announcement_creator, 
 				DATE_FORMAT(A.created_date, '%M %d, %Y %r') as announcement_created_date
 			FROM 
-				announcements A
+				" . Tables::$ANNOUNCEMENTS . " A
 			LEFT JOIN 
-				users B ON A.created_by = B.user_id 
+				" . Tables::$USERS . " B ON A.created_by = B.user_id 
 			WHERE 
 				A.active_flag = 'Y' $where_condition 
-			ORDER BY A.announcement_id DESC
-			";
+			ORDER BY 
+				A.announcement_id DESC";
 		
 		$stmt = $this->db->query($query);
 		return $stmt->result();
@@ -39,7 +40,7 @@ class Announcements_model extends CI_Model {
 				'created_by' 			=> $data['created_by']
 			);
 			
-			$this->db->insert('announcements', $announcement_fields);
+			$this->db->insert(Tables::$ANNOUNCEMENTS, $announcement_fields);
 			$lastInsertedId = $this->db->insert_id();
 		}catch(PDOException $e){
 			$msg = $e->getMessage();
@@ -55,7 +56,7 @@ class Announcements_model extends CI_Model {
 									'announcement_details' => $data['announcement_details']
 								);
 			$this->db->where('announcement_id', $data['announcement_id']);
-			$this->db->update('announcements', $announcement_params);
+			$this->db->update(Tables::$ANNOUNCEMENTS, $announcement_params);
 		}catch(PDOException $e){
 			$msg = $e->getMessage();
 			$this->db->trans_rollback();
@@ -64,7 +65,7 @@ class Announcements_model extends CI_Model {
 	
 	public function delete_announcement($announcement_id){
         try {
-			$this->db->delete('announcements', array('announcement_id' => $announcement_id));
+			$this->db->delete(Tables::$ANNOUNCEMENTS, array('announcement_id' => $announcement_id));
         }catch(PDOException $e){
 			$msg = $e->getMessage();
 			$this->db->trans_rollback();

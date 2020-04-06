@@ -1,5 +1,6 @@
 <?php
 date_default_timezone_set("Asia/Manila");
+require APPPATH . 'models/Tables.php';
 
 class Talents_model extends CI_Model {
 	private function _send_added_talent_email_notif(array $data){
@@ -39,7 +40,7 @@ class Talents_model extends CI_Model {
 				IF( ISNULL(talent_display_photo), 'NO IMAGE', CONCAT('" . base_url() . "uploads/talents_or_models/', talent_display_photo) ) as talent_display_photo,
 				IF( ISNULL(talent_display_photo), 'NO IMAGE', talent_display_photo) as talent_display_photo_raw 
 			FROM
-				talents_resources 
+				" . Tables::$TALENTS_RESOURCES . " 
 			WHERE 
 				talent_id = ?
 		";
@@ -69,7 +70,7 @@ class Talents_model extends CI_Model {
 				'created_by' 			=> $data['created_by']
 			);
 			
-			$this->db->insert('talents', $talents_fields);
+			$this->db->insert(Tables::$TALENTS, $talents_fields);
 			$lastInsertedId = $this->db->insert_id();
 
 			//insert to talents_category table
@@ -84,7 +85,7 @@ class Talents_model extends CI_Model {
 				'category_id'	=> implode('*', $talent_category)
 			);
 			
-			$this->db->insert('talents_category', $talents_category_fields);
+			$this->db->insert(Tables::$TALENTS_CATEGORY, $talents_category_fields);
 	
 			//insert to talents_account table
 			$generated_pin = 'HIRE_US@123';
@@ -94,7 +95,7 @@ class Talents_model extends CI_Model {
 				'talent_password' => password_hash($generated_pin, PASSWORD_BCRYPT),
 			);
 			
-			$this->db->insert('talents_account', $talents_account_fields);
+			$this->db->insert(Tables::$TALENTS_ACCOUNT, $talents_account_fields);
 			
 			//insert to talents_exp_or_prev_clients table
 			$talents_prev_clients_fields = array(
@@ -102,7 +103,7 @@ class Talents_model extends CI_Model {
 				'details'		=> $data['prev_clients']
 			);
 	
-			$this->db->insert('talents_exp_or_prev_clients', $talents_prev_clients_fields);
+			$this->db->insert(Tables::$TALENTS_EXP_OR_PREV_CLIENTS, $talents_prev_clients_fields);
 			
 			//insert to talent_address table
 			$talents_address_fields = array(
@@ -115,7 +116,7 @@ class Talents_model extends CI_Model {
 				'zip_code' 			=> $data['address']['zip_code']
 			);
 	
-			$this->db->insert('talents_address', $talents_address_fields);
+			$this->db->insert(Tables::$TALENTS_ADDRESS, $talents_address_fields);
 
 			//insert to talents_resources table
 			$talent_resources_fields = array(
@@ -124,13 +125,13 @@ class Talents_model extends CI_Model {
 				'created_by'				=> $data['created_by']
 			);
 
-			$this->db->insert('talents_resources', $talent_resources_fields);
+			$this->db->insert(Tables::$TALENTS_RESOURCES, $talent_resources_fields);
 			
 			for($i = 0; $i < count($data['talent_gallery']); $i++){
 				$data['talent_gallery'][$i]['talent_id'] = $lastInsertedId;
 			}
 			
-			$this->db->insert_batch('talents_gallery', $data['talent_gallery']);
+			$this->db->insert_batch(Tables::$TALENTS_GALLERY, $data['talent_gallery']);
 			//$this->_send_added_talent_email_notif($data);
 		}catch(PDOException $e){
 			$msg = $e->getMessage();
@@ -166,7 +167,7 @@ class Talents_model extends CI_Model {
 
 			//update talents
 			$this->db->where('talent_id', $talent_id);
-			$this->db->update('talents', $talents_fields);
+			$this->db->update(Tables::$TALENTS, $talents_fields);
 
 			$talents_address_fields = array(
 				'region'			=> $data['address']['region'],
@@ -179,7 +180,7 @@ class Talents_model extends CI_Model {
 
 			//update talents_address
 			$this->db->where('talent_id', $talent_id);
-			$this->db->update('talents_address', $talents_address_fields);
+			$this->db->update(Tables::$TALENTS_ADDRESS, $talents_address_fields);
 
 			$talents_prev_clients_fields = array(
 				'talent_id' 	=> $talent_id,
@@ -188,7 +189,7 @@ class Talents_model extends CI_Model {
 
 			//update talents_exp_or_prev_clients
 			$this->db->where('talent_id', $talent_id);
-			$this->db->update('talents_exp_or_prev_clients', $talents_prev_clients_fields);
+			$this->db->update(Tables::$TALENTS_EXP_OR_PREV_CLIENTS, $talents_prev_clients_fields);
 
 			$talent_category = array();
 
@@ -202,7 +203,7 @@ class Talents_model extends CI_Model {
 
 			//update talents_category
 			$this->db->where('talent_id', $talent_id);
-			$this->db->update('talents_category', $talent_category_fields);
+			$this->db->update(Tables::$TALENTS_CATEGORY, $talent_category_fields);
 			
 			//for uploading talent profile picture
 			$talent_resources_fields = array();
@@ -218,7 +219,7 @@ class Talents_model extends CI_Model {
 					
 					//update talents_resources
 					$this->db->where('talent_id', $talent_id);
-					$this->db->update('talents_resources', $talent_resources_fields);
+					$this->db->update(Tables::$TALENTS_RESOURCES, $talent_resources_fields);
 				}
 			}else{
 				$talent_resources_fields = array(
@@ -228,7 +229,7 @@ class Talents_model extends CI_Model {
 				);
 
 				//insert to talents_resources
-				$this->db->insert('talents_resources', $talent_resources_fields);
+				$this->db->insert(Tables::$TALENTS_RESOURCES, $talent_resources_fields);
 			}
 		}catch(PDOException $e){
 			$msg = $e->getMessage();
@@ -289,28 +290,29 @@ class Talents_model extends CI_Model {
 					MAX(I.brgyDesc) as barangay,
 					F.bldg_village, F.zip_code
 				FROM 
-					talents A 
+					" . Tables::$TALENTS . " A 
 				LEFT JOIN 
-					talents_resources B ON A.talent_id = B.talent_id 
+					" . Tables::$TALENTS_RESOURCES . " B ON A.talent_id = B.talent_id 
 				LEFT JOIN 
-					talents_category C ON A.talent_id = C.talent_id 
+					" . Tables::$TALENTS_CATEGORY . " C ON A.talent_id = C.talent_id 
 				LEFT JOIN 
-					param_categories D ON C.category_id = D.category_id 
+					" . Tables::$PARAM_CATEGORIES . " D ON C.category_id = D.category_id 
 				LEFT JOIN 
-					talents_address F ON A.talent_id = F.talent_id 
+					" . Tables::$TALENTS_ADDRESS . " F ON A.talent_id = F.talent_id 
 				LEFT JOIN 
-					param_province G ON F.province = G.provCode 
+					" . Tables::$PARAM_PROVINCE . " G ON F.province = G.provCode 
 				LEFT JOIN
-					param_city_muni H ON F.city_muni = H.citymunCode 
+					" . Tables::$PARAM_CITY_MUNI . " H ON F.city_muni = H.citymunCode 
 				LEFT JOIN 
-					param_barangay I ON F.barangay = I.id 
+					" . Tables::$PARAM_BARANGAY . " I ON F.barangay = I.id 
 				LEFT JOIN 
-					param_region J ON F.region = J.regCode 
+					" . Tables::$PARAM_REGION . " J ON F.region = J.regCode 
 				WHERE 
 					A.active_flag = ? $where_selected_categories $where_additional_filtering 
-				GROUP BY A.talent_id 
-				ORDER BY A.talent_id DESC
-			";
+				GROUP BY 
+					A.talent_id 
+				ORDER BY 
+					A.talent_id DESC";
 		
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
@@ -342,29 +344,29 @@ class Talents_model extends CI_Model {
 				IFNULL(A.instagram_followers, 0) as instagram_followers,
 				IFNULL(A.genre, 'N/A') as genre
 			FROM 
-				talents A 
+				" . Tables::$TALENTS . " A 
 			LEFT JOIN 
-				talents_resources B ON A.talent_id = B.talent_id 
+				" . Tables::$TALENTS_RESOURCES . " B ON A.talent_id = B.talent_id 
 			LEFT JOIN 
-				talents_category C ON A.talent_id = C.talent_id 
+				" . Tables::$TALENTS_CATEGORY . " C ON A.talent_id = C.talent_id 
 			LEFT JOIN 
-				param_categories D ON C.category_id = D.category_id 
+				" . Tables::$PARAM_CATEGORIES . " D ON C.category_id = D.category_id 
 			LEFT JOIN 
-				talents_exp_or_prev_clients E ON A.talent_id = E.talent_id 
+				" . Tables::$TALENTS_EXP_OR_PREV_CLIENTS . " E ON A.talent_id = E.talent_id 
 			LEFT JOIN 
-				talents_address F ON A.talent_id = F.talent_id 
+				" . Tables::$TALENTS_ADDRESS . " F ON A.talent_id = F.talent_id 
 			LEFT JOIN 
-				param_province G ON F.province = G.provCode 
+				" . Tables::$PARAM_PROVINCE . " G ON F.province = G.provCode 
 			LEFT JOIN
-				param_city_muni H ON F.city_muni = H.citymunCode 
+				" . Tables::$PARAM_CITY_MUNI . " H ON F.city_muni = H.citymunCode 
 			LEFT JOIN 
-				param_barangay I ON F.barangay = I.id 
+				" . Tables::$PARAM_BARANGAY . " I ON F.barangay = I.id 
 			LEFT JOIN 
-				param_region J ON F.region = J.regCode 
+				" . Tables::$PARAM_REGION . " J ON F.region = J.regCode 
 			WHERE 
 				A.talent_id = ?
-			GROUP BY A.talent_id
-		";
+			GROUP BY 
+				A.talent_id";
 		
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
@@ -406,7 +408,7 @@ class Talents_model extends CI_Model {
                 NOW() as datetime_today,
                 IF(NOW() > DATE_FORMAT(DATE_ADD(A.booking_approved_or_declined_date, INTERVAL 24 hour), '%Y-%m-%d %T'), 'EXPIRED', 'ACTIVE') as booking_payment_status
 			FROM 
-				client_booking_list A 
+				" . Tables::$CLIENT_BOOKING_LIST . " A 
 			WHERE 
 				A.talent_id = ? 
 			ORDER BY 
@@ -418,7 +420,7 @@ class Talents_model extends CI_Model {
 
 	public function add_talent_reviews(array $data){
 		try{
-			$this->db->insert('client_reviews', $data);
+			$this->db->insert(Tables::$CLIENT_REVIEWS, $data);
 			$lastInsertedId = $this->db->insert_id();
 		}catch(PDOException $e){
 			$msg = $e->getMessage();
@@ -435,10 +437,11 @@ class Talents_model extends CI_Model {
 				review_rating, review_to, review_from, 
 				DATE_FORMAT(review_date, '%M %d, %Y %r') as review_date 
 			FROM 
-				client_reviews 
+				" . Tables::$CLIENT_REVIEWS . "  
 			WHERE 
 				review_to = ?
-			ORDER BY review_id DESC";
+			ORDER BY 
+				review_id DESC";
 
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();

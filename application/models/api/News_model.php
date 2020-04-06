@@ -1,5 +1,6 @@
 <?php
 date_default_timezone_set("Asia/Manila");
+require APPPATH . 'models/Tables.php';
 
 class News_model extends CI_Model {
 	public function detect_if_display_pic_exist($news_id){
@@ -10,7 +11,7 @@ class News_model extends CI_Model {
 				IF( ISNULL(news_display_pic), 'NO IMAGE', CONCAT('" . base_url() . "uploads/news/', news_display_pic) ) as news_display_photo,
 				IF( ISNULL(news_display_pic), 'NO IMAGE', news_display_pic) as news_display_photo_raw 
 			FROM
-				news_and_updates 
+				" . Tables::$NEWS_AND_UPDATES . "  
 			WHERE 
 				news_id = ?
 		";
@@ -39,13 +40,13 @@ class News_model extends CI_Model {
 				B.user_id, CONCAT(B.firstname, ' ', B.lastname) as news_creator, A.news_author,
 				DATE_FORMAT(A.created_date, '%M %d, %Y %r') as news_created_date, A.active_flag
 			FROM 
-				news_and_updates A
+				" . Tables::$NEWS_AND_UPDATES . " A
 			LEFT JOIN 
-				users B ON A.created_by = B.user_id 
+				" . Tables::$USERS . " B ON A.created_by = B.user_id 
 			WHERE 
 				A.active_flag = ? $where_condition 
-			ORDER BY A.news_id DESC
-			";
+			ORDER BY 
+				A.news_id DESC";
 		
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
@@ -62,7 +63,7 @@ class News_model extends CI_Model {
 				'created_by' 		=> $data['created_by']
 			);
 			
-			$this->db->insert('news_and_updates', $news_fields);
+			$this->db->insert(Tables::$NEWS_AND_UPDATES, $news_fields);
 			$lastInsertedId = $this->db->insert_id();
 		}catch(PDOException $e){
 			$msg = $e->getMessage();
@@ -93,7 +94,7 @@ class News_model extends CI_Model {
 			
 			
 			$this->db->where('news_id', $data['news_id']);
-			$this->db->update('news_and_updates', $news_params);
+			$this->db->update(Tables::$NEWS_AND_UPDATES, $news_params);
 		}catch(PDOException $e){
 			$msg = $e->getMessage();
 			$this->db->trans_rollback();
@@ -102,7 +103,7 @@ class News_model extends CI_Model {
 	
 	public function delete_news($news_id){
         try {
-			$this->db->delete('news_and_updates', array('news_id' => $news_id));
+			$this->db->delete(Tables::$NEWS_AND_UPDATES, array('news_id' => $news_id));
         }catch(PDOException $e){
 			$msg = $e->getMessage();
 			$this->db->trans_rollback();

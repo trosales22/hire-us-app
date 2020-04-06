@@ -1,5 +1,6 @@
 <?php
 date_default_timezone_set("Asia/Manila");
+require APPPATH . 'models/Tables.php';
 
 class Login_model extends CI_Model {
 	private function _generatePIN($digits = 4) {
@@ -24,7 +25,7 @@ class Login_model extends CI_Model {
 			SELECT 
 				username
 			FROM 
-				users
+				" . Tables::$USERS . " 
 			WHERE 
 				username = ? OR email = ? AND password = ? AND active_flag = ?";
 				
@@ -43,12 +44,11 @@ class Login_model extends CI_Model {
 			SELECT 
 				A.talent_id, A.email
 			FROM 
-				talents A 
+				" . Tables::$TALENTS . " A 
 			LEFT JOIN 
-				talents_account B ON A.talent_id = B.talent_id 
+				" . Tables::$TALENTS_ACCOUNT . " B ON A.talent_id = B.talent_id 
 			WHERE 
-				A.email = ? AND B.talent_password = ? AND A.active_flag = ?
-		";
+				A.email = ? AND B.talent_password = ? AND A.active_flag = ?";
 				
 		$stmt = $this->db->query($query, $params);
 		return $stmt->num_rows();
@@ -67,18 +67,17 @@ class Login_model extends CI_Model {
 				IF( ISNULL(C.talent_display_photo), '', CONCAT('" . base_url() . "uploads/talents_or_models/', C.talent_display_photo) ) as talent_display_photo, 
 				GROUP_CONCAT(E.category_name SEPARATOR '\n') as role_name
 			FROM 
-				talents A 
+				" . Tables::$TALENTS . " A 
 			JOIN 
-				talents_account B ON A.talent_id = B.talent_id 
+				" . Tables::$TALENTS_ACCOUNT . " B ON A.talent_id = B.talent_id 
 			JOIN 
-				talents_resources C ON A.talent_id = C.talent_id 
+				" . Tables::$TALENTS_RESOURCES . " C ON A.talent_id = C.talent_id 
 			LEFT JOIN 
-				talents_category D ON A.talent_id = D.talent_id 
+				" . Tables::$TALENTS_CATEGORY . " D ON A.talent_id = D.talent_id 
 			LEFT JOIN 
-				param_categories E ON D.category_id = E.category_id 
+				" . Tables::$PARAM_CATEGORIES . " E ON D.category_id = E.category_id 
 			WHERE 
-				A.email = ? AND A.active_flag = ?
-			";
+				A.email = ? AND A.active_flag = ?";
 
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
@@ -91,12 +90,11 @@ class Login_model extends CI_Model {
 				A.user_id, A.username, A.firstname, A.lastname, 
 				A.email,A.gender, A.password, B.role_code
 			FROM 
-				users A
+				" . Tables::$USERS . " A
 			LEFT JOIN 
-				user_role B ON A.user_id = B.user_id
+				" . Tables::$USER_ROLE . " B ON A.user_id = B.user_id
 			WHERE 
-				A.username = ? OR A.email = ? AND A.active_flag = ?
-			";
+				A.username = ? OR A.email = ? AND A.active_flag = ?";
 
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
@@ -108,7 +106,7 @@ class Login_model extends CI_Model {
 			SELECT 
 				user_id,role_code
 			FROM 
-				user_role
+				" . Tables::$USER_ROLE . " 
 			WHERE 
 				user_id = ?";
 
@@ -122,10 +120,9 @@ class Login_model extends CI_Model {
 			SELECT 
 				category_id,category_name
 			FROM 
-				param_categories 
+				" . Tables::$PARAM_CATEGORIES . " 
 			WHERE 
-				active_flag = ?
-			";
+				active_flag = ?";
 
 		$stmt = $this->db->query($query, $params);
 		return $stmt->result();
@@ -138,10 +135,9 @@ class Login_model extends CI_Model {
 			SELECT 
 				role_id,role_name
 			FROM 
-				param_roles 
+				" . Tables::$PARAM_ROLES . "  
 			WHERE 
-				active_flag = ? AND role_id IN ('CLIENT_INDIVIDUAL', 'CLIENT_COMPANY')
-			";
+				active_flag = ? AND role_id IN ('CLIENT_INDIVIDUAL', 'CLIENT_COMPANY')";
 
     	$stmt = $this->db->query($query, $params);
     	return $stmt->result();
@@ -158,7 +154,7 @@ class Login_model extends CI_Model {
 		  'password'	=> password_hash($data['password'], PASSWORD_BCRYPT)
 		);
 
-		$this->db->insert('users', $users_fields);
+		$this->db->insert(Tables::$USERS, $users_fields);
 		$lastInsertedId = $this->db->insert_id();
 
 		$user_role_fields = array(
@@ -166,12 +162,11 @@ class Login_model extends CI_Model {
 			'role_code' => 'APPLICANT',
 		);
 		
-		$this->db->insert('user_role', $user_role_fields);
+		$this->db->insert(Tables::$USER_ROLE, $user_role_fields);
 	}
 
 	public function insertClient(array $data){
 		$generated_pin = 'HIREUS_' . $this->_generatePIN();
-		print_r('PIN: ' . $generated_pin);
 
 		$users_fields = array(
 			'email' => $data['email'],
@@ -179,15 +174,15 @@ class Login_model extends CI_Model {
 			'password'	=> password_hash($generated_pin, PASSWORD_BCRYPT)
 		);
 
-		$this->db->insert('users', $users_fields);
+		$this->db->insert(Tables::$USERS, $users_fields);
 		$lastInsertedId = $this->db->insert_id();
-
+		
 		$user_role_fields = array(
 			'user_id' => $lastInsertedId,
 			'role_code' => $data['account_type'],
 		);
 		
-		$this->db->insert('user_role', $user_role_fields);
+		$this->db->insert(Tables::$USER_ROLE, $user_role_fields);
 		
 	}
 }
