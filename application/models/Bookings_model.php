@@ -45,7 +45,7 @@ class Bookings_model extends CI_Model {
 				IFNULL(booking_other_details, 'N/A') as booking_other_details,
 				booking_offer_status, DATE_FORMAT(booking_created_date, '%M %d, %Y %r') as booking_created_date,
 				IFNULL(booking_decline_reason, 'N/A') as booking_decline_reason,
-				IF(booking_approved_or_declined_date = NULL, 'N/A', DATE_FORMAT(booking_approved_or_declined_date, '%M %d, %Y %r')) as booking_approved_or_declined_date,
+				IF(ISNULL(booking_approved_or_declined_date), 'N/A', DATE_FORMAT(booking_approved_or_declined_date, '%M %d, %Y %r')) as booking_approved_or_declined_date,
 				IF(ISNULL(booking_date_paid), 'PENDING', DATE_FORMAT(booking_date_paid, '%M %d, %Y %r')) as booking_date_paid,
                 DATE_FORMAT(DATE_ADD(booking_approved_or_declined_date, INTERVAL 24 hour), '%M %d, %Y %r') as booking_pay_on_or_before,
                 IF(NOW() > DATE_FORMAT(DATE_ADD(booking_approved_or_declined_date, INTERVAL 24 hour), '%Y-%m-%d %T'), 'EXPIRED', 'ACTIVE') as booking_payment_status
