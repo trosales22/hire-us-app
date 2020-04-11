@@ -1,6 +1,6 @@
 <?php
 date_default_timezone_set("Asia/Manila");
-require APPPATH . 'models/Tables.php';
+include_once APPPATH . 'models/Tables.php';
 
 class Categories_model extends CI_Model {
 	public function getAllCategories() {

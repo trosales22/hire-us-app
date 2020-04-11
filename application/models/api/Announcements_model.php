@@ -1,6 +1,6 @@
 <?php
 date_default_timezone_set("Asia/Manila");
-require APPPATH . 'models/Tables.php';
+include_once APPPATH . 'models/Tables.php';
 
 class Announcements_model extends CI_Model {
 	public function get_announcements(array $announcement_params = NULL){

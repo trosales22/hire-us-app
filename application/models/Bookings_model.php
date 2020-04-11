@@ -1,6 +1,6 @@
 <?php
 date_default_timezone_set("Asia/Manila");
-require APPPATH . 'models/Tables.php';
+include_once APPPATH . 'models/Tables.php';
 
 class Bookings_model extends CI_Model {
 	public function add_to_booking_list(array $booking_params, array $email_params){
@@ -27,8 +27,8 @@ class Bookings_model extends CI_Model {
 				booking_offer_status, DATE_FORMAT(booking_created_date, '%M %d, %Y %r') as booking_created_date,
 				IFNULL(booking_decline_reason, 'N/A') as booking_decline_reason,
 				IFNULL(booking_approved_or_declined_date, 'N/A') as booking_approved_or_declined_date
-			FROM " . Tables::$CLIENT_BOOKING_LIST;
-		
+			FROM " . Tables::$CLIENT_BOOKING_LIST . " ORDER BY booking_id DESC";
+
 		$stmt = $this->db->query($query);
 		return $stmt->result();
 	}
@@ -45,7 +45,10 @@ class Bookings_model extends CI_Model {
 				IFNULL(booking_other_details, 'N/A') as booking_other_details,
 				booking_offer_status, DATE_FORMAT(booking_created_date, '%M %d, %Y %r') as booking_created_date,
 				IFNULL(booking_decline_reason, 'N/A') as booking_decline_reason,
-				IFNULL(booking_approved_or_declined_date, 'N/A') as booking_approved_or_declined_date
+				IF(booking_approved_or_declined_date = NULL, 'N/A', DATE_FORMAT(booking_approved_or_declined_date, '%M %d, %Y %r')) as booking_approved_or_declined_date,
+				IF(ISNULL(booking_date_paid), 'PENDING', DATE_FORMAT(booking_date_paid, '%M %d, %Y %r')) as booking_date_paid,
+                DATE_FORMAT(DATE_ADD(booking_approved_or_declined_date, INTERVAL 24 hour), '%M %d, %Y %r') as booking_pay_on_or_before,
+                IF(NOW() > DATE_FORMAT(DATE_ADD(booking_approved_or_declined_date, INTERVAL 24 hour), '%Y-%m-%d %T'), 'EXPIRED', 'ACTIVE') as booking_payment_status
 			FROM 
 				" . Tables::$CLIENT_BOOKING_LIST . "  
 			WHERE 

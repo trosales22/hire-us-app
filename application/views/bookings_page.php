@@ -29,6 +29,7 @@
 	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/selectize.js/0.12.6/css/selectize.bootstrap3.css">
 	<link href="<?php echo base_url(); ?>static/css/parsley.css" rel="stylesheet">
 	<link href="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.css" rel="stylesheet">
+  <link href="<?php echo base_url(); ?>static/css/sweetalert2.min.css" rel="stylesheet">
 
   <style>
   div.gallery {
@@ -79,51 +80,43 @@
                 <table class="table table-bordered" id="tbl_bookings" width="100%" cellspacing="0">
                   <thead>
 										<tr>
-                      <th>Booking ID</th>
-											<th>Event Title</th>
-											<th>Talent Fee Offer</th>
-											<th>Venue/Location</th>
-											<th>Payment Option</th>
-											<th>Working Dates</th>
-											<th>Working Hours</th>
-											<th>Offer Status</th>
-											<th>Client</th>
-											<th>Talent</th>
-											<th>Created Date</th>
+                      <th>ID</th>
+                      <th>Generated ID</th>
+											<th>Client Name</th>
+											<th>Talent Name</th>
+											<th>Booked Date</th>
+                      <th>Actions</th>
                     </tr>
                   </thead>
                   
                   <tbody>
 										<?php foreach($booking_list as $booking){?>
 											<tr>
+                        <td><?php echo $booking->booking_id;?></td>
 												<td><?php echo $booking->booking_generated_id;?></td>
-												<td><?php echo $booking->booking_event_title;?></td>
-												<td><?php echo $booking->booking_talent_fee;?></td>
-												<td><?php echo $booking->booking_venue_location;?></td>
-												<td><?php echo $booking->booking_payment_option;?></td>
-												<td><?php echo $booking->booking_date;?></td>
-												<td><?php echo $booking->booking_time;?></td>
-												<td><?php echo $booking->booking_offer_status;?></td>
 												<td><?php echo $booking->client_id->fullname . ' (' . $booking->client_id->role_name . ')';?></td>
 												<td><?php echo $booking->talent_id->firstname . ' ' . $booking->talent_id->lastname; ?></td>
 												<td><?php echo $booking->booking_created_date;?></td>
+                        <td>
+                          <a style="width: 100%; cursor: pointer; color: white; margin-bottom: 5px;" data-toggle="modal" data-id="<?php echo $booking->booking_generated_id;?>" data-target="#viewBookingModal" class="btnViewBooking btn btn-info btn-icon-split">
+                            <span class="icon text-white-50" style="margin-right: auto;">
+                              <i class="fas fa-eye"></i>
+                            </span>
+                            <span class="text" style="margin-right: auto;">View</span>
+                          </a><br/>
+                        </td>
 											</tr> 
                      <?php }?>
                   </tbody>
 
                   <tfoot>
 										<tr>
-											<th>Booking ID</th>
-											<th>Event Title</th>
-											<th>Talent Fee Offer</th>
-											<th>Venue/Location</th>
-											<th>Payment Option</th>
-											<th>Working Dates</th>
-											<th>Working Hours</th>
-											<th>Offer Status</th>
-											<th>Client</th>
-											<th>Talent</th>
-											<th>Created Date</th>
+                      <th>ID</th>
+                      <th>Generated ID</th>
+											<th>Client Name</th>
+											<th>Talent Name</th>
+											<th>Booked Date</th>
+                      <th>Actions</th>
                     </tr>
                   </tfoot>
                 </table>
@@ -148,6 +141,8 @@
     <i class="fas fa-angle-up"></i>
   </a>
 
+  <?php include 'pages/modals/view_booking.php';?>
+
   <?php include 'pages/modals/logout.php';?>
 	
   <!-- Bootstrap core JavaScript-->
@@ -171,6 +166,7 @@
 	<script src="<?php echo base_url(); ?>static/SBAdmin/js/demo/datatables-demo.js"></script>
 	<script src="https://parsleyjs.org/dist/parsley.min.js"></script>
 	<script src="<?php echo base_url(); ?>static/js/libraries/jquery-confirm-v3.3.4/dist/jquery-confirm.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@9"></script>
 	<script src="<?php echo base_url(); ?>static/js/bookings.js"></script>
 
 </body>

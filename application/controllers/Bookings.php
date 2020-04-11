@@ -33,7 +33,7 @@ class Bookings extends CI_Controller {
 			
 			$success  = 1;
 		}catch (Exception $e){
-			$msg = $e->getMessage();      
+			$msg = $e->getMessage();
 		}
 
 		if($success == 1){

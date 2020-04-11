@@ -1,6 +1,6 @@
 <?php
 date_default_timezone_set("Asia/Manila");
-require APPPATH . 'models/Tables.php';
+include_once APPPATH . 'models/Tables.php';
 
 class Clients_model extends CI_Model {
 	public function get_all_valid_ids(){
@@ -240,7 +240,7 @@ class Clients_model extends CI_Model {
 				A.booking_offer_status, DATE_FORMAT(A.booking_created_date, '%M %d, %Y %r') as booking_created_date,
 				IFNULL(A.booking_decline_reason, 'N/A') as booking_decline_reason,
 				IF(A.booking_approved_or_declined_date = NULL, 'N/A', DATE_FORMAT(A.booking_approved_or_declined_date, '%M %d, %Y %r')) as booking_approved_or_declined_date,
-				IF(A.booking_date_paid = NULL, 'PENDING', DATE_FORMAT(A.booking_date_paid, '%M %d, %Y %r')) as booking_date_paid,
+				IF(ISNULL(A.booking_date_paid), 'PENDING', DATE_FORMAT(A.booking_date_paid, '%M %d, %Y %r')) as booking_date_paid,
                 DATE_FORMAT(DATE_ADD(A.booking_approved_or_declined_date, INTERVAL 24 hour), '%M %d, %Y %r') as booking_pay_on_or_before,
                 NOW() as datetime_today,
                 IF(NOW() > DATE_FORMAT(DATE_ADD(A.booking_approved_or_declined_date, INTERVAL 24 hour), '%Y-%m-%d %T'), 'EXPIRED', 'ACTIVE') as booking_payment_status
