@@ -402,11 +402,10 @@ class Talents_model extends CI_Model {
 				IFNULL(A.booking_other_details, 'N/A') as booking_other_details,
 				A.booking_offer_status, DATE_FORMAT(A.booking_created_date, '%M %d, %Y %r') as booking_created_date,
 				IFNULL(A.booking_decline_reason, 'N/A') as booking_decline_reason,
-				IF(A.booking_approved_or_declined_date = NULL, 'N/A', DATE_FORMAT(A.booking_approved_or_declined_date, '%M %d, %Y %r')) as booking_approved_or_declined_date,
-				IF(A.booking_date_paid = NULL, 'PENDING', DATE_FORMAT(A.booking_date_paid, '%M %d, %Y %r')) as booking_date_paid,
-                DATE_FORMAT(DATE_ADD(A.booking_approved_or_declined_date, INTERVAL 24 hour), '%M %d, %Y %r') as booking_pay_on_or_before,
-                NOW() as datetime_today,
-                IF(NOW() > DATE_FORMAT(DATE_ADD(A.booking_approved_or_declined_date, INTERVAL 24 hour), '%Y-%m-%d %T'), 'EXPIRED', 'ACTIVE') as booking_payment_status
+				IF(ISNULL(A.booking_approved_or_declined_date), 'N/A', DATE_FORMAT(A.booking_approved_or_declined_date, '%M %d, %Y %r')) as booking_approved_or_declined_date,
+				IF(ISNULL(A.booking_date_paid), 'PENDING', DATE_FORMAT(A.booking_date_paid, '%M %d, %Y %r')) as booking_date_paid,
+                IF(ISNULL(A.booking_approved_or_declined_date), 'NOT YET APPROVED/DECLINED', DATE_FORMAT(DATE_ADD(A.booking_approved_or_declined_date, INTERVAL 24 hour), '%M %d, %Y %r') ) as booking_pay_on_or_before,
+				IF(ISNULL(A.booking_approved_or_declined_date), 'NOT YET APPROVED/DECLINED', IF(NOW() > DATE_FORMAT(DATE_ADD(A.booking_approved_or_declined_date, INTERVAL 24 hour), '%Y-%m-%d %T'), 'EXPIRED', 'ACTIVE') ) as booking_payment_status
 			FROM 
 				" . Tables::$CLIENT_BOOKING_LIST . " A 
 			WHERE 
@@ -416,6 +415,25 @@ class Talents_model extends CI_Model {
 
     	$stmt = $this->db->query($query, $params);
     	return $stmt->result();
+	}
+
+	public function get_all_bookings_ignored_for_days(){
+		$query = "
+			SELECT * FROM 
+				" . Tables::$CLIENT_BOOKING_LIST . "  
+			WHERE 
+				booking_approved_or_declined_date IS NULL AND NOW() > DATE_FORMAT(DATE_ADD(booking_created_date, INTERVAL 24 hour), '%Y-%m-%d %T')";
+		$stmt = $this->db->query($query);
+    	return $stmt->result();
+	}
+
+	public function delete_all_bookings_ignored($booking_id){
+        try {
+			$this->db->delete(Tables::$CLIENT_BOOKING_LIST, array('booking_id' => $booking_id));
+        }catch(PDOException $e){
+			$msg = $e->getMessage();
+			$this->db->trans_rollback();
+		}
 	}
 
 	public function add_talent_reviews(array $data){

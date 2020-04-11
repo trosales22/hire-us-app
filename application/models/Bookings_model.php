@@ -47,8 +47,8 @@ class Bookings_model extends CI_Model {
 				IFNULL(booking_decline_reason, 'N/A') as booking_decline_reason,
 				IF(ISNULL(booking_approved_or_declined_date), 'N/A', DATE_FORMAT(booking_approved_or_declined_date, '%M %d, %Y %r')) as booking_approved_or_declined_date,
 				IF(ISNULL(booking_date_paid), 'PENDING', DATE_FORMAT(booking_date_paid, '%M %d, %Y %r')) as booking_date_paid,
-                DATE_FORMAT(DATE_ADD(booking_approved_or_declined_date, INTERVAL 24 hour), '%M %d, %Y %r') as booking_pay_on_or_before,
-                IF(NOW() > DATE_FORMAT(DATE_ADD(booking_approved_or_declined_date, INTERVAL 24 hour), '%Y-%m-%d %T'), 'EXPIRED', 'ACTIVE') as booking_payment_status
+                IF(ISNULL(booking_approved_or_declined_date), 'NOT YET APPROVED/DECLINED', DATE_FORMAT(DATE_ADD(booking_approved_or_declined_date, INTERVAL 24 hour), '%M %d, %Y %r') ) as booking_pay_on_or_before,
+                IF(ISNULL(booking_approved_or_declined_date), 'NOT YET APPROVED/DECLINED', IF(NOW() > DATE_FORMAT(DATE_ADD(booking_approved_or_declined_date, INTERVAL 24 hour), '%Y-%m-%d %T'), 'EXPIRED', 'ACTIVE') ) as booking_payment_status
 			FROM 
 				" . Tables::$CLIENT_BOOKING_LIST . "  
 			WHERE 

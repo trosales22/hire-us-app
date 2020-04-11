@@ -36,7 +36,7 @@ $('.btnViewBooking').click(function(){
 		$(".booking_pay_on_or_before").text(response.booking_pay_on_or_before);
 		$(".booking_payment_status").text(response.booking_payment_status);
 
-		if(response.booking_payment_status == "ACTIVE" && response.booking_payment_option == "N/A"){
+		if(response.booking_payment_status == "ACTIVE" && response.booking_payment_option == "N/A" && response.booking_approved_or_declined_date != "N/A"){
 			$('button#btnApprovePayment').css('display', 'block');
 		}else{
 			$('button#btnApprovePayment').css('display', 'none');
