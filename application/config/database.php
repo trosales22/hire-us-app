@@ -83,7 +83,7 @@ $db['default'] = array(
 	// 'database' => 'db_hireus',
 	
 	//DEVELOPMENT SERVER
-	'hostname' => 'localhost',
+	'hostname' => '194.59.164.85',
 	'username' => 'u191444882_hireus_admin',
 	'password' => 'teamhireus03',
 	'database' => 'u191444882_hireusph_dev',

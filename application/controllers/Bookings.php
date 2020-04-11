@@ -20,7 +20,15 @@ class Bookings extends CI_Controller {
 
 	private function _get_bookings(){
 		try{
-			$success        		= 0;
+			$success = 0;
+
+			//check for ignored bookings first
+			$bookings_ignored_for_days_list = $this->talents_model->get_all_bookings_ignored_for_days();
+			
+			foreach($bookings_ignored_for_days_list as $booking_ignored){
+				$this->talents_model->delete_all_bookings_ignored($booking_ignored->booking_id);
+			}
+
 			$client_booking_list = $this->bookings_model->get_all_bookings();
 
 			foreach($client_booking_list as $booking){
@@ -46,9 +54,6 @@ class Bookings extends CI_Controller {
 				'flag'      => $success
 			];
 		}
-
-		// print "<pre>";
-		// die(print_r($response['client_booking_list']));
 		
 		$this->data['booking_list'] = $response['client_booking_list'];
 	}
