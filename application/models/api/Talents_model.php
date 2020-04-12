@@ -422,7 +422,7 @@ class Talents_model extends CI_Model {
 			SELECT * FROM 
 				" . Tables::$CLIENT_BOOKING_LIST . "  
 			WHERE 
-				booking_approved_or_declined_date IS NULL AND NOW() > DATE_FORMAT(DATE_ADD(booking_created_date, INTERVAL 24 hour), '%Y-%m-%d %T')";
+				booking_approved_or_declined_date IS NULL AND NOW() > DATE_FORMAT(DATE_ADD(booking_created_date, INTERVAL 48 hour), '%Y-%m-%d %T')";
 		$stmt = $this->db->query($query);
     	return $stmt->result();
 	}
